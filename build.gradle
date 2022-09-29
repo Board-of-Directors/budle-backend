@@ -4,16 +4,37 @@ plugins {
 
 group 'ru.nsu.fit.pak'
 version '1.0-SNAPSHOT'
+    id 'org.springframework.boot' version '2.7.4'
+    id 'io.spring.dependency-management' version '1.0.14.RELEASE'
+    id 'java'
+}
+
+group = 'ru.nsu.fit.pak'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
 }
-
-dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'ru.nsu.fit.pak.BudleApplication'
+        )
+    }
 }
 
-test {
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'javax.validation:validation-api:2.0.1.Final'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.postgresql:postgresql:42.5.0'
+}
+
+tasks.named('test') {
     useJUnitPlatform()
 }
