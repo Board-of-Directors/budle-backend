@@ -1,9 +1,4 @@
 plugins {
-    id 'java'
-}
-
-group 'ru.nsu.fit.pak'
-version '1.0-SNAPSHOT'
     id 'org.springframework.boot' version '2.7.4'
     id 'io.spring.dependency-management' version '1.0.14.RELEASE'
     id 'java'
