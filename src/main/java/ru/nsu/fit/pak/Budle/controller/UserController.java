@@ -1,5 +1,7 @@
 package ru.nsu.fit.pak.Budle.controller;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,26 +9,28 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import ru.nsu.fit.pak.Budle.service.UserService;
-import ru.nsu.fit.pak.Budle.dto.UserDto;
 import ru.nsu.fit.pak.Budle.dao.User;
+import ru.nsu.fit.pak.Budle.dto.UserDto;
+import ru.nsu.fit.pak.Budle.service.UserService;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @RestController
-public class RouteController {
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
+public class UserController {
     @Autowired
     UserService userService;
 
-    public RouteController() {
-    }
-
 
     @GetMapping("/users")
-    public ResponseEntity<String> getUsers() {
+    public ResponseEntity<List<UserDto>> getUsers() {
         try {
-            return new ResponseEntity<>(userService.getUsers().toString(), HttpStatus.OK);
+            return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, e.getMessage(), e);
+
         }
 
     }
@@ -39,8 +43,7 @@ public class RouteController {
             return new ResponseEntity<>(answer, HttpStatus.OK);
 
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-
+            return new ResponseEntity<>("You was not registered", HttpStatus.BAD_REQUEST);
         }
     }
 
