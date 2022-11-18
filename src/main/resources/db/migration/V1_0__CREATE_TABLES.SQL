@@ -1,4 +1,4 @@
-
+DROP TABLE IF EXISTS user_table;
 
 CREATE TABLE user_table
 (
@@ -12,6 +12,7 @@ CREATE TABLE user_table
 
 );
 
+DROP TABLE IF EXISTS establishment_table;
 create table establishment_table
 (
 
