@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Setter
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
-@Table(name = "JC_EST")
+@Table(name = "establishment_table")
 public class Establishment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
