@@ -1,0 +1,4 @@
+INSERT INTO establishment_table (NAME, DESCRIPTION, ADDRESS, OWNER_ID) VALUES ('Red Rabbit','Small pizza-bar near to NSU','Novosibirsk, Ilyich St. 8', 11 );
+INSERT INTO establishment_table (NAME, DESCRIPTION, ADDRESS, OWNER_ID) VALUES ('Respublica','Bar in the center of the Novosibirsk','Novosibirsk, Lenin St. 6', 11 );
+INSERT INTO establishment_table (NAME, DESCRIPTION, ADDRESS, OWNER_ID) VALUES ('Polyclinic №8','St. Petersburg State Budgetary Health Institution','St. Petersburg, Novoselov St. 45', 11 );
+INSERT INTO establishment_table (NAME, DESCRIPTION, ADDRESS, OWNER_ID) VALUES ('Service Station №3','Car service station','Tashkent, Amir Temur Av., 79', 11 );

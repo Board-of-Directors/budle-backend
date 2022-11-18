@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Setter
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
-@Table(name = "JC_USER")
+@Table(name = "user_table")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class User {
     private String phoneNumber;
     @Size(min = 6)
     private String pass;
-    private int userType;
+    private Short userType;
 
 
 }

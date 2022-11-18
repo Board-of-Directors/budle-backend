@@ -1,7 +1,10 @@
+import org.flywaydb.gradle.task.FlywayMigrateTask
+
 plugins {
     id 'org.springframework.boot' version '2.7.4'
     id 'io.spring.dependency-management' version '1.0.14.RELEASE'
     id 'java'
+    id 'org.flywaydb.flyway' version '9.8.1'
 }
 
 group = 'ru.nsu.fit.pak'
@@ -22,6 +25,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.postgresql:postgresql:42.5.0'
+    implementation ('org.flywaydb:flyway-core')
 }
 
 task customFatJar(type: Jar) {
@@ -32,3 +36,12 @@ task customFatJar(type: Jar) {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
+flyway{
+    url='jdbc:postgresql://localhost:8000/contactbd?user=postgres&password=xzq75757'
+    user='postgres'
+    password='xzq75757'
+    baselineOnMigrate=true
+    cleanDisabled=false
+
+}
+flywayMigrate.dependsOn(classes)
