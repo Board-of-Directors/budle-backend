@@ -7,7 +7,6 @@ CREATE TABLE user_table
     last_name    varchar(30),
     phone_number varchar(30) not null unique,
     pass         varchar     not null,
-    user_type    smallint    not null default 0,
     primary key (id)
 
 );
@@ -20,6 +19,7 @@ create table establishment_table
     "name"      varchar(100) NOT NULL,
     description varchar,
     address     varchar      not null,
-    owner_id    bigserial     not null references user_table (id),
+    owner_id    bigserial    not null,
+    foreign key (owner_id) references user_table (id),
     primary key (id)
 );

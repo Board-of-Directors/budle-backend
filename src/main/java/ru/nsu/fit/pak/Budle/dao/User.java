@@ -25,7 +25,6 @@ public class User {
     private String phoneNumber;
     @Size(min = 6)
     private String pass;
-    private Short userType;
 
 
 }
