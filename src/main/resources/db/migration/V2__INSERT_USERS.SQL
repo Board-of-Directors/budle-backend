@@ -8,4 +8,4 @@ INSERT INTO user_table (FIRST_NAME, LAST_NAME, PHONE_NUMBER,pass) VALUES ('Dave'
 INSERT INTO user_table (FIRST_NAME, LAST_NAME, PHONE_NUMBER,pass) VALUES ('Megan','Fox','+75464449887','rumba228');
 INSERT INTO user_table (FIRST_NAME, LAST_NAME, PHONE_NUMBER,pass) VALUES ('Silvester','Stalone','+72233567821','kringecommitowner');
 INSERT INTO user_table (FIRST_NAME, LAST_NAME, PHONE_NUMBER,pass) VALUES ('Grisha','Karavaev','+12345678912','mysqlslave');
-INSERT INTO user_table (FIRST_NAME, LAST_NAME, PHONE_NUMBER,pass,USER_TYPE) VALUES ('Oleg','Veber','+79833211139','verystrange!', 1);
+INSERT INTO user_table (FIRST_NAME, LAST_NAME, PHONE_NUMBER,pass) VALUES ('Oleg','Veber','+79833211139','verystrange!');
