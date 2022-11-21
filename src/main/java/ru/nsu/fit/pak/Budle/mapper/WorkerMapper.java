@@ -2,9 +2,7 @@ package ru.nsu.fit.pak.Budle.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.nsu.fit.pak.Budle.dao.Establishment;
 import ru.nsu.fit.pak.Budle.dao.Worker;
-import ru.nsu.fit.pak.Budle.dto.UserDto;
 import ru.nsu.fit.pak.Budle.dto.WorkerDto;
 
 @Component
