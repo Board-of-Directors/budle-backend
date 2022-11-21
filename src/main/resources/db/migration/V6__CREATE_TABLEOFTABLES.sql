@@ -5,7 +5,7 @@ create table tables(
     establishment_id bigserial not null,
     tags varchar(255),
     coordinates point,
-    status varchar(1),
+    status varchar(1) not null,
     primary key (id),
     foreign key (establishment_id) references establishment_table(id)
 )

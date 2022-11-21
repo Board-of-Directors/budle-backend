@@ -4,8 +4,8 @@ create table worker_table
     id          bigserial,
     user_id     bigserial  not null,
     worker_type varchar(1) not null,
-    on_work     boolean,
-    foreign key (user_id) references user_table,
+    on_work     boolean not null,
+    foreign key (user_id) references user_table(id),
     primary key (id)
 );
 
