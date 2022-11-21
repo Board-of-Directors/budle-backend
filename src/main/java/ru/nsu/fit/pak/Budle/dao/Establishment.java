@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,6 +25,11 @@ public class Establishment {
     private String address;
     @OneToOne
     private User owner;
+    @ManyToMany
+    @JoinTable(name = "worker_establishment",
+            joinColumns = @JoinColumn(name = "establishment_id"),
+            inverseJoinColumns = @JoinColumn(name = "worker_id"))
+    private List<Worker> workers;
 
 
 }
