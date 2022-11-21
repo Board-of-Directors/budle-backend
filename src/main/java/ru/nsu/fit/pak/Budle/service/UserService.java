@@ -2,6 +2,7 @@ package ru.nsu.fit.pak.Budle.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.nsu.fit.pak.Budle.Exceptions.UserAlreadyExistsException;
 import ru.nsu.fit.pak.Budle.dao.User;
 import ru.nsu.fit.pak.Budle.dto.UserDto;
 import ru.nsu.fit.pak.Budle.mapper.UserMapper;
@@ -24,7 +25,7 @@ public class UserService implements UserServiceInterface {
     public User registerUser(UserDto userDto) {
 
         if (!userRepository.findByPhoneNumber(userDto.getPhoneNumber()).isEmpty()) {
-            throw new IllegalArgumentException("This phone number already exists in our system. ");
+            throw new UserAlreadyExistsException("This phone number already exists in our system. ");
         } else {
             User user = userMapper.dtoToUser(userDto);
             userRepository.save(user);
