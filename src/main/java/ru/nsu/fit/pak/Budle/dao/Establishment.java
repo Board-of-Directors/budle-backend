@@ -23,6 +23,8 @@ public class Establishment {
     @Column(unique = true)
     private String description;
     private String address;
+    private Boolean hasMap;
+    private Boolean hasCardPayment;
     @OneToOne
     private User owner;
     @ManyToMany(fetch = FetchType.EAGER)
