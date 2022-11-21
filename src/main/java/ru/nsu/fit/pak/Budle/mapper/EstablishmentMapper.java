@@ -23,6 +23,8 @@ public class EstablishmentMapper {
         dto.setName(establishment.getName());
         dto.setDescription(establishment.getDescription());
         dto.setAddress(establishment.getAddress());
+        dto.setHasMap(establishment.getHasMap());
+        dto.setHasCardPayment(establishment.getHasCardPayment());
         dto.setOwner(userMapper.modelToDto(establishment.getOwner()));
         return dto;
     }

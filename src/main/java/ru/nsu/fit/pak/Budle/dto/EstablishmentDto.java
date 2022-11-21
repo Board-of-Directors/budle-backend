@@ -20,13 +20,7 @@ public class EstablishmentDto {
     @NotNull
     private UserDto owner;
 
-    @Override
-    public String toString() {
-        return "Establishment{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", address='" + address + '\'' +
-                ", owner='" + owner + '\'' +
-                '}';
-    }
+    private boolean hasCardPayment;
+
+    private boolean hasMap;
 }

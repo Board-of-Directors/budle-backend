@@ -17,8 +17,8 @@ create table worker_table
     id          bigserial,
     user_id     bigserial  not null,
     worker_type varchar(1) not null,
-    on_work     boolean not null,
-    foreign key (user_id) references user_table(id),
+    on_work     boolean    not null,
+    foreign key (user_id) references user_table (id),
     primary key (id)
 );
 
@@ -30,6 +30,8 @@ create table establishment_table
     "name"      varchar(100) NOT NULL,
     description varchar,
     address     varchar      not null,
+    has_map     boolean default false,
+    has_card_payment boolean default false,
     owner_id    bigserial    not null,
     foreign key (owner_id) references user_table (id),
     primary key (id)
