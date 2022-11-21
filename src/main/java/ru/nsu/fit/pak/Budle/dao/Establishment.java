@@ -25,7 +25,7 @@ public class Establishment {
     private String address;
     @OneToOne
     private User owner;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "worker_establishment",
             joinColumns = @JoinColumn(name = "establishment_id"),
             inverseJoinColumns = @JoinColumn(name = "worker_id"))

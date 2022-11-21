@@ -15,7 +15,6 @@ public class WorkerMapper {
     UserMapper userMapper;
 
     public WorkerDto modelToDto(Worker worker) {
-        UserMapper userMapper = new UserMapper();
         WorkerDto dto = new WorkerDto();
         dto.setId(worker.getId());
         dto.setOnWork(worker.getOnWork());

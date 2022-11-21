@@ -18,7 +18,7 @@ public class Worker {
     private String workerType;
     @OneToOne
     private User user;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "worker_establishment",
             joinColumns = @JoinColumn(name = "worker_id"),
             inverseJoinColumns = @JoinColumn(name = "establishment_id"))
