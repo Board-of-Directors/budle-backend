@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface WorkerRepository extends CrudRepository<Worker, Long> {
-    List<Worker> findWorkerByWorkerType(String workerType);
+    List<Worker> findWorkerById(Long id);
 }
