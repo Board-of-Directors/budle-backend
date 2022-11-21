@@ -1,5 +1,6 @@
 package ru.nsu.fit.pak.Budle.mapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.pak.Budle.dao.Establishment;
@@ -10,8 +11,9 @@ import ru.nsu.fit.pak.Budle.dto.EstablishmentDto;
 @Component
 public class EstablishmentMapper {
 
+    @Autowired
+    UserMapper userMapper;
     public EstablishmentDto modelToDto(Establishment establishment) {
-        UserMapper userMapper = new UserMapper();
         EstablishmentDto dto = new EstablishmentDto();
         dto.setId(establishment.getId());
         dto.setName(establishment.getName());
