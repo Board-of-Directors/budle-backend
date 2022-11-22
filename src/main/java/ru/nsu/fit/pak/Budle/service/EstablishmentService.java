@@ -28,4 +28,9 @@ public class EstablishmentService implements EstablishmentServiceInterface {
         }
         return establishmentDtos;
     }
+    @Override
+    public EstablishmentDto getEstablishmentById(Long id){
+       return establishmentMapper.modelToDto(establishmentRepository.getEstablishmentById(id));
+
+    }
 }
