@@ -12,6 +12,8 @@ import ru.nsu.fit.pak.Budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.Budle.service.EstablishmentService;
 import ru.nsu.fit.pak.Budle.service.SpotService;
 
+import java.util.List;
+
 @RestController
 public class SpotController {
     @Autowired
@@ -19,8 +21,8 @@ public class SpotController {
     @Autowired
     EstablishmentRepository establishmentRepository;
     @GetMapping(value = "/spot/{establishmentId}")
-    public ResponseEntity<SpotDto> getSpotsByEstalibshment(@PathVariable("establishmentId") Long establishmentId){
+    public ResponseEntity<List<SpotDto>> getSpotsByEstalibshment(@PathVariable("establishmentId") Long establishmentId){
         Establishment establishment = establishmentRepository.getEstablishmentById(establishmentId);
-        return new ResponseEntity<>(spotService.getSpotsByEstablishment(establishment).get(0), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(spotService.getSpotsByEstablishment(establishment), HttpStatus.ACCEPTED);
     }
 }
