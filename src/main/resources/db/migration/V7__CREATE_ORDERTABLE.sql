@@ -6,6 +6,6 @@ create table order_table(
     table_id bigserial not null,
     primary key (order_id),
     foreign key (user_id) references user_table(id),
-    foreign key (table_id) references tables(id)
+    foreign key (table_id) references spot_table(id)
 
 )
