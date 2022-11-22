@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS user_table;
+DROP TABLE IF EXISTS users;
 
-CREATE TABLE user_table
+CREATE TABLE users
 (
     id           bigserial,
     first_name   varchar(30) not null,
@@ -11,19 +11,19 @@ CREATE TABLE user_table
 
 );
 
-DROP TABLE IF EXISTS worker_table;
-create table worker_table
+DROP TABLE IF EXISTS workers;
+create table workers
 (
     id          bigserial,
     user_id     bigserial  not null,
     worker_type varchar(1) not null,
     on_work     boolean    not null,
-    foreign key (user_id) references user_table (id),
+    foreign key (user_id) references users (id),
     primary key (id)
 );
 
-DROP TABLE IF EXISTS establishment_table;
-create table establishment_table
+DROP TABLE IF EXISTS establishments;
+create table establishments
 (
 
     id          bigserial,
@@ -33,7 +33,7 @@ create table establishment_table
     has_map     boolean default false,
     has_card_payment boolean default false,
     owner_id    bigserial    not null,
-    foreign key (owner_id) references user_table (id),
+    foreign key (owner_id) references users (id),
     primary key (id)
 );
 

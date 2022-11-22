@@ -9,7 +9,7 @@ import java.util.List;
 @Setter
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "worker_table")
+@Table(name = "workers")
 public class Worker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +19,7 @@ public class Worker {
     @OneToOne
     private User user;
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "worker_establishment",
+    @JoinTable(name = "worker_establishments",
             joinColumns = @JoinColumn(name = "worker_id"),
             inverseJoinColumns = @JoinColumn(name = "establishment_id"))
     private List<Establishment> establishments;

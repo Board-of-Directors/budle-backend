@@ -8,6 +8,6 @@ create table establishment_working_hours
     end_working      varchar(5) not null,
     booking_duration varchar(5) not null,
     break_duration   varchar(5),
-    foreign key (establishment_id) references establishment_table (id)
+    foreign key (establishment_id) references establishments (id)
 
 );
