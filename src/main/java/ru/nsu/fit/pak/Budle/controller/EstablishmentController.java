@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.nsu.fit.pak.Budle.dto.EstablishmentDto;
-import ru.nsu.fit.pak.Budle.service.EstablishmentService;
+import ru.nsu.fit.pak.Budle.service.EstablishmentServiceImpl;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class EstablishmentController {
     @Autowired
-    private EstablishmentService establishmentService;
+    private EstablishmentServiceImpl establishmentService;
 
 
     @GetMapping("/establishments")

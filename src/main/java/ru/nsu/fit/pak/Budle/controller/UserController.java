@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.nsu.fit.pak.Budle.dto.UserDto;
-import ru.nsu.fit.pak.Budle.service.UserService;
+import ru.nsu.fit.pak.Budle.service.UserServiceImpl;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class UserController {
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
 
     @GetMapping("/users")
