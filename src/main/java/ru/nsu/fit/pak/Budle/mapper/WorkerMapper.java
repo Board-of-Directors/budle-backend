@@ -8,9 +8,9 @@ import ru.nsu.fit.pak.Budle.dto.WorkerDto;
 @Component
 public class WorkerMapper {
     @Autowired
-    EstablishmentMapper establishmentMapper;
+    private EstablishmentMapper establishmentMapper;
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
 
     public WorkerDto modelToDto(Worker worker) {
         WorkerDto dto = new WorkerDto();

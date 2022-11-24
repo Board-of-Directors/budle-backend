@@ -17,12 +17,12 @@ import java.util.List;
 @RestController
 public class SpotController {
     @Autowired
-    SpotService spotService;
+    private SpotService spotService;
     @Autowired
-    EstablishmentRepository establishmentRepository;
+    private EstablishmentRepository establishmentRepository;
     @GetMapping(value = "/spot/{establishmentId}")
-    public ResponseEntity<List<SpotDto>> getSpotsByEstalibshment(@PathVariable("establishmentId") Long establishmentId){
+    public List<SpotDto> getSpotsByEstalibshment(@PathVariable("establishmentId") Long establishmentId){
         Establishment establishment = establishmentRepository.getEstablishmentById(establishmentId);
-        return new ResponseEntity<>(spotService.getSpotsByEstablishment(establishment), HttpStatus.ACCEPTED);
+        return spotService.getSpotsByEstablishment(establishment);
     }
 }

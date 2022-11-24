@@ -13,10 +13,10 @@ import java.util.List;
 @Service
 public class SpotService implements SpotServiceInterface{
     @Autowired
-    SpotRepository spotRepository;
+    private SpotRepository spotRepository;
 
     @Autowired
-    SpotMapper spotMapper;
+    private SpotMapper spotMapper;
     @Override
     public List<SpotDto> getSpotsByEstablishment(Establishment establishment) {
         return spotMapper.ListModelToListDto(spotRepository.findByEstablishment(establishment));

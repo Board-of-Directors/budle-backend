@@ -13,20 +13,14 @@ import java.util.List;
 @Service
 public class EstablishmentService implements EstablishmentServiceInterface {
     @Autowired
-    EstablishmentRepository establishmentRepository;
+    private EstablishmentRepository establishmentRepository;
 
     @Autowired
-    EstablishmentMapper establishmentMapper;
+    private EstablishmentMapper establishmentMapper;
 
     @Override
     public List<EstablishmentDto> getEstablishments() {
-        Iterable<Establishment> establishments = establishmentRepository.findAll();
-        ArrayList<EstablishmentDto> establishmentDtos = new ArrayList<>();
-        for (Establishment establishment : establishments) {
-            EstablishmentDto dto = establishmentMapper.modelToDto(establishment);
-            establishmentDtos.add(dto);
-        }
-        return establishmentDtos;
+        return establishmentMapper.modelListToDtoList(establishmentRepository.findAll());
     }
     @Override
     public EstablishmentDto getEstablishmentById(Long id){

@@ -17,10 +17,10 @@ import java.util.Objects;
 public class UserService implements UserServiceInterface {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
 
     @Override
     public UserDto registerUser(UserDto userDto) {
@@ -36,13 +36,7 @@ public class UserService implements UserServiceInterface {
 
     @Override
     public List<UserDto> getUsers() {
-        Iterable<User> users = userRepository.findAll();
-        ArrayList<UserDto> userDtos = new ArrayList<>();
-        for (User user : users) {
-            UserDto dto = userMapper.modelToDto(user);
-            userDtos.add(dto);
-        }
-        return userDtos;
+        return userMapper.modelListToDtoList(userRepository.findAll());
     }
 
     @Override

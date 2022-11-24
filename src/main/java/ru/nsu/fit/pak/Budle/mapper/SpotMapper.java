@@ -11,7 +11,7 @@ import java.util.List;
 @Component
 public class SpotMapper {
     @Autowired
-    EstablishmentMapper establishmentMapper;
+    private EstablishmentMapper establishmentMapper;
     public SpotDto modelToDto(Spot spot){
         SpotDto spotDto = new SpotDto();
         spotDto.setTags(spot.getTags());

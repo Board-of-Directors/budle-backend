@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class UserController {
     @Autowired
-    UserService userService;
+    private UserService userService;
 
 
     @GetMapping("/users")

@@ -15,7 +15,7 @@ import java.util.List;
 public class EstablishmentMapper {
 
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
 
     public EstablishmentDto modelToDto(Establishment establishment) {
         EstablishmentDto dto = new EstablishmentDto();
@@ -29,7 +29,7 @@ public class EstablishmentMapper {
         return dto;
     }
 
-    public List<EstablishmentDto> modelListToDtoList(List<Establishment> establishmentList) {
+    public List<EstablishmentDto> modelListToDtoList(Iterable<Establishment> establishmentList) {
         List<EstablishmentDto> dtoList = new ArrayList<>();
         for (Establishment establishment : establishmentList) {
             dtoList.add(modelToDto(establishment));

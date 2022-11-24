@@ -1,8 +1,13 @@
 package ru.nsu.fit.pak.Budle.mapper;
 
 import org.springframework.stereotype.Component;
+import ru.nsu.fit.pak.Budle.dao.Establishment;
 import ru.nsu.fit.pak.Budle.dao.User;
+import ru.nsu.fit.pak.Budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.Budle.dto.UserDto;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class UserMapper {
@@ -23,5 +28,13 @@ public class UserMapper {
         user.setPhoneNumber(userDto.getPhoneNumber());
         user.setPass(userDto.getPassword());
         return user;
+    }
+
+    public List<UserDto> modelListToDtoList(Iterable<User> userList) {
+        List<UserDto> dtoList = new ArrayList<>();
+        for (User user : userList) {
+            dtoList.add(modelToDto(user));
+        }
+        return dtoList;
     }
 }
