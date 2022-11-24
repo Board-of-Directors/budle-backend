@@ -36,14 +36,3 @@ task customFatJar(type: Jar) {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
-flyway{
-    url='jdbc:postgresql://localhost:8000/contactbd?user=postgres&password=xzq75757'
-    user='postgres'
-    password='xzq75757'
-    baselineOnMigrate=true
-    cleanDisabled=false
-    locations = "./src/main/resources/db/migration"
-
-
-}
-flywayMigrate.dependsOn(classes)
