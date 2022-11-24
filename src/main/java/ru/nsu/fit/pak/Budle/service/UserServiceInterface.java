@@ -6,9 +6,9 @@ import ru.nsu.fit.pak.Budle.dto.UserDto;
 import java.util.List;
 
 public interface UserServiceInterface {
-    User registerUser(UserDto userDto);
+    UserDto registerUser(UserDto userDto);
 
     List<UserDto> getUsers();
 
-    User loginUser(UserDto userDto);
+    UserDto loginUser(UserDto userDto);
 }

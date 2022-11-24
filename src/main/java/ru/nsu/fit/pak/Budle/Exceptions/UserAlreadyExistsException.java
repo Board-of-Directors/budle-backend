@@ -1,7 +1,11 @@
 package ru.nsu.fit.pak.Budle.Exceptions;
 
-public class UserAlreadyExistsException extends RuntimeException{
-    public UserAlreadyExistsException(String message){
-        super(message);
+import lombok.Getter;
+
+@Getter
+public class UserAlreadyExistsException extends ResponseException {
+    public UserAlreadyExistsException(String message) {
+        super(message, "AlreadyExists");
     }
+
 }

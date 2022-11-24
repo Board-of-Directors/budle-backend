@@ -22,16 +22,8 @@ public class EstablishmentController {
 
 
     @GetMapping("/establishments")
-    public ResponseEntity<List<EstablishmentDto>> getEstablishments() {
-        try {
-            return ResponseEntity.ok(establishmentService.getEstablishments());
-
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        }
-
-
+    public List<EstablishmentDto> getEstablishments() {
+        return establishmentService.getEstablishments();
     }
 
 }
