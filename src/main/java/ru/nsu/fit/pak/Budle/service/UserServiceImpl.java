@@ -52,4 +52,9 @@ public class UserServiceImpl implements UserService {
             throw new IncorrectDataException("Number or password were incorrect");
         }
     }
+
+    @Override
+    public Boolean existsPhoneNumber(String phoneNumber){
+        return !userRepository.findByPhoneNumber(phoneNumber).isEmpty();
+    }
 }

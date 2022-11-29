@@ -10,4 +10,6 @@ public interface UserService {
     List<UserDto> getUsers();
 
     UserDto loginUser(UserDto userDto);
+
+    Boolean existsPhoneNumber(String phoneNumber);
 }

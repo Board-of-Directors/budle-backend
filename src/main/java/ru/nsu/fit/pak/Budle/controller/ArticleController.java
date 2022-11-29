@@ -15,6 +15,8 @@ import ru.nsu.fit.pak.Budle.Exceptions.IncorrectDataException;
 import ru.nsu.fit.pak.Budle.Exceptions.BaseException;
 import ru.nsu.fit.pak.Budle.Exceptions.UserAlreadyExistsException;
 
+import java.util.LinkedHashMap;
+
 @ControllerAdvice
 public class ArticleController implements ResponseBodyAdvice<Object> {
     @ExceptionHandler({UserAlreadyExistsException.class, IncorrectDataException.class})
@@ -30,7 +32,7 @@ public class ArticleController implements ResponseBodyAdvice<Object> {
 
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-        if (body instanceof BaseResponse<?>) {
+        if (body instanceof BaseResponse<?> || body instanceof LinkedHashMap<?, ?>) {
             return body;
         }
         return new BaseResponse<>(body);
