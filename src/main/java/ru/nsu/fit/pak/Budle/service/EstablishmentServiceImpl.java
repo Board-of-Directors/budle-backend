@@ -25,4 +25,9 @@ public class EstablishmentServiceImpl implements EstablishmentService {
        return establishmentMapper.modelToDto(establishmentRepository.getEstablishmentById(id));
 
     }
+
+    @Override
+    public List<EstablishmentDto> getEstablishmentsByCategory(String category) {
+        return establishmentMapper.modelListToDtoList(establishmentRepository.findByCategory(category));
+    }
 }

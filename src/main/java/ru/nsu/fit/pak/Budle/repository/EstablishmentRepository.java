@@ -11,4 +11,6 @@ import java.util.List;
 public interface EstablishmentRepository extends CrudRepository<Establishment, Long> {
     List<Establishment> findByOwner(User owner);
     Establishment getEstablishmentById(Long id);
+
+    List<Establishment> findByCategory(String category);
 }
