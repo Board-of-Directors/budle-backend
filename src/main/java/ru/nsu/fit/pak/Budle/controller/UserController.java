@@ -30,12 +30,12 @@ public class UserController {
     }
 
     @PostMapping(value = "/register", consumes = {"application/json"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public UserDto register(@RequestBody UserDto userDto) {
+    public Boolean register(@RequestBody UserDto userDto) {
         return userService.registerUser(userDto);
     }
 
     @PostMapping(value = "/login", consumes = {"application/json"})
-    public UserDto login(@RequestBody UserDto userDto) {
+    public Boolean login(@RequestBody UserDto userDto) {
         return userService.loginUser(userDto);
     }
 

@@ -5,11 +5,12 @@ import ru.nsu.fit.pak.Budle.dto.UserDto;
 import java.util.List;
 
 public interface UserService {
-    UserDto registerUser(UserDto userDto);
 
     List<UserDto> getUsers();
 
-    UserDto loginUser(UserDto userDto);
+    Boolean registerUser(UserDto userDto);
+
+    Boolean loginUser(UserDto userDto);
 
     Boolean existsPhoneNumber(String phoneNumber);
 }
