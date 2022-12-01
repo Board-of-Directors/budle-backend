@@ -3,8 +3,7 @@ DROP TABLE IF EXISTS users cascade;
 CREATE TABLE users
 (
     id           bigserial,
-    first_name   varchar(30) not null,
-    last_name    varchar(30),
+    "name"   varchar(30) not null,
     phone_number varchar(30) not null unique,
     pass         varchar     not null,
     primary key (id)

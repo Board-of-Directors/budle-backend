@@ -14,19 +14,7 @@ public class UserDto {
     @NotNull
     private String password;
     @NotNull
-    private String firstName;
-    @NotNull
-    private String lastName;
+    private String name;
     @NotNull
     private String phoneNumber;
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
 }

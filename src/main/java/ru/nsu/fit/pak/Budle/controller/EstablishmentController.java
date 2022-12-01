@@ -20,7 +20,7 @@ public class EstablishmentController {
 
 
     @GetMapping("/establishments")
-    public List<EstablishmentDto> getEstablishments(@RequestParam String category) {
+    public List<EstablishmentDto> getEstablishments(@RequestParam(required = false) String category) {
         if (category != null){
             return establishmentService.getEstablishmentsByCategory(category);
         }
