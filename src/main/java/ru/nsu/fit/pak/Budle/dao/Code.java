@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -20,5 +21,6 @@ public class Code {
     private Long id;
     private String phoneNumber;
     private String code;
+    @CreationTimestamp
     private LocalDateTime createdAt;
 }
