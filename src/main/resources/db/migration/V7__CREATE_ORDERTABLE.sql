@@ -1,11 +1,11 @@
-drop table if exists orders;
+drop table if exists orders cascade;
 
 create table orders(
-    order_id bigserial not null,
+    id bigserial not null,
     user_id bigserial not null,
-    table_id bigserial not null,
-    primary key (order_id),
+    spot_id bigserial not null,
+    primary key (id),
     foreign key (user_id) references users(id),
-    foreign key (table_id) references spots(id)
+    foreign key (spot_id) references spots(id)
 
 )

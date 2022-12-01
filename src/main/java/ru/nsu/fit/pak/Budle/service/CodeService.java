@@ -5,5 +5,5 @@ import java.io.IOException;
 public interface CodeService {
     public boolean checkCode(String phoneNumber, String code);
 
-    public void generateCode(String phoneNumber) throws IOException;
+    public boolean generateCode(String phoneNumber) throws IOException;
 }

@@ -1,19 +1,24 @@
 package ru.nsu.fit.pak.Budle.dao;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import lombok.Getter;
+import lombok.Setter;
 
+import javax.persistence.*;
+
+
+@Entity
+@Getter
+@Setter
+@Table(name = "orders")
 public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderId;
+    private Long id;
 
     @OneToOne
-    User user;
+    private User user;
 
     @OneToOne
-    Spot spot;
+    private Spot spot;
 }

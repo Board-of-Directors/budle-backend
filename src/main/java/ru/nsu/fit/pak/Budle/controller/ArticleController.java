@@ -22,7 +22,7 @@ public class ArticleController implements ResponseBodyAdvice<Object> {
     @ExceptionHandler({UserAlreadyExistsException.class, IncorrectDataException.class})
     public <T extends BaseException> ResponseEntity<BaseResponse<Object>> handleException(T e) {
         BaseResponse<Object> response = new BaseResponse<>(e.getMessage(), e.getType());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override

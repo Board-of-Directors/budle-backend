@@ -14,8 +14,7 @@ public class UserMapper {
     public UserDto modelToDto(User user) {
         UserDto dto = new UserDto();
         dto.setId(user.getId());
-        dto.setFirstName(user.getFirstName());
-        dto.setLastName(user.getLastName());
+        dto.setName(user.getName());
         dto.setPhoneNumber(user.getPhoneNumber());
         dto.setPassword(user.getPass());
         return dto;
@@ -23,8 +22,7 @@ public class UserMapper {
 
     public User dtoToUser(UserDto userDto) {
         User user = new User();
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
+        user.setName(userDto.getName());
         user.setPhoneNumber(userDto.getPhoneNumber());
         user.setPass(userDto.getPassword());
         return user;

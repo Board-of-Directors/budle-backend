@@ -1,17 +1,16 @@
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS users cascade;
 
 CREATE TABLE users
 (
     id           bigserial,
-    first_name   varchar(30) not null,
-    last_name    varchar(30),
+    "name"   varchar(30) not null,
     phone_number varchar(30) not null unique,
     pass         varchar     not null,
     primary key (id)
 
 );
 
-DROP TABLE IF EXISTS workers;
+DROP TABLE IF EXISTS workers cascade;
 create table workers
 (
     id          bigserial,
@@ -22,17 +21,18 @@ create table workers
     primary key (id)
 );
 
-DROP TABLE IF EXISTS establishments;
+DROP TABLE IF EXISTS establishments cascade;
 create table establishments
 (
 
-    id          bigserial,
-    "name"      varchar(100) NOT NULL,
-    description varchar,
-    address     varchar      not null,
-    has_map     boolean default false,
+    id               bigserial,
+    "name"           varchar(100) NOT NULL,
+    description      varchar,
+    address          varchar      not null,
+    has_map          boolean default false,
     has_card_payment boolean default false,
-    owner_id    bigserial    not null,
+    owner_id         bigserial    not null,
+    category         varchar(10)  not null,
     foreign key (owner_id) references users (id),
     primary key (id)
 );

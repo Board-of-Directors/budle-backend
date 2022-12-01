@@ -1,4 +1,4 @@
-DROP TABLE if exists worker_establishments;
+DROP TABLE if exists worker_establishments cascade;
 create table worker_establishments
 (
     worker_id        bigserial not null,

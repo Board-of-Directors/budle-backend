@@ -15,8 +15,8 @@ public class CodeController {
     CodeService codeService;
 
     @GetMapping(value = "/getCode", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void getCode(@RequestParam String phoneNumber) throws IOException {
-        codeService.generateCode(phoneNumber);
+    public Boolean getCode(@RequestParam String phoneNumber) throws IOException {
+        return codeService.generateCode(phoneNumber);
     }
 
     @PostMapping(value = "/checkCode", consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)

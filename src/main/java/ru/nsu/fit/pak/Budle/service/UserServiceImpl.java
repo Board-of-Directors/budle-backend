@@ -22,14 +22,14 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Override
-    public UserDto registerUser(UserDto userDto) {
+    public Boolean registerUser(UserDto userDto) {
 
         if (!userRepository.findByPhoneNumber(userDto.getPhoneNumber()).isEmpty()) {
             throw new UserAlreadyExistsException("This phone number already exists in our system.");
         } else {
             User user = userMapper.dtoToUser(userDto);
             userRepository.save(user);
-            return userMapper.modelToDto(user);
+            return true;
         }
     }
 
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto loginUser(UserDto userDto) {
+    public Boolean loginUser(UserDto userDto) {
         User user;
         try {
             user = userRepository.findByPhoneNumber(userDto.getPhoneNumber()).get(0);
@@ -47,14 +47,14 @@ public class UserServiceImpl implements UserService {
             throw new IncorrectDataException("User with such phone number does not exist");
         }
         if (Objects.equals(user.getPass(), userDto.getPassword())) {
-            return userMapper.modelToDto(user);
+            return true;
         } else {
             throw new IncorrectDataException("Number or password were incorrect");
         }
     }
 
     @Override
-    public Boolean existsPhoneNumber(String phoneNumber){
+    public Boolean existsPhoneNumber(String phoneNumber) {
         return !userRepository.findByPhoneNumber(phoneNumber).isEmpty();
     }
 }
