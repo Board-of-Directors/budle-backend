@@ -1,4 +1,4 @@
-drop table if exists orders;
+drop table if exists orders cascade;
 
 create table orders(
     id bigserial not null,

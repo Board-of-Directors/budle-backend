@@ -1,4 +1,4 @@
-drop table if exists spots;
+drop table if exists spots cascade;
 
 create table spots(
     id bigserial not null,

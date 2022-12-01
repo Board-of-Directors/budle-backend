@@ -23,4 +23,6 @@ public class EstablishmentDto {
     private boolean hasCardPayment;
 
     private boolean hasMap;
+
+    private String category;
 }

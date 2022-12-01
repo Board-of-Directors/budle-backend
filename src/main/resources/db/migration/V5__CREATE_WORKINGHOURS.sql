@@ -1,4 +1,4 @@
-drop table if exists establishment_working_hours;
+drop table if exists establishment_working_hours cascade;
 
 create table establishment_working_hours
 (

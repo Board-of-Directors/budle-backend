@@ -26,6 +26,7 @@ public class EstablishmentMapper {
         dto.setHasMap(establishment.getHasMap());
         dto.setHasCardPayment(establishment.getHasCardPayment());
         dto.setOwner(userMapper.modelToDto(establishment.getOwner()));
+        dto.setCategory(establishment.getCategory());
         return dto;
     }
 

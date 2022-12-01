@@ -1,4 +1,4 @@
-drop table if exists user_codes;
+drop table if exists user_codes cascade;
 
 create table user_codes(
     id bigserial,

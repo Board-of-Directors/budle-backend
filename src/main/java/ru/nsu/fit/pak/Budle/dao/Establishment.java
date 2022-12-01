@@ -25,6 +25,7 @@ public class Establishment {
     private String address;
     private Boolean hasMap;
     private Boolean hasCardPayment;
+    private String category;
     @OneToOne
     private User owner;
     @ManyToMany(fetch = FetchType.EAGER)
