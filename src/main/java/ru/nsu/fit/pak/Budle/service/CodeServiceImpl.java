@@ -2,6 +2,7 @@ package ru.nsu.fit.pak.Budle.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.nsu.fit.pak.Budle.Exceptions.IncorrectDataException;
 import ru.nsu.fit.pak.Budle.Exceptions.UserAlreadyExistsException;
 import ru.nsu.fit.pak.Budle.dao.Code;
 import ru.nsu.fit.pak.Budle.repository.CodeRepository;
@@ -31,10 +32,14 @@ public class CodeServiceImpl implements CodeService {
         } else {
             RequestSender sender = new RequestSender();
             Map<String, Object> map = sender.sendUCaller(phoneNumber);
-            Code code = new Code();
-            code.setCode((String) map.get("code"));
-            code.setPhoneNumber(phoneNumber);
-            codeRepository.save(code);
+            if (map.get("status").equals(false)) {
+                throw new IncorrectDataException((String) map.get("error"));
+            } else {
+                Code code = new Code();
+                code.setCode((String) map.get("code"));
+                code.setPhoneNumber(phoneNumber);
+                codeRepository.save(code);
+            }
         }
     }
 
