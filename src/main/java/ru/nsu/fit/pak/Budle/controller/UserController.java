@@ -34,23 +34,6 @@ public class UserController {
         return userService.registerUser(userDto);
     }
 
-    @PostMapping(value = "/getcode", consumes = {"application/json"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Object> getCode(@RequestBody Map<String, String> obj) throws IOException {
-        if (userService.existsPhoneNumber(obj.get("phoneNumber"))) {
-            throw new UserAlreadyExistsException("User with such number already exists");
-        } else {
-            RequestSender sender = new RequestSender();
-            return sender.sendUCaller(obj.get("phoneNumber"));
-        }
-
-    }
-
-    @PostMapping(value = "/checkcode", consumes = {"application/json"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Boolean checkCode(@RequestBody Map<String, String> obj) throws IOException {
-        String phoneNumber = obj.get("phoneNumber");
-        return null;
-    }
-
     @PostMapping(value = "/login", consumes = {"application/json"})
     public UserDto login(@RequestBody UserDto userDto) {
         return userService.loginUser(userDto);
