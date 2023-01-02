@@ -22,7 +22,7 @@ public class User {
     @Column(unique = true)
     private String phoneNumber;
     @Size(min = 6)
-    private String pass;
+    private String password;
 
 
 }

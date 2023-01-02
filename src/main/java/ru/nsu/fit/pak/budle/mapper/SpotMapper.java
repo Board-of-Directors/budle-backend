@@ -1,31 +1,23 @@
 package ru.nsu.fit.pak.budle.mapper;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.pak.budle.dao.Spot;
 import ru.nsu.fit.pak.budle.dto.SpotDto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class SpotMapper {
-    @Autowired
-    private EstablishmentMapper establishmentMapper;
-    public SpotDto modelToDto(Spot spot){
-        SpotDto spotDto = new SpotDto();
-        spotDto.setTags(spot.getTags());
-        spotDto.setId(spot.getId());
-        spotDto.setStatus(spot.getStatus());
-        spotDto.setEstablishment(establishmentMapper.modelToDto(spot.getEstablishment()));
-        return spotDto;
-    }
+    private final ModelMapper modelMapper;
 
-    public List<SpotDto> ListModelToListDto(List<Spot> spots){
-        List<SpotDto> spotDto = new ArrayList<>();
-        for (Spot spot: spots){
-            spotDto.add(modelToDto(spot));
-        }
-        return spotDto;
+
+    public List<SpotDto> ListModelToListDto(List<Spot> spots) {
+        return spots
+                .stream()
+                .map(spot -> modelMapper.map(spot, SpotDto.class))
+                .toList();
     }
 }

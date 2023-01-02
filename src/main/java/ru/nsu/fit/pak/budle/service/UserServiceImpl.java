@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         try {
             User user = userRepository.findByPhoneNumber(userDto.getPhoneNumber()).orElseThrow();
 
-            if (user.getPass().equals(userDto.getPassword())) {
+            if (user.getPassword().equals(userDto.getPassword())) {
                 return true;
             } else {
                 throw new IncorrectDataException("Номер или пароль введены неправильно.");

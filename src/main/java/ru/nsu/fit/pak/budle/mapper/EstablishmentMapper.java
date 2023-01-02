@@ -1,38 +1,27 @@
 package ru.nsu.fit.pak.budle.mapper;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.pak.budle.dao.Establishment;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 @Component
+@RequiredArgsConstructor
 public class EstablishmentMapper {
-
-    @Autowired
-    private UserMapper userMapper;
+    private final ModelMapper modelMapper;
 
     public EstablishmentDto modelToDto(Establishment establishment) {
-        EstablishmentDto dto = new EstablishmentDto();
-        dto.setId(establishment.getId());
-        dto.setName(establishment.getName());
-        dto.setDescription(establishment.getDescription());
-        dto.setAddress(establishment.getAddress());
-        dto.setHasMap(establishment.getHasMap());
-        dto.setHasCardPayment(establishment.getHasCardPayment());
-        dto.setOwner(userMapper.modelToDto(establishment.getOwner()));
-        dto.setCategory(establishment.getCategory());
-        return dto;
+        return modelMapper.map(establishment, EstablishmentDto.class);
     }
 
-    public List<EstablishmentDto> modelListToDtoList(Iterable<Establishment> establishmentList) {
-        List<EstablishmentDto> dtoList = new ArrayList<>();
-        for (Establishment establishment : establishmentList) {
-            dtoList.add(modelToDto(establishment));
-        }
-        return dtoList;
+    public List<EstablishmentDto> modelListToDtoList(List<Establishment> establishmentList) {
+        return establishmentList
+                .stream()
+                .map(establishment -> modelMapper.map(establishment, EstablishmentDto.class))
+                .toList();
     }
 }

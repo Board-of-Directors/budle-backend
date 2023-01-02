@@ -13,15 +13,15 @@ import java.util.List;
 public class UserMapper {
     private final ModelMapper modelMapper;
 
-    public UserDto modelToDto(User user) {
-        return modelMapper.map(user, UserDto.class);
-    }
 
     public User dtoToModel(UserDto userDto) {
         return modelMapper.map(userDto, User.class);
     }
 
     public List<UserDto> modelListToDtoList(List<User> userList) {
-        return userList.stream().map(user -> modelMapper.map(user, UserDto.class)).toList();
+        return userList
+                .stream()
+                .map(user -> modelMapper.map(user, UserDto.class))
+                .toList();
     }
 }

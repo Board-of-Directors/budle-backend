@@ -1,24 +1,18 @@
 package ru.nsu.fit.pak.budle.mapper;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.pak.budle.dao.Worker;
 import ru.nsu.fit.pak.budle.dto.WorkerDto;
 
 @Component
+@RequiredArgsConstructor
 public class WorkerMapper {
-    @Autowired
-    private EstablishmentMapper establishmentMapper;
-    @Autowired
-    private UserMapper userMapper;
+
+    private final ModelMapper modelMapper;
 
     public WorkerDto modelToDto(Worker worker) {
-        WorkerDto dto = new WorkerDto();
-        dto.setId(worker.getId());
-        dto.setOnWork(worker.getOnWork());
-        dto.setWorkerType(worker.getWorkerType());
-        dto.setEstablishments(establishmentMapper.modelListToDtoList(worker.getEstablishments()));
-        dto.setUser(userMapper.modelToDto(worker.getUser()));
-        return dto;
+        return modelMapper.map(worker, WorkerDto.class);
     }
 }
