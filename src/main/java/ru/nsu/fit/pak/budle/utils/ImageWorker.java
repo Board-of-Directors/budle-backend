@@ -1,34 +1,39 @@
 package ru.nsu.fit.pak.budle.utils;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.pak.budle.dao.Establishment;
 
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.File;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
+import java.time.ZoneOffset;
+import java.util.Base64;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Component
 public class ImageWorker {
     public String saveImage(Establishment establishment) {
-        String filepath = "./" + LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE);
-        try (FileWriter writer = new FileWriter(filepath)) {
-            writer.write(establishment.getImage());
+        String filepath = "./" + LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + ".jpg";
+        try {
+            File file = new File(filepath);
+            byte[] imageBytes = Base64.getDecoder().decode(establishment.getImage());
+            FileUtils.writeByteArrayToFile(file, imageBytes);
             return filepath;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new IllegalStateException("Cannot save image");
+            Logger.getAnonymousLogger().log(Level.WARNING, e.getMessage());
+            return null;
 
         }
     }
 
     public String loadImage(Establishment establishment) {
-        try (FileReader reader = new FileReader(establishment.getImage())) {
-            Scanner scan = new Scanner(reader);
-            return String.valueOf(scan.next());
+        try {
+            File inputFile = new File(establishment.getImage());
+            byte[] fileContent = FileUtils.readFileToByteArray(inputFile);
+            return Base64.getEncoder().encodeToString(fileContent);
         } catch (Exception e) {
-            System.out.println("Cannot load image");
+            Logger.getAnonymousLogger().log(Level.WARNING, e.getMessage());
             return null;
         }
     }
