@@ -27,4 +27,6 @@ public class EstablishmentDto {
     private boolean hasMap;
     @NotNull
     private String category;
+    @NotNull
+    private String image;
 }

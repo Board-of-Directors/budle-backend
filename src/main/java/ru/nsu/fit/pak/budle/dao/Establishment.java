@@ -23,6 +23,8 @@ public class Establishment {
     private Boolean hasMap;
     private Boolean hasCardPayment;
     private String category;
+
+    private String image;
     @OneToOne
     private User owner;
     @ManyToMany(fetch = FetchType.EAGER)

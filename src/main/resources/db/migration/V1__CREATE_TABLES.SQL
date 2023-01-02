@@ -32,6 +32,7 @@ create table establishments
     has_map          boolean default false,
     has_card_payment boolean default false,
     owner_id         bigserial    not null,
+    image            varchar,
     category         varchar(10)  not null,
     foreign key (owner_id) references users (id),
     primary key (id),
