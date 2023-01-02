@@ -4,5 +4,5 @@ import org.springframework.data.repository.CrudRepository;
 import ru.nsu.fit.pak.Budle.dao.Code;
 
 public interface CodeRepository extends CrudRepository<Code, Long> {
-    public boolean existsByPhoneNumberAndCode(String phoneNumber, String code);
+    boolean existsByPhoneNumberAndCode(String phoneNumber, String code);
 }
