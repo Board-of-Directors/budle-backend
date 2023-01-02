@@ -1,6 +1,7 @@
 package ru.nsu.fit.pak.Budle.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.nsu.fit.pak.Budle.dto.CodeDto;
@@ -9,10 +10,11 @@ import ru.nsu.fit.pak.Budle.service.CodeService;
 import java.io.IOException;
 
 @RestController
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class CodeController {
 
-    @Autowired
-    CodeService codeService;
+
+    private final CodeService codeService;
 
     @GetMapping(value = "/getCode", produces = MediaType.APPLICATION_JSON_VALUE)
     public Boolean getCode(@RequestParam String phoneNumber) throws IOException {

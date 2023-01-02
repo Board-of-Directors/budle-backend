@@ -2,7 +2,6 @@ package ru.nsu.fit.pak.Budle.controller;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,8 +14,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class EstablishmentController {
-    @Autowired
-    private EstablishmentServiceImpl establishmentService;
+    private final EstablishmentServiceImpl establishmentService;
 
 
     @GetMapping("/establishments")
