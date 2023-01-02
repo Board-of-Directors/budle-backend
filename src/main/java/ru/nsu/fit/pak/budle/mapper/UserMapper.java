@@ -1,36 +1,27 @@
 package ru.nsu.fit.pak.budle.mapper;
 
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dto.UserDto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class UserMapper {
+    private final ModelMapper modelMapper;
+
     public UserDto modelToDto(User user) {
-        UserDto dto = new UserDto();
-        dto.setId(user.getId());
-        dto.setName(user.getName());
-        dto.setPhoneNumber(user.getPhoneNumber());
-        dto.setPassword(user.getPass());
-        return dto;
+        return modelMapper.map(user, UserDto.class);
     }
 
-    public User dtoToUser(UserDto userDto) {
-        User user = new User();
-        user.setName(userDto.getName());
-        user.setPhoneNumber(userDto.getPhoneNumber());
-        user.setPass(userDto.getPassword());
-        return user;
+    public User dtoToModel(UserDto userDto) {
+        return modelMapper.map(userDto, User.class);
     }
 
-    public List<UserDto> modelListToDtoList(Iterable<User> userList) {
-        List<UserDto> dtoList = new ArrayList<>();
-        for (User user : userList) {
-            dtoList.add(modelToDto(user));
-        }
-        return dtoList;
+    public List<UserDto> modelListToDtoList(List<User> userList) {
+        return userList.stream().map(user -> modelMapper.map(user, UserDto.class)).toList();
     }
 }

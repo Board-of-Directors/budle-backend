@@ -1,7 +1,6 @@
 package ru.nsu.fit.pak.budle.service;
 
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dto.UserDto;
@@ -21,15 +20,13 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
 
-    private final ModelMapper modelMapper;
-
     @Override
     public Boolean registerUser(UserDto userDto) {
 
         if (!userRepository.existsByPhoneNumber(userDto.getPhoneNumber())) {
             throw new UserAlreadyExistsException("ѕользователь с таким номером уже существует.");
         } else {
-            User user = modelMapper.map(userDto, User.class);
+            User user = userMapper.dtoToModel(userDto);
             userRepository.save(user);
             return true;
         }
