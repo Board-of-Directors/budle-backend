@@ -18,13 +18,11 @@ public class EstablishmentController {
 
 
     @GetMapping("/establishments")
-    public List<EstablishmentDto> getEstablishments(@RequestParam(required = false) String category) {
-        if (category != null){
-            return establishmentService.getEstablishmentsByCategory(category);
-        }
-        return establishmentService.getEstablishments();
+    public List<EstablishmentDto> getEstablishments(@RequestParam(required = false) String category,
+                                                    @RequestParam(required = false) Boolean hasMap,
+                                                    @RequestParam(required = false) Boolean hasCardPayment) {
+        return establishmentService.getEstablishmentByParams(category, hasMap, hasCardPayment);
     }
-
 
 
 }

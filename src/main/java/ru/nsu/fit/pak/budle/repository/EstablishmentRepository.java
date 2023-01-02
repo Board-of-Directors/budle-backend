@@ -12,4 +12,5 @@ public interface EstablishmentRepository extends JpaRepository<Establishment, Lo
     Establishment getEstablishmentById(Long id);
 
     List<Establishment> findByCategory(String category);
+
 }

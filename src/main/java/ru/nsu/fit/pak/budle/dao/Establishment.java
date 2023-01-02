@@ -34,5 +34,9 @@ public class Establishment {
             inverseJoinColumns = @JoinColumn(name = "worker_id"))
     private List<Worker> workers;
 
-
+    public Establishment(String category, Boolean hasMap, Boolean hasCardPayment) {
+        this.category = category;
+        this.hasMap = hasMap;
+        this.hasCardPayment = hasCardPayment;
+    }
 }
