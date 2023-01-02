@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.pak.budle.dao.Establishment;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
+import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
 import java.util.List;
 
@@ -13,15 +14,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EstablishmentMapper {
     private final ModelMapper modelMapper;
+    private final ImageWorker imageWorker;
 
     public EstablishmentDto modelToDto(Establishment establishment) {
-        return modelMapper.map(establishment, EstablishmentDto.class);
+        EstablishmentDto establishmentDto = modelMapper.map(establishment, EstablishmentDto.class);
+        establishmentDto.setImage(imageWorker.loadImage(establishment));
+        return establishmentDto;
     }
 
     public List<EstablishmentDto> modelListToDtoList(List<Establishment> establishmentList) {
         return establishmentList
                 .stream()
-                .map(establishment -> modelMapper.map(establishment, EstablishmentDto.class))
+                .map(this::modelToDto)
                 .toList();
     }
 

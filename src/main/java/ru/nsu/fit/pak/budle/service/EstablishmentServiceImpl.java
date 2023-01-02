@@ -8,6 +8,7 @@ import ru.nsu.fit.pak.budle.dao.Establishment;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
+import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
 import java.util.List;
 
@@ -44,6 +45,8 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     public void createEstablishment(EstablishmentDto dto) {
         Establishment establishment = establishmentMapper.dtoToModel(dto);
+        ImageWorker imageWorker = new ImageWorker();
+        establishment.setImage(imageWorker.saveImage(establishment));
         establishmentRepository.save(establishment);
     }
 }
