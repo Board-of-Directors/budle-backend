@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     public Boolean registerUser(UserDto userDto) {
 
         if (!userRepository.findByPhoneNumber(userDto.getPhoneNumber()).isEmpty()) {
-            throw new UserAlreadyExistsException("This phone number already exists in our system.");
+            throw new UserAlreadyExistsException("Пользователь с таким номером уже существует.");
         } else {
             User user = userMapper.dtoToUser(userDto);
             userRepository.save(user);
@@ -43,12 +43,12 @@ public class UserServiceImpl implements UserService {
         try {
             user = userRepository.findByPhoneNumber(userDto.getPhoneNumber()).get(0);
         } catch (Exception e) {
-            throw new IncorrectDataException("User with such phone number does not exist");
+            throw new IncorrectDataException("Пользователя с такими данными не существует.");
         }
         if (Objects.equals(user.getPass(), userDto.getPassword())) {
             return true;
         } else {
-            throw new IncorrectDataException("Number or password were incorrect");
+            throw new IncorrectDataException("Номер или пароль введены неправильно.");
         }
     }
 

@@ -23,7 +23,7 @@ public class CodeServiceImpl implements CodeService {
     public boolean checkCode(String phoneNumber, String code) {
         boolean res = codeRepository.existsByPhoneNumberAndCode(phoneNumber, code);
         if (!res) {
-            throw new IncorrectDataException("Код введен неверно");
+            throw new IncorrectDataException("Код введен неверно.");
         } else {
             return true;
         }
@@ -32,7 +32,7 @@ public class CodeServiceImpl implements CodeService {
     @Override
     public boolean generateCode(String phoneNumber) throws IOException {
         if (userRepository.existsByPhoneNumber(phoneNumber)) {
-            throw new UserAlreadyExistsException("User with such number already exists");
+            throw new UserAlreadyExistsException("Пользователь с таким номером уже существует.");
         } else {
             RequestSender sender = new RequestSender();
             Map<String, Object> map = sender.sendUCaller(phoneNumber);
