@@ -1,6 +1,6 @@
 package ru.nsu.fit.pak.Budle.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.Budle.Exceptions.IncorrectDataException;
 import ru.nsu.fit.pak.Budle.Exceptions.UserAlreadyExistsException;
@@ -13,12 +13,11 @@ import java.io.IOException;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class CodeServiceImpl implements CodeService {
 
-    @Autowired
-    CodeRepository codeRepository;
-    @Autowired
-    UserRepository userRepository;
+    private final CodeRepository codeRepository;
+    private final UserRepository userRepository;
 
     @Override
     public boolean checkCode(String phoneNumber, String code) {

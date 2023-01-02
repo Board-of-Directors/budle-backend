@@ -1,6 +1,6 @@
 package ru.nsu.fit.pak.Budle.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.Budle.dao.Establishment;
 import ru.nsu.fit.pak.Budle.dto.SpotDto;
@@ -10,12 +10,12 @@ import ru.nsu.fit.pak.Budle.repository.SpotRepository;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class SpotServiceImpl implements SpotService {
-    @Autowired
-    private SpotRepository spotRepository;
+    private final SpotRepository spotRepository;
 
-    @Autowired
-    private SpotMapper spotMapper;
+    private final SpotMapper spotMapper;
+
     @Override
     public List<SpotDto> getSpotsByEstablishment(Establishment establishment) {
         return spotMapper.ListModelToListDto(spotRepository.findByEstablishment(establishment));

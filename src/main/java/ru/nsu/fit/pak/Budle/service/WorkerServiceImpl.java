@@ -1,6 +1,6 @@
 package ru.nsu.fit.pak.Budle.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.Budle.dto.WorkerDto;
 import ru.nsu.fit.pak.Budle.mapper.WorkerMapper;
@@ -8,12 +8,11 @@ import ru.nsu.fit.pak.Budle.repository.WorkerRepository;
 
 
 @Service
+@RequiredArgsConstructor
 public class WorkerServiceImpl implements WorkerService {
-    @Autowired
-    private WorkerRepository workerRepository;
+    private final WorkerRepository workerRepository;
 
-    @Autowired
-    private WorkerMapper workerMapper;
+    private final WorkerMapper workerMapper;
 
     @Override
     public WorkerDto getWorkerById(Long id) {

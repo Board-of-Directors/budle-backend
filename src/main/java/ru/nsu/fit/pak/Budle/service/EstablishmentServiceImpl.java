@@ -1,6 +1,6 @@
 package ru.nsu.fit.pak.Budle.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.Budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.Budle.mapper.EstablishmentMapper;
@@ -9,20 +9,20 @@ import ru.nsu.fit.pak.Budle.repository.EstablishmentRepository;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class EstablishmentServiceImpl implements EstablishmentService {
-    @Autowired
-    private EstablishmentRepository establishmentRepository;
+    private final EstablishmentRepository establishmentRepository;
 
-    @Autowired
-    private EstablishmentMapper establishmentMapper;
+    private final EstablishmentMapper establishmentMapper;
 
     @Override
     public List<EstablishmentDto> getEstablishments() {
         return establishmentMapper.modelListToDtoList(establishmentRepository.findAll());
     }
+
     @Override
-    public EstablishmentDto getEstablishmentById(Long id){
-       return establishmentMapper.modelToDto(establishmentRepository.getEstablishmentById(id));
+    public EstablishmentDto getEstablishmentById(Long id) {
+        return establishmentMapper.modelToDto(establishmentRepository.getEstablishmentById(id));
 
     }
 

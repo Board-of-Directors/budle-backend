@@ -1,6 +1,6 @@
 package ru.nsu.fit.pak.Budle.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.Budle.Exceptions.IncorrectDataException;
 import ru.nsu.fit.pak.Budle.Exceptions.UserAlreadyExistsException;
@@ -13,13 +13,12 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
     @Override
     public Boolean registerUser(UserDto userDto) {
