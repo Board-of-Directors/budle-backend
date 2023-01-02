@@ -1,11 +1,9 @@
 package ru.nsu.fit.pak.Budle.dto;
 
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class SpotDto {
     private Long id;
     private String tags;

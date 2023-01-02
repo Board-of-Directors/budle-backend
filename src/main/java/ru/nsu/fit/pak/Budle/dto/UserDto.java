@@ -1,13 +1,11 @@
 package ru.nsu.fit.pak.Budle.dto;
 
+import lombok.Data;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
-import lombok.Setter;
-import lombok.Getter;
-
-@Getter
-@Setter
+@Data
 public class UserDto {
     @Null
     private Long id;
