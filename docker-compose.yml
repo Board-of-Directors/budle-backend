@@ -1,0 +1,22 @@
+version: '3.1'
+services:
+  app:
+    container_name: budle
+    image: fagorym/budle:latest
+    build: ./
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgresqldb
+    environment:
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/budledb
+  postgresqldb:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=budledb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres

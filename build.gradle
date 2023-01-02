@@ -9,6 +9,7 @@ group = 'ru.nsu.fit.pak'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
+
 repositories {
     mavenCentral()
 }
@@ -29,11 +30,6 @@ dependencies {
     implementation 'org.apache.commons:commons-io:1.3.2'
 }
 
-task customFatJar(type: Jar) {
-    manifest {
-        attributes 'Main-Class': 'ru.nsu.fit.pak.Budle.BudleApplication'
-    }
-    baseName = 'DemoFat'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
+springBoot {
+    mainClass = "ru.nsu.fit.pak.budle.BudleApplication"
 }
