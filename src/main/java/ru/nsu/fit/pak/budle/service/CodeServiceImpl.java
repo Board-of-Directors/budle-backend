@@ -19,13 +19,14 @@ public class CodeServiceImpl implements CodeService {
     private final CodeRepository codeRepository;
     private final UserRepository userRepository;
 
+    private final RequestSender requestSender;
+
     @Override
     public boolean checkCode(String phoneNumber, String code) {
-        boolean res = codeRepository.existsByPhoneNumberAndCode(phoneNumber, code);
-        if (!res) {
-            throw new IncorrectDataException("Код введен неверно.");
-        } else {
+        if (codeRepository.existsByPhoneNumberAndCode(phoneNumber, code)) {
             return true;
+        } else {
+            throw new IncorrectDataException("Код введен неверно.");
         }
     }
 
@@ -34,8 +35,7 @@ public class CodeServiceImpl implements CodeService {
         if (userRepository.existsByPhoneNumber(phoneNumber)) {
             throw new UserAlreadyExistsException("Пользователь с таким номером уже существует.");
         } else {
-            RequestSender sender = new RequestSender();
-            Map<String, Object> map = sender.sendUCaller(phoneNumber);
+            Map<String, Object> map = requestSender.sendUCaller(phoneNumber);
             if (map.get("status").equals(false)) {
                 throw new IncorrectDataException((String) map.get("error"));
             } else {

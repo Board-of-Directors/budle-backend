@@ -2,6 +2,7 @@ package ru.nsu.fit.pak.budle.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,19 +11,19 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
+
+@Component
 public class RequestSender {
     public Map<String, Object> sendUCaller(String phoneNumber) throws IOException {
         if (phoneNumber.charAt(0) != '7') {
             phoneNumber = phoneNumber.substring(1);
         }
-        StringBuilder url = new StringBuilder();
-        System.out.println(phoneNumber);
-        url.append("https://api.ucaller.ru/v1.0/initCall?");
-        url.append("phone=").append(phoneNumber);
-        url.append("&voice=").append("true");
-        url.append("&key=1vvjxSFMby9xJx783gk31AT7UDPEHBdI");
-        url.append("&service_id=317622");
-        URL obj = new URL(url.toString());
+        String url = "https://api.ucaller.ru/v1.0/initCall?" +
+                "phone=" + phoneNumber +
+                "&voice=" + "true" +
+                "&key=1vvjxSFMby9xJx783gk31AT7UDPEHBdI" +
+                "&service_id=317622";
+        URL obj = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
         connection.setRequestMethod("GET");
         BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
