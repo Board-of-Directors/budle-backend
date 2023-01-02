@@ -2,12 +2,11 @@ package ru.nsu.fit.pak.budle.controller;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.budle.service.EstablishmentServiceImpl;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -18,10 +17,13 @@ public class EstablishmentController {
 
 
     @GetMapping("/establishments")
-    public List<EstablishmentDto> getEstablishments(@RequestParam(required = false) String category,
-                                                    @RequestParam(required = false) Boolean hasMap,
-                                                    @RequestParam(required = false) Boolean hasCardPayment) {
+    public List<EstablishmentDto> getEstablishments(@RequestParam(required = false) String category, @RequestParam(required = false) Boolean hasMap, @RequestParam(required = false) Boolean hasCardPayment) {
         return establishmentService.getEstablishmentByParams(category, hasMap, hasCardPayment);
+    }
+
+    @PostMapping("/establishment")
+    public void createEstablishment(@Valid @RequestBody EstablishmentDto establishmentDto) {
+        establishmentService.createEstablishment(establishmentDto);
     }
 
 

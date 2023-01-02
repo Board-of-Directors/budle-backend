@@ -41,4 +41,9 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         List<Establishment> results = establishmentRepository.findAll(exampleQuery);
         return establishmentMapper.modelListToDtoList(results);
     }
+
+    public void createEstablishment(EstablishmentDto dto) {
+        Establishment establishment = establishmentMapper.dtoToModel(dto);
+        establishmentRepository.save(establishment);
+    }
 }

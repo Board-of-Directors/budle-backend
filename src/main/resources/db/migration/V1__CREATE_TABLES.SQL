@@ -34,6 +34,7 @@ create table establishments
     owner_id         bigserial    not null,
     category         varchar(10)  not null,
     foreign key (owner_id) references users (id),
-    primary key (id)
+    primary key (id),
+    unique ("name", address)
 );
 

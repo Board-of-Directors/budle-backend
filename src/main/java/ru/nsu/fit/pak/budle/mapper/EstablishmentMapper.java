@@ -24,4 +24,8 @@ public class EstablishmentMapper {
                 .map(establishment -> modelMapper.map(establishment, EstablishmentDto.class))
                 .toList();
     }
+
+    public Establishment dtoToModel(EstablishmentDto dto) {
+        return modelMapper.map(dto, Establishment.class);
+    }
 }
