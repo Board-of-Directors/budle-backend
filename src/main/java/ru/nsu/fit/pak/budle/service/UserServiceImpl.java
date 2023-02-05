@@ -23,8 +23,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean registerUser(UserDto userDto) {
 
-        if (!userRepository.existsByPhoneNumber(userDto.getPhoneNumber())) {
-            throw new UserAlreadyExistsException("Пользователь с таким номером уже существует.");
+        if (userRepository.existsByPhoneNumber(userDto.getPhoneNumber())) {
+            throw new UserAlreadyExistsException("РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃ С‚Р°РєРёРј РЅРѕРјРµСЂРѕРј СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚.");
         } else {
             User user = userMapper.dtoToModel(userDto);
             userRepository.save(user);
@@ -45,10 +45,10 @@ public class UserServiceImpl implements UserService {
             if (user.getPassword().equals(userDto.getPassword())) {
                 return true;
             } else {
-                throw new IncorrectDataException("Номер или пароль введены неправильно.");
+                throw new IncorrectDataException("РќРѕРјРµСЂ РёР»Рё РїР°СЂРѕР»СЊ РІРІРµРґРµРЅС‹ РЅРµРїСЂР°РІРёР»СЊРЅРѕ.");
             }
         } catch (NoSuchElementException e) {
-            throw new IncorrectDataException("Пользователя с такими данными не существует.");
+            throw new IncorrectDataException("РџРѕР»СЊР·РѕРІР°С‚РµР»СЏ СЃ С‚Р°РєРёРјРё РґР°РЅРЅС‹РјРё РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚.");
         }
     }
 
