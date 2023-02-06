@@ -28,9 +28,13 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     private final UserRepository userRepository;
 
 
-    public List<EstablishmentDto> getEstablishmentByParams(Category category, Boolean hasMap, Boolean hasCardPayment, Pageable page) {
+    public List<EstablishmentDto> getEstablishmentByParams(String category, Boolean hasMap, Boolean hasCardPayment, Pageable page) {
         ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues();
-        Example<Establishment> exampleQuery = Example.of(new Establishment(category, hasMap, hasCardPayment), matcher);
+        Category categoryEnum = null;
+        if (category != null) {
+            categoryEnum = Category.valueOf(category);
+        }
+        Example<Establishment> exampleQuery = Example.of(new Establishment(categoryEnum, hasMap, hasCardPayment), matcher);
         Page<Establishment> results = establishmentRepository.findAll(exampleQuery, page);
         return establishmentMapper.modelListToDtoList(results);
     }

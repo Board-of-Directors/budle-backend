@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dto.CategoryDto;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.EstablishmentListDto;
@@ -17,14 +16,14 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(value = "/establishment", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "establishment", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class EstablishmentController {
     private final EstablishmentServiceImpl establishmentService;
 
 
     @GetMapping
-    public EstablishmentListDto getEstablishments(@RequestParam(required = false) Category category,
+    public EstablishmentListDto getEstablishments(@RequestParam(required = false) String category,
                                                   @RequestParam(required = false) Boolean hasMap,
                                                   @RequestParam(required = false) Boolean hasCardPayment,
                                                   @RequestParam(required = false, defaultValue = "0") Integer offset,

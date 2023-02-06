@@ -8,5 +8,5 @@ create table user_codes
     code         varchar(4),
     phone_number varchar(100),
     created_at   timestamp default now(),
-    type         code_type not null
+    type varchar not null
 )

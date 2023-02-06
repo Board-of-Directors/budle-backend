@@ -10,22 +10,19 @@ CREATE TABLE users
 
 );
 
-create type worker_status as ENUM ('absent', 'on_work');
 
 DROP TABLE IF EXISTS workers cascade;
 create table workers
 (
     id          bigserial,
-    user_id     bigserial     not null,
-    worker_type varchar(1)    not null,
-    status      worker_status not null,
+    user_id     bigserial  not null,
+    worker_type varchar(1) not null,
+    status      varchar    not null,
     foreign key (user_id) references users (id),
     primary key (id)
 );
 
 DROP TABLE IF EXISTS establishments cascade;
-create type category as enum ('restaurant', 'hotel', 'bank', 'medicine', 'government',
-    'cars', 'entertainment', 'building');
 create table establishments
 (
 
@@ -37,7 +34,7 @@ create table establishments
     has_card_payment boolean default false,
     owner_id         bigserial    not null,
     image            varchar,
-    category         category     not null,
+    category         varchar      not null,
     foreign key (owner_id) references users (id),
     primary key (id),
     unique ("name", address)

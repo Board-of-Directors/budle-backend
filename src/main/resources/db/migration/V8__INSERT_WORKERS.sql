@@ -10,4 +10,4 @@ VALUES (1, 1);
 INSERT INTO worker_establishments(worker_id, establishment_id)
 VALUES (2, 2);
 INSERT INTO worker_establishments(worker_id, establishment_id)
-VALUES (3, 3);
+VALUES (3, 2);
