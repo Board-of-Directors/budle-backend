@@ -24,6 +24,8 @@ create table workers
 );
 
 DROP TABLE IF EXISTS establishments cascade;
+create type category as enum ('restaurant', 'hotel', 'bank', 'medicine', 'government',
+    'cars', 'entertainment', 'building');
 create table establishments
 (
 
@@ -35,7 +37,7 @@ create table establishments
     has_card_payment boolean default false,
     owner_id         bigserial    not null,
     image            varchar,
-    category         varchar(10)  not null,
+    category         category     not null,
     foreign key (owner_id) references users (id),
     primary key (id),
     unique ("name", address)

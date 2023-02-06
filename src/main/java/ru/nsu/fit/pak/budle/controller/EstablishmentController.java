@@ -3,6 +3,7 @@ package ru.nsu.fit.pak.budle.controller;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.budle.service.EstablishmentServiceImpl;
 
@@ -18,7 +19,7 @@ public class EstablishmentController {
 
     // TODO: PAGINATION
     @GetMapping("/establishments")
-    public List<EstablishmentDto> getEstablishments(@RequestParam(required = false) String category,
+    public List<EstablishmentDto> getEstablishments(@RequestParam(required = false) Category category,
                                                     @RequestParam(required = false) Boolean hasMap,
                                                     @RequestParam(required = false) Boolean hasCardPayment,
                                                     @RequestParam(required = false) Integer offset,
