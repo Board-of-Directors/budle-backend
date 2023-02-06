@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
+import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Establishment;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
@@ -39,7 +40,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
 
-    public List<EstablishmentDto> getEstablishmentByParams(String category, Boolean hasMap, Boolean hasCardPayment) {
+    public List<EstablishmentDto> getEstablishmentByParams(Category category, Boolean hasMap, Boolean hasCardPayment) {
         ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues();
         Example<Establishment> exampleQuery = Example.of(new Establishment(category, hasMap, hasCardPayment), matcher);
         List<Establishment> results = establishmentRepository.findAll(exampleQuery);
