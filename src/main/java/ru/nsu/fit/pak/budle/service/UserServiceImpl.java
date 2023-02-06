@@ -20,6 +20,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
 
+    // TODO: Хеширование пароля, Security
     @Override
     public Boolean registerUser(UserDto userDto) {
 
@@ -37,6 +38,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.modelListToDtoList(userRepository.findAll());
     }
 
+    //TODO: Совместить два исключения в одно
     @Override
     public Boolean loginUser(UserDto userDto) {
         try {
