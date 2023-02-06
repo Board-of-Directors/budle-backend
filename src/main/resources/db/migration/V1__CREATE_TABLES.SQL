@@ -32,6 +32,8 @@ create table establishments
     address          varchar      not null,
     has_map          boolean default false,
     has_card_payment boolean default false,
+    price            int4,
+    rating           float,
     owner_id         bigserial    not null,
     image            varchar,
     category         varchar      not null,

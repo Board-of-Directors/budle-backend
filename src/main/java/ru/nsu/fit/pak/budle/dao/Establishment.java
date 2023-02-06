@@ -16,12 +16,14 @@ import java.util.List;
 public class Establishment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
     private String name;
     private String description;
     private String address;
     private Boolean hasMap;
     private Boolean hasCardPayment;
+    private float rating;
+    private Integer price;
     @Enumerated(EnumType.STRING)
     private Category category;
 
