@@ -19,7 +19,6 @@ public class EstablishmentDto {
     @NotNull
     @Size(max = 200)
     private String address;
-    @NotNull
     private UserDto owner;
     @NotNull
     private boolean hasCardPayment;

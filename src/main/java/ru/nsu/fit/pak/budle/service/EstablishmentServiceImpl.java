@@ -8,6 +8,7 @@ import ru.nsu.fit.pak.budle.dao.Establishment;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
+import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
 import java.util.List;
@@ -18,6 +19,8 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     private final EstablishmentRepository establishmentRepository;
 
     private final EstablishmentMapper establishmentMapper;
+
+    private final UserRepository userRepository;
 
     @Override
     public List<EstablishmentDto> getEstablishments() {
@@ -43,10 +46,12 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         return establishmentMapper.modelListToDtoList(results);
     }
 
+    // TODO: Удалить пользователя из этой части кода, проверка на name+address
     public void createEstablishment(EstablishmentDto dto) {
         Establishment establishment = establishmentMapper.dtoToModel(dto);
         ImageWorker imageWorker = new ImageWorker();
         establishment.setImage(imageWorker.saveImage(establishment));
+        establishment.setOwner(userRepository.getReferenceById(1L));
         establishmentRepository.save(establishment);
     }
 }
