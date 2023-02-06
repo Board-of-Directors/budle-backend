@@ -2,6 +2,7 @@ package ru.nsu.fit.pak.budle.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.pak.budle.dao.Establishment;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
@@ -22,7 +23,7 @@ public class EstablishmentMapper {
         return establishmentDto;
     }
 
-    public List<EstablishmentDto> modelListToDtoList(List<Establishment> establishmentList) {
+    public List<EstablishmentDto> modelListToDtoList(Page<Establishment> establishmentList) {
         return establishmentList
                 .stream()
                 .map(this::modelToDto)

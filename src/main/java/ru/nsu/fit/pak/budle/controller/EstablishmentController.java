@@ -2,6 +2,7 @@ package ru.nsu.fit.pak.budle.controller;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
@@ -24,7 +25,7 @@ public class EstablishmentController {
                                                     @RequestParam(required = false) Boolean hasCardPayment,
                                                     @RequestParam(required = false) Integer offset,
                                                     @RequestParam(required = false) Integer limit) {
-        return establishmentService.getEstablishmentByParams(category, hasMap, hasCardPayment);
+        return establishmentService.getEstablishmentByParams(category, hasMap, hasCardPayment, PageRequest.of(offset, limit));
     }
 
     @PostMapping("/establishment")
