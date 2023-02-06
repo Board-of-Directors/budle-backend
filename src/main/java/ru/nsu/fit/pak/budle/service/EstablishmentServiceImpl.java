@@ -8,12 +8,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Establishment;
+import ru.nsu.fit.pak.budle.dto.CategoryDto;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -40,5 +42,9 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         establishment.setImage(imageWorker.saveImage(establishment));
         establishment.setOwner(userRepository.getReferenceById(1L));
         establishmentRepository.save(establishment);
+    }
+
+    public List<CategoryDto> getCategories() {
+        return Arrays.stream(Category.values()).map(CategoryDto::new).toList();
     }
 }
