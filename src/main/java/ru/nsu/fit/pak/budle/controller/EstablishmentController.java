@@ -16,8 +16,13 @@ public class EstablishmentController {
     private final EstablishmentServiceImpl establishmentService;
 
 
+    // TODO: PAGINATION
     @GetMapping("/establishments")
-    public List<EstablishmentDto> getEstablishments(@RequestParam(required = false) String category, @RequestParam(required = false) Boolean hasMap, @RequestParam(required = false) Boolean hasCardPayment) {
+    public List<EstablishmentDto> getEstablishments(@RequestParam(required = false) String category,
+                                                    @RequestParam(required = false) Boolean hasMap,
+                                                    @RequestParam(required = false) Boolean hasCardPayment,
+                                                    @RequestParam(required = false) Integer offset,
+                                                    @RequestParam(required = false) Integer limit) {
         return establishmentService.getEstablishmentByParams(category, hasMap, hasCardPayment);
     }
 

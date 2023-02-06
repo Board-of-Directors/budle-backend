@@ -4,9 +4,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import ru.nsu.fit.pak.budle.dao.Worker;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface WorkerRepository extends CrudRepository<Worker, Long> {
-    List<Worker> findWorkerById(Long id);
+    Optional<Worker> findWorkerById(Long id);
 }

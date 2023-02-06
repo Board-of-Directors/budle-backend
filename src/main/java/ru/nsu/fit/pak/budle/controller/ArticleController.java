@@ -14,12 +14,13 @@ import ru.nsu.fit.pak.budle.BaseResponse;
 import ru.nsu.fit.pak.budle.exceptions.BaseException;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 import ru.nsu.fit.pak.budle.exceptions.UserAlreadyExistsException;
+import ru.nsu.fit.pak.budle.exceptions.WorkerNotFoundException;
 
 import java.util.LinkedHashMap;
 
 @ControllerAdvice
 public class ArticleController implements ResponseBodyAdvice<Object> {
-    @ExceptionHandler({UserAlreadyExistsException.class, IncorrectDataException.class})
+    @ExceptionHandler({UserAlreadyExistsException.class, IncorrectDataException.class, WorkerNotFoundException.class})
     public <T extends BaseException> ResponseEntity<BaseResponse<Object>> handleException(T e) {
         BaseResponse<Object> response = new BaseResponse<>(e.getMessage(), e.getType());
         return new ResponseEntity<>(response, HttpStatus.OK);
