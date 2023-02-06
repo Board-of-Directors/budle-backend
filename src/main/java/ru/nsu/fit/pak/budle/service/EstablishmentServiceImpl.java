@@ -3,6 +3,8 @@ package ru.nsu.fit.pak.budle.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Establishment;
@@ -23,27 +25,11 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     private final UserRepository userRepository;
 
-    @Override
-    public List<EstablishmentDto> getEstablishments() {
-        return establishmentMapper.modelListToDtoList(establishmentRepository.findAll());
-    }
 
-    @Override
-    public EstablishmentDto getEstablishmentById(Long id) {
-        return establishmentMapper.modelToDto(establishmentRepository.getEstablishmentById(id));
-
-    }
-
-    @Override
-    public List<EstablishmentDto> getEstablishmentsByCategory(String category) {
-        return establishmentMapper.modelListToDtoList(establishmentRepository.findByCategory(category));
-    }
-
-
-    public List<EstablishmentDto> getEstablishmentByParams(Category category, Boolean hasMap, Boolean hasCardPayment) {
+    public List<EstablishmentDto> getEstablishmentByParams(Category category, Boolean hasMap, Boolean hasCardPayment, Pageable page) {
         ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues();
         Example<Establishment> exampleQuery = Example.of(new Establishment(category, hasMap, hasCardPayment), matcher);
-        List<Establishment> results = establishmentRepository.findAll(exampleQuery);
+        Page<Establishment> results = establishmentRepository.findAll(exampleQuery, page);
         return establishmentMapper.modelListToDtoList(results);
     }
 
