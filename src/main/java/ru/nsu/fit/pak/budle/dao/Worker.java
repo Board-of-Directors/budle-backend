@@ -17,7 +17,8 @@ public class Worker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Boolean onWork;
+    @Enumerated(EnumType.STRING)
+    private WorkerStatus status;
     private String workerType;
     @OneToOne
     private User user;

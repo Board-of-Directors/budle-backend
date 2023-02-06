@@ -10,13 +10,15 @@ CREATE TABLE users
 
 );
 
+create type worker_status as ENUM ('absent', 'on_work');
+
 DROP TABLE IF EXISTS workers cascade;
 create table workers
 (
     id          bigserial,
-    user_id     bigserial  not null,
-    worker_type varchar(1) not null,
-    on_work     boolean    not null,
+    user_id     bigserial     not null,
+    worker_type varchar(1)    not null,
+    status      worker_status not null,
     foreign key (user_id) references users (id),
     primary key (id)
 );
