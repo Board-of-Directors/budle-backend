@@ -10,6 +10,7 @@ import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Establishment;
 import ru.nsu.fit.pak.budle.dto.CategoryDto;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
+import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
@@ -28,7 +29,11 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     private final UserRepository userRepository;
 
 
-    public List<EstablishmentDto> getEstablishmentByParams(String category, Boolean hasMap, Boolean hasCardPayment, Pageable page) {
+    public List<EstablishmentDto> getEstablishmentByParams(String category,
+                                                           Boolean hasMap,
+                                                           Boolean hasCardPayment,
+                                                           String name,
+                                                           Pageable page) {
         ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues();
         Category categoryEnum = null;
         if (category != null) {
@@ -36,11 +41,18 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         }
         Example<Establishment> exampleQuery = Example.of(new Establishment(categoryEnum, hasMap, hasCardPayment), matcher);
         Page<Establishment> results = establishmentRepository.findAll(exampleQuery, page);
-        return establishmentMapper.modelListToDtoList(results);
+        return establishmentMapper.modelListToDtoList(results)
+                .stream()
+                .filter(establishment -> establishment.getName().contains(name))
+                .toList();
     }
 
-    // TODO: Удалить пользователя из этой части кода, проверка на name+address
+    // TODO: РЈРґР°Р»РёС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РёР· СЌС‚РѕР№ С‡Р°СЃС‚Рё РєРѕРґР°
     public void createEstablishment(EstablishmentDto dto) {
+        if (establishmentRepository.existsByAddressAndName(dto.getAddress(), dto.getName())) {
+            throw new EstablishmentAlreadyExistsException("Establishment with such name and address already exists",
+                    "AlreadyExistsException");
+        }
         Establishment establishment = establishmentMapper.dtoToModel(dto);
         ImageWorker imageWorker = new ImageWorker();
         establishment.setImage(imageWorker.saveImage(establishment));

@@ -8,14 +8,14 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@Table(name="spots")
+@Table(name = "spots")
 public class Spot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String tags;
-    String status;
+    private Long id;
+    private String tags;
+    private String status;
     @OneToOne
-    Establishment establishment;
+    private Establishment establishment;
 
 }
