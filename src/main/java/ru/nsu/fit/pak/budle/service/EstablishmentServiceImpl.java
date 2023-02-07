@@ -29,7 +29,11 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     private final UserRepository userRepository;
 
 
-    public List<EstablishmentDto> getEstablishmentByParams(String category, Boolean hasMap, Boolean hasCardPayment, Pageable page) {
+    public List<EstablishmentDto> getEstablishmentByParams(String category,
+                                                           Boolean hasMap,
+                                                           Boolean hasCardPayment,
+                                                           String name,
+                                                           Pageable page) {
         ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues();
         Category categoryEnum = null;
         if (category != null) {
@@ -37,7 +41,10 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         }
         Example<Establishment> exampleQuery = Example.of(new Establishment(categoryEnum, hasMap, hasCardPayment), matcher);
         Page<Establishment> results = establishmentRepository.findAll(exampleQuery, page);
-        return establishmentMapper.modelListToDtoList(results);
+        return establishmentMapper.modelListToDtoList(results)
+                .stream()
+                .filter(establishment -> establishment.getName().contains(name))
+                .toList();
     }
 
     // TODO: Удалить пользователя из этой части кода
