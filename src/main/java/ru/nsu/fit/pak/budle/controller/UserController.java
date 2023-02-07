@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.nsu.fit.pak.budle.dto.UserDto;
 import ru.nsu.fit.pak.budle.service.UserServiceImpl;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Boolean register(@RequestBody UserDto userDto) {
+    public Boolean register(@RequestBody @Valid UserDto userDto) {
         return userService.registerUser(userDto);
     }
 
