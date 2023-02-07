@@ -39,7 +39,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         return establishmentMapper.modelListToDtoList(results);
     }
 
-    // TODO: Удалить пользователя из этой части кода, проверка на name+address
+    // TODO: РЈРґР°Р»РёС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РёР· СЌС‚РѕР№ С‡Р°СЃС‚Рё РєРѕРґР°, РїСЂРѕРІРµСЂРєР° РЅР° name+address
     public void createEstablishment(EstablishmentDto dto) {
         Establishment establishment = establishmentMapper.dtoToModel(dto);
         ImageWorker imageWorker = new ImageWorker();

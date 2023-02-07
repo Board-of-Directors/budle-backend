@@ -22,7 +22,7 @@ public class Establishment {
     private String address;
     private Boolean hasMap;
     private Boolean hasCardPayment;
-    private float rating;
+    private Float rating;
     private Integer price;
     @Enumerated(EnumType.STRING)
     private Category category;
