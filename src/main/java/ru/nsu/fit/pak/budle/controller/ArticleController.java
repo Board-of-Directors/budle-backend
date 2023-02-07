@@ -22,7 +22,6 @@ import ru.nsu.fit.pak.budle.exceptions.UserAlreadyExistsException;
 import ru.nsu.fit.pak.budle.exceptions.WorkerNotFoundException;
 
 import java.util.LinkedHashMap;
-import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ArticleController extends ResponseEntityExceptionHandler implements ResponseBodyAdvice<Object> {
@@ -54,8 +53,9 @@ public class ArticleController extends ResponseEntityExceptionHandler implements
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String message = ex.getBindingResult().getFieldErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.joining(", "));
+                .toList()
+                .get(0);
         BaseResponse<Object> response = new BaseResponse<>(message, "notValidException");
-        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }
