@@ -10,13 +10,14 @@ CREATE TABLE users
 
 );
 
+
 DROP TABLE IF EXISTS workers cascade;
 create table workers
 (
     id          bigserial,
     user_id     bigserial  not null,
     worker_type varchar(1) not null,
-    on_work     boolean    not null,
+    status      varchar    not null,
     foreign key (user_id) references users (id),
     primary key (id)
 );
@@ -31,9 +32,11 @@ create table establishments
     address          varchar      not null,
     has_map          boolean default false,
     has_card_payment boolean default false,
+    price            int4,
+    rating           float,
     owner_id         bigserial    not null,
     image            varchar,
-    category         varchar(10)  not null,
+    category         varchar      not null,
     foreign key (owner_id) references users (id),
     primary key (id),
     unique ("name", address)

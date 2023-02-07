@@ -23,4 +23,6 @@ public class Code {
     private String code;
     @CreationTimestamp
     private LocalDateTime createdAt;
+    @Enumerated(EnumType.STRING)
+    private CodeType type;
 }

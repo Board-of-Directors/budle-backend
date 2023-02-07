@@ -3,14 +3,19 @@ package ru.nsu.fit.pak.budle.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Establishment;
+import ru.nsu.fit.pak.budle.dto.CategoryDto;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -22,27 +27,15 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     private final UserRepository userRepository;
 
-    @Override
-    public List<EstablishmentDto> getEstablishments() {
-        return establishmentMapper.modelListToDtoList(establishmentRepository.findAll());
-    }
 
-    @Override
-    public EstablishmentDto getEstablishmentById(Long id) {
-        return establishmentMapper.modelToDto(establishmentRepository.getEstablishmentById(id));
-
-    }
-
-    @Override
-    public List<EstablishmentDto> getEstablishmentsByCategory(String category) {
-        return establishmentMapper.modelListToDtoList(establishmentRepository.findByCategory(category));
-    }
-
-
-    public List<EstablishmentDto> getEstablishmentByParams(String category, Boolean hasMap, Boolean hasCardPayment) {
+    public List<EstablishmentDto> getEstablishmentByParams(String category, Boolean hasMap, Boolean hasCardPayment, Pageable page) {
         ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues();
-        Example<Establishment> exampleQuery = Example.of(new Establishment(category, hasMap, hasCardPayment), matcher);
-        List<Establishment> results = establishmentRepository.findAll(exampleQuery);
+        Category categoryEnum = null;
+        if (category != null) {
+            categoryEnum = Category.valueOf(category);
+        }
+        Example<Establishment> exampleQuery = Example.of(new Establishment(categoryEnum, hasMap, hasCardPayment), matcher);
+        Page<Establishment> results = establishmentRepository.findAll(exampleQuery, page);
         return establishmentMapper.modelListToDtoList(results);
     }
 
@@ -53,5 +46,9 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         establishment.setImage(imageWorker.saveImage(establishment));
         establishment.setOwner(userRepository.getReferenceById(1L));
         establishmentRepository.save(establishment);
+    }
+
+    public List<CategoryDto> getCategories() {
+        return Arrays.stream(Category.values()).map(CategoryDto::new).toList();
     }
 }

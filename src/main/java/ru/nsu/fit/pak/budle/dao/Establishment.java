@@ -16,13 +16,16 @@ import java.util.List;
 public class Establishment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
     private String name;
     private String description;
     private String address;
     private Boolean hasMap;
     private Boolean hasCardPayment;
-    private String category;
+    private float rating;
+    private Integer price;
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
     private String image;
     @OneToOne
@@ -33,7 +36,7 @@ public class Establishment {
             inverseJoinColumns = @JoinColumn(name = "worker_id"))
     private List<Worker> workers;
 
-    public Establishment(String category, Boolean hasMap, Boolean hasCardPayment) {
+    public Establishment(Category category, Boolean hasMap, Boolean hasCardPayment) {
         this.category = category;
         this.hasMap = hasMap;
         this.hasCardPayment = hasCardPayment;
