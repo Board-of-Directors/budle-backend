@@ -23,14 +23,15 @@ public class EstablishmentController {
 
 
     @GetMapping
-    public EstablishmentListDto getEstablishments(@RequestParam(required = false) String category,
+    public EstablishmentListDto getEstablishments(@RequestParam(required = false) String name,
+                                                  @RequestParam(required = false) String category,
                                                   @RequestParam(required = false) Boolean hasMap,
                                                   @RequestParam(required = false) Boolean hasCardPayment,
                                                   @RequestParam(required = false, defaultValue = "0") Integer offset,
                                                   @RequestParam(required = false, defaultValue = "100") Integer limit,
                                                   @RequestParam(required = false, defaultValue = "name") String sortValue) {
         EstablishmentListDto list = new EstablishmentListDto();
-        list.setEstablishments(establishmentService.getEstablishmentByParams(category, hasMap, hasCardPayment,
+        list.setEstablishments(establishmentService.getEstablishmentByParams(category, hasMap, hasCardPayment, name,
                 PageRequest.of(offset, limit, Sort.by(sortValue))));
         list.setCount(list.getEstablishments().size());
         return list;
