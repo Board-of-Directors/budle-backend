@@ -10,6 +10,7 @@ import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Establishment;
 import ru.nsu.fit.pak.budle.dto.CategoryDto;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
+import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
@@ -39,8 +40,12 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         return establishmentMapper.modelListToDtoList(results);
     }
 
-    // TODO: Удалить пользователя из этой части кода, проверка на name+address
+    // TODO: Удалить пользователя из этой части кода
     public void createEstablishment(EstablishmentDto dto) {
+        if (establishmentRepository.existsByAddressAndName(dto.getAddress(), dto.getName())) {
+            throw new EstablishmentAlreadyExistsException("Establishment with such name and address already exists",
+                    "AlreadyExistsException");
+        }
         Establishment establishment = establishmentMapper.dtoToModel(dto);
         ImageWorker imageWorker = new ImageWorker();
         establishment.setImage(imageWorker.saveImage(establishment));
