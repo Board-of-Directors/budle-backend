@@ -16,10 +16,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.nsu.fit.pak.budle.BaseResponse;
-import ru.nsu.fit.pak.budle.exceptions.BaseException;
-import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
-import ru.nsu.fit.pak.budle.exceptions.UserAlreadyExistsException;
-import ru.nsu.fit.pak.budle.exceptions.WorkerNotFoundException;
+import ru.nsu.fit.pak.budle.exceptions.*;
 
 import java.util.LinkedHashMap;
 
@@ -29,7 +26,8 @@ public class ArticleController extends ResponseEntityExceptionHandler implements
 
     @ExceptionHandler({UserAlreadyExistsException.class,
             IncorrectDataException.class,
-            WorkerNotFoundException.class})
+            WorkerNotFoundException.class,
+            EstablishmentAlreadyExistsException.class})
     public <T extends BaseException> ResponseEntity<BaseResponse<Object>> handleException(T e) {
         BaseResponse<Object> response = new BaseResponse<>(e.getMessage(), e.getType());
         return new ResponseEntity<>(response, HttpStatus.OK);
