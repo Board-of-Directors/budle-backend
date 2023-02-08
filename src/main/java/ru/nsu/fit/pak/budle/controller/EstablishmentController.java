@@ -56,5 +56,11 @@ public class EstablishmentController {
         return orderService.getOrders(establishmentId, Boolean.FALSE);
     }
 
+    @DeleteMapping
+    public void deleteOrder(@RequestParam Long orderId,
+                            @RequestParam Long establishmentId) {
+        orderService.deleteOrder(orderId, establishmentId, Boolean.FALSE);
+    }
+
 
 }
