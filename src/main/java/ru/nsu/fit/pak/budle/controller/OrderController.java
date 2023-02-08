@@ -29,7 +29,7 @@ public class OrderController {
 
     @GetMapping
     public List<OrderDto> get(@RequestParam Long userId) {
-        return orderService.getOrders(userId);
+        return orderService.getOrders(userId, Boolean.TRUE);
     }
 
 
