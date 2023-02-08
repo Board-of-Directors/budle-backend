@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.nsu.fit.pak.budle.dto.CategoryDto;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.EstablishmentListDto;
+import ru.nsu.fit.pak.budle.dto.OrderDto;
 import ru.nsu.fit.pak.budle.service.EstablishmentServiceImpl;
+import ru.nsu.fit.pak.budle.service.OrderService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class EstablishmentController {
     private final EstablishmentServiceImpl establishmentService;
+    private final OrderService orderService;
 
 
     @GetMapping
@@ -45,6 +48,12 @@ public class EstablishmentController {
     @GetMapping(value = "/category")
     public List<CategoryDto> category() {
         return establishmentService.getCategories();
+    }
+
+
+    @GetMapping(value = "/order")
+    public List<OrderDto> orders(@RequestParam Long establishmentId) {
+        return orderService.getOrders(establishmentId, Boolean.FALSE);
     }
 
 

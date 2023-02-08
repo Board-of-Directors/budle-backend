@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.Order;
 import ru.nsu.fit.pak.budle.dto.OrderDto;
 import ru.nsu.fit.pak.budle.mapper.OrderMapper;
+import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.OrderRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 
@@ -21,15 +22,19 @@ public class OrderServiceImpl implements OrderService {
 
     private final UserRepository userRepository;
 
+    private final EstablishmentRepository establishmentRepository;
+
     public void createOrder(OrderDto dto) {
         Order order = orderMapper.dtoToOrder(dto);
         orderRepository.save(order);
     }
 
     @Override
-    public List<OrderDto> getOrders(Long userId) {
-        return orderRepository
-                .findAllByUser(userRepository.getReferenceById(userId))
+    public List<OrderDto> getOrders(Long id, Boolean byUser) {
+        List<Order> orders = byUser ?
+                orderRepository.findAllByUser(userRepository.getReferenceById(id)) :
+                orderRepository.findAllByEstablishment(establishmentRepository.getReferenceById(id));
+        return orders
                 .stream()
                 .map(order -> modelMapper.map(order, OrderDto.class))
                 .toList();

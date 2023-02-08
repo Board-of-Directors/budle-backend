@@ -36,6 +36,9 @@ public class Establishment {
             inverseJoinColumns = @JoinColumn(name = "worker_id"))
     private List<Worker> workers;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "id")
+    private List<Order> orders;
+
     public Establishment(Category category, Boolean hasMap, Boolean hasCardPayment) {
         this.category = category;
         this.hasMap = hasMap;
