@@ -2,10 +2,7 @@ package ru.nsu.fit.pak.budle.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.nsu.fit.pak.budle.dto.OrderDto;
 import ru.nsu.fit.pak.budle.service.OrderService;
 
@@ -22,4 +19,17 @@ public class OrderController {
         orderService.createOrder(dto);
 
     }
+
+    @DeleteMapping
+    public void delete(@RequestParam Long orderId,
+                       @RequestParam Long userId) {
+        orderService.deleteOrder(orderId, userId);
+    }
+
+    @GetMapping
+    public void get(@RequestParam Long userId) {
+        orderService.getOrders(userId);
+    }
+
+
 }
