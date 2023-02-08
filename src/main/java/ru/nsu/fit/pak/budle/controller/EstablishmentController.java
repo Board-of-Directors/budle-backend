@@ -23,7 +23,7 @@ public class EstablishmentController {
 
 
     @GetMapping
-    public EstablishmentListDto getEstablishments(@RequestParam(required = false) String name,
+    public EstablishmentListDto getEstablishments(@RequestParam(required = false, defaultValue = "") String name,
                                                   @RequestParam(required = false) String category,
                                                   @RequestParam(required = false) Boolean hasMap,
                                                   @RequestParam(required = false) Boolean hasCardPayment,
