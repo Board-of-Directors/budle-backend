@@ -56,6 +56,12 @@ public class EstablishmentController {
         return orderService.getOrders(establishmentId, Boolean.FALSE);
     }
 
+    @PutMapping(value = "/order")
+    public void accept(@RequestParam Long establishmentId,
+                       @RequestParam Long orderId) {
+        orderService.acceptOrder(orderId, establishmentId);
+    }
+
     @DeleteMapping
     public void deleteOrder(@RequestParam Long orderId,
                             @RequestParam Long establishmentId) {

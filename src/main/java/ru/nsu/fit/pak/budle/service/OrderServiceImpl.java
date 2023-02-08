@@ -48,12 +48,20 @@ public class OrderServiceImpl implements OrderService {
                 .findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException("Cannot find order"));
         if (byUser && order.getUser().getId().equals(id)) {
-            orderRepository.delete(order);
+            order.setStatus(2);
         } else if (order.getEstablishment().getId().equals(id)) {
-            orderRepository.delete(order);
+            order.setStatus(2);
         } else {
             throw new NotEnoughRightsException("You cannot delete this order");
         }
+    }
+
+    @Override
+    public void acceptOrder(Long orderId, Long establishmentId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() ->
+                new OrderNotFoundException("Order not found"));
+        order.setStatus(1);
+        orderRepository.save(order);
     }
 
 }
