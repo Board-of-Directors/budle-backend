@@ -10,4 +10,6 @@ public interface OrderService {
     List<OrderDto> getOrders(Long id, Boolean byUser);
 
     void deleteOrder(Long orderId, Long id, Boolean byUser);
+
+    void acceptOrder(Long orderId, Long establishmentId);
 }
