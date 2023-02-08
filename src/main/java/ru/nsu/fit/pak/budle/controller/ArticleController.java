@@ -10,17 +10,18 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.nsu.fit.pak.budle.BaseResponse;
 import ru.nsu.fit.pak.budle.exceptions.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.LinkedHashMap;
 
-@ControllerAdvice
+@RestControllerAdvice(basePackages = "ru.nsu.fit.pak.budle.controller")
 public class ArticleController extends ResponseEntityExceptionHandler implements ResponseBodyAdvice<Object> {
 
 
@@ -35,7 +36,7 @@ public class ArticleController extends ResponseEntityExceptionHandler implements
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return true;
+        return !returnType.hasMethodAnnotation(ApiIgnore.class);
     }
 
     @Override
