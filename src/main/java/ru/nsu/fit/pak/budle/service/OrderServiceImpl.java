@@ -15,8 +15,8 @@ public class OrderServiceImpl implements OrderService {
 
     public void createOrder(OrderDto dto) {
         Order order = modelMapper.map(dto, Order.class);
+        order.setStatus(0);
         orderRepository.save(order);
-
     }
 
 }

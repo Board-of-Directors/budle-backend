@@ -1,16 +1,19 @@
 package ru.nsu.fit.pak.budle.dao;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 
 @Entity
-@Getter
-@Setter
+@Data
 @Table(name = "orders")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Order {
 
     @Id
@@ -18,10 +21,12 @@ public class Order {
     private Long id;
 
     private Integer guestCount;
-    private LocalDateTime dateTime;
+    private LocalDate date;
+    private LocalTime time;
+    private Integer status;
     @OneToOne
     private User user;
 
     @OneToOne
-    private Spot spot;
+    private Establishment establishment;
 }
