@@ -5,8 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.sql.Time;
+import java.util.Date;
 
 
 @Entity
@@ -21,8 +21,8 @@ public class Order {
     private Long id;
 
     private Integer guestCount;
-    private LocalDate date;
-    private LocalTime time;
+    private Date date;
+    private Time time;
     private Integer status;
     @OneToOne
     private User user;
