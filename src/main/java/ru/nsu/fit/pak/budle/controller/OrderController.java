@@ -7,6 +7,7 @@ import ru.nsu.fit.pak.budle.dto.OrderDto;
 import ru.nsu.fit.pak.budle.service.OrderService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "order", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -27,8 +28,8 @@ public class OrderController {
     }
 
     @GetMapping
-    public void get(@RequestParam Long userId) {
-        orderService.getOrders(userId);
+    public List<OrderDto> get(@RequestParam Long userId) {
+        return orderService.getOrders(userId);
     }
 
 
