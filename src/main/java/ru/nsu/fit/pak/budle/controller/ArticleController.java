@@ -31,7 +31,8 @@ public class ArticleController extends ResponseEntityExceptionHandler implements
             EstablishmentAlreadyExistsException.class,
             NotEnoughRightsException.class,
             OrderNotFoundException.class,
-            EstablishmentNotFoundException.class})
+            EstablishmentNotFoundException.class,
+            UserNotFoundException.class})
     public <T extends BaseException> ResponseEntity<BaseResponse<Object>> handleException(T e) {
         BaseResponse<Object> response = new BaseResponse<>(e.getMessage(), e.getType());
         return new ResponseEntity<>(response, HttpStatus.OK);
