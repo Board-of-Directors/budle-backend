@@ -4,7 +4,6 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.util.List;
 
 @Data
 public class WorkerDto {
@@ -16,5 +15,4 @@ public class WorkerDto {
     private String workerType;
     @NotNull
     private UserDto user;
-    private List<EstablishmentDto> establishments;
 }

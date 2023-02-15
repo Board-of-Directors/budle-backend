@@ -2,8 +2,10 @@ package ru.nsu.fit.pak.budle.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.nsu.fit.pak.budle.dao.Establishment;
 import ru.nsu.fit.pak.budle.dao.Worker;
 import ru.nsu.fit.pak.budle.dto.WorkerDto;
+import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
 import ru.nsu.fit.pak.budle.exceptions.WorkerNotFoundException;
 import ru.nsu.fit.pak.budle.mapper.WorkerMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
@@ -23,8 +25,12 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     public List<WorkerDto> getWorkers(Long establishmentId) {
+        Establishment establishment = establishmentRepository.findById(establishmentId)
+                .orElseThrow(() -> new EstablishmentNotFoundException(
+                        "Establishment with id " + establishmentId + " doesnt exist"
+                ));
         return workerRepository
-                .findByEstablishments(establishmentRepository.getReferenceById(establishmentId))
+                .findByEstablishments(establishment)
                 .stream()
                 .map(workerMapper::modelToDto)
                 .toList();

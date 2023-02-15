@@ -22,7 +22,7 @@ public class Worker {
     private String workerType;
     @OneToOne
     private User user;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "worker_establishments",
             joinColumns = @JoinColumn(name = "worker_id"),
             inverseJoinColumns = @JoinColumn(name = "establishment_id"))
