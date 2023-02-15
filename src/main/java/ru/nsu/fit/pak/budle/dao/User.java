@@ -19,7 +19,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    private String name;
+    private String username;
     private String phoneNumber;
     private String password;
 
@@ -31,7 +31,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return name;
+        return username;
     }
 
     @Override
