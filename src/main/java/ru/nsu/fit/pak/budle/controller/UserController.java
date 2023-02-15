@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.nsu.fit.pak.budle.dto.UserDto;
+import ru.nsu.fit.pak.budle.service.SecurityService;
 import ru.nsu.fit.pak.budle.service.UserServiceImpl;
 
 import javax.validation.Valid;
@@ -16,6 +17,8 @@ import java.util.List;
 public class UserController {
     private final UserServiceImpl userService;
 
+    private final SecurityService securityService;
+
 
     @GetMapping
     public List<UserDto> getUsers() {
@@ -24,12 +27,15 @@ public class UserController {
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Boolean register(@RequestBody @Valid UserDto userDto) {
-        return userService.registerUser(userDto);
+        userService.registerUser(userDto);
+        securityService.autoLogin(userDto.getUsername(), userDto.getPassword());
+        return true;
     }
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Boolean login(@RequestBody UserDto userDto) {
-        return userService.loginUser(userDto);
+        securityService.autoLogin(userDto.getUsername(), userDto.getPassword());
+        return true;
     }
 
 }
