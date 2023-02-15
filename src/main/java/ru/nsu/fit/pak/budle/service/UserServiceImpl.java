@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dto.UserDto;
@@ -24,14 +25,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserMapper userMapper;
 
+    private final PasswordEncoder encoder;
+
     // TODO: Хеширование пароля, Security
     @Override
     public Boolean registerUser(UserDto userDto) {
 
-        if (userRepository.existsByPhoneNumber(userDto.getPhoneNumber())) {
-            throw new UserAlreadyExistsException("Пользователь с таким номером уже существует.");
+        if (userRepository.existsByPhoneNumber(userDto.getPhoneNumber()) ||
+                userRepository.existsByUsername(userDto.getUsername())) {
+            throw new UserAlreadyExistsException("Пользователь с таким номером или именем уже существует.");
         } else {
             User user = userMapper.dtoToModel(userDto);
+            user.setPassword(encoder.encode(user.getPassword()));
             userRepository.save(user);
             return true;
         }
