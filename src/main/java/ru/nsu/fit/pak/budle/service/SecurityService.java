@@ -5,5 +5,4 @@ public interface SecurityService {
 
     void autoLogin(String username, String password);
 
-    void login(String username, String password);
 }
