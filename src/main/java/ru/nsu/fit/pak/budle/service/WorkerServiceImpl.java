@@ -39,7 +39,7 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     public void deleteWorker(Long workerId) {
         Worker worker = workerRepository.findWorkerById(workerId).orElseThrow(() -> new WorkerNotFoundException("" +
-                "Работник с id " + workerId + " не найден"));
+                "Worker with id " + workerId + " doesnt exist"));
         workerRepository.delete(worker);
     }
 
