@@ -1,6 +1,8 @@
 package ru.nsu.fit.pak.budle.service;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
@@ -22,18 +24,19 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class EstablishmentServiceImpl implements EstablishmentService {
+    private static final Logger log = LoggerFactory.getLogger(EstablishmentServiceImpl.class);
     private final EstablishmentRepository establishmentRepository;
-
     private final EstablishmentMapper establishmentMapper;
-
     private final UserRepository userRepository;
-
 
     public List<EstablishmentDto> getEstablishmentByParams(String category,
                                                            Boolean hasMap,
                                                            Boolean hasCardPayment,
                                                            String name,
                                                            Pageable page) {
+        log.info("getEstablishmentByParams\n" + "Category: " + category + "\n" +
+                "HasMap: " + hasMap + "\n" +
+                "HasCardPayment " + hasCardPayment + "\n" + "Name: " + name);
         ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues();
         Category categoryEnum = null;
         if (category != null) {
