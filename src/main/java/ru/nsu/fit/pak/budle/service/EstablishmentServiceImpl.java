@@ -36,7 +36,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues();
         Category categoryEnum = null;
         if (category != null) {
-            categoryEnum = Category.valueOf(category);
+            categoryEnum = Category.getEnumByValue(category);
         }
         Example<Establishment> exampleQuery = Example.of(new Establishment(categoryEnum, hasMap, hasCardPayment), matcher);
         Page<Establishment> results = establishmentRepository.findAll(exampleQuery, page);
