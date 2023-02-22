@@ -1,7 +1,8 @@
 package ru.nsu.fit.pak.budle.exceptions;
 
 public class WorkerNotFoundException extends BaseException {
-    public WorkerNotFoundException(String message) {
-        super(message, "WorkerNotFound");
+
+    public WorkerNotFoundException(Long id) {
+        super("Работник с id " + id + " не существует", "WorkerNotFound");
     }
 }
