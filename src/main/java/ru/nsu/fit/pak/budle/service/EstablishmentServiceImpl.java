@@ -48,8 +48,10 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     // TODO: Удалить пользователя из этой части кода
     public void createEstablishment(EstablishmentDto dto) {
-        if (establishmentRepository.existsByAddressAndName(dto.getAddress(), dto.getName())) {
-            throw new EstablishmentAlreadyExistsException("Establishment with such name and address already exists");
+        String address = dto.getAddress();
+        String name = dto.getName();
+        if (establishmentRepository.existsByAddressAndName(address, name)) {
+            throw new EstablishmentAlreadyExistsException(name, address);
         }
         Establishment establishment = establishmentMapper.dtoToModel(dto);
         establishmentRepository.save(establishment);
