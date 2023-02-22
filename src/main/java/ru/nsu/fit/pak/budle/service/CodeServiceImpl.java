@@ -34,7 +34,7 @@ public class CodeServiceImpl implements CodeService {
     @Override
     public boolean generateCode(String phoneNumber) throws IOException {
         if (userRepository.existsByPhoneNumber(phoneNumber)) {
-            throw new UserAlreadyExistsException("Пользователь с таким номером уже существует.");
+            throw new UserAlreadyExistsException();
         } else {
             Map<String, Object> map = requestSender.sendUCaller(phoneNumber);
             if (map.get("status").equals(false)) {

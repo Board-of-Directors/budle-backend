@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         if (userRepository.existsByPhoneNumber(userDto.getPhoneNumber()) ||
                 userRepository.existsByUsername(userDto.getUsername())) {
-            throw new UserAlreadyExistsException("Пользователь с таким номером или именем уже существует.");
+            throw new UserAlreadyExistsException();
         } else {
             User user = userMapper.dtoToModel(userDto);
             user.setPassword(encoder.encode(user.getPassword()));
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 throw new IncorrectDataException();
             }
         } catch (NoSuchElementException e) {
-            throw new UserNotFoundException("Пользователя с такими данными не существует.");
+            throw new UserNotFoundException();
         }
     }
 

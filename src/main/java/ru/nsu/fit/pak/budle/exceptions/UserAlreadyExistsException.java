@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public class UserAlreadyExistsException extends BaseException {
-    public UserAlreadyExistsException(String message) {
-        super(message, "AlreadyExists");
+    public UserAlreadyExistsException() {
+        super("Пользователь с такими данными уже существует.", "AlreadyExists");
     }
 
 }
