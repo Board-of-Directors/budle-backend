@@ -52,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
         } else if (order.getEstablishment().getId().equals(id)) {
             order.setStatus(2);
         } else {
-            throw new NotEnoughRightsException("You cannot delete this order");
+            throw new NotEnoughRightsException();
         }
     }
 
