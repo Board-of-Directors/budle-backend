@@ -26,9 +26,7 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     public List<WorkerDto> getWorkers(Long establishmentId) {
         Establishment establishment = establishmentRepository.findById(establishmentId)
-                .orElseThrow(() -> new EstablishmentNotFoundException(
-                        "Establishment with id " + establishmentId + " doesnt exist"
-                ));
+                .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
         return workerRepository
                 .findByEstablishments(establishment)
                 .stream()
