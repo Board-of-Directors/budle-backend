@@ -46,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
     public void deleteOrder(Long orderId, Long id, Boolean byUser) {
         Order order = orderRepository
                 .findById(orderId)
-                .orElseThrow(() -> new OrderNotFoundException("Cannot find order"));
+                .orElseThrow(() -> new OrderNotFoundException(orderId));
         if (byUser && order.getUser().getId().equals(id)) {
             order.setStatus(2);
         } else if (order.getEstablishment().getId().equals(id)) {
@@ -59,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void acceptOrder(Long orderId, Long establishmentId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() ->
-                new OrderNotFoundException("Order not found"));
+                new OrderNotFoundException(orderId));
         order.setStatus(1);
         orderRepository.save(order);
     }
