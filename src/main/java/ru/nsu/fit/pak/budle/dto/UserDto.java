@@ -10,13 +10,13 @@ import javax.validation.constraints.Size;
 public class UserDto {
     @Null
     private Long id;
-    @NotNull(message = "password cannot be null")
-    @Size(min = 6, message = "Password cannot be less than 6 symbols")
+    @NotNull(message = "Пароль не может быть пустым")
+    @Size(min = 6, message = "Пароль не может быть короче 6 символов")
     private String password;
-    @NotNull(message = "username cannot be null")
-    @Size(min = 2, max = 255, message = "Name cannot be less than 2 symbols and more than 255")
+    @NotNull(message = "Имя пользователя не может быть пустым")
+    @Size(min = 2, max = 255, message = "Имя пользователя не может быть короче 2 символов или длиннее 255")
     private String username;
-    @NotNull(message = "Phone number cannot be null")
-    @Size(min = 11, message = "Phone number cannot be less than 11 symbols")
+    @NotNull(message = "Номер телефона не может быть пустым")
+    @Size(min = 11, message = "Номер телефона не может быть короче 11 символов")
     private String phoneNumber;
 }

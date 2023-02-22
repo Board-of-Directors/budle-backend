@@ -8,30 +8,30 @@ import javax.validation.constraints.*;
 public class EstablishmentDto {
     @Null
     private Long id;
-    @NotNull(message = "Name cannot be null")
+    @NotNull(message = "Имя не может быть пустым")
     @Size(max = 200)
     private String name;
-    @NotNull(message = "Description cannot be null")
+    @NotNull(message = "Описание не может быть пустым")
     @Size(max = 1000)
     private String description;
-    @NotNull(message = "Address cannot be null")
+    @NotNull(message = "Адрес не может быть пустым")
     @Size(max = 200)
     private String address;
     private UserDto owner;
-    @NotNull(message = "Card payment flag cannot be null")
+    @NotNull(message = "Информация о оплате картой не может быть пустой")
     private boolean hasCardPayment;
-    @NotNull(message = "Map flag cannot be null")
+    @NotNull(message = "Информация о карте заведения не может быть пустой")
     private boolean hasMap;
-    @NotNull(message = "Category cannot be null")
+    @NotNull(message = "Категория не может быть пустой")
     private String category;
-    @NotNull(message = "Image cannot be null")
+    @NotNull(message = "Картинка заведения не может быть пустой")
     private String image;
-    @Min(value = 1, message = "Rating cannot be less than 1")
-    @Max(value = 5, message = "Rating cannot be more than 5")
-    @NotNull(message = "Rating cannot be null")
+    @Min(value = 1, message = "Рейтинг не может быть меньше 1")
+    @Max(value = 5, message = "Рейтинг не может быть больше 5")
+    @NotNull(message = "Рейтинг не может быть пустым")
     private Float rating;
-    @Max(value = 10000, message = "Price cannot be more than 10000")
-    @Min(value = 500, message = "Price cannot be less than 500")
-    @NotNull(message = "Price cannot be null")
+    @Max(value = 10000, message = "Средний чек не может быть больше 10000")
+    @Min(value = 500, message = "Средний чек не может быть меньше 500")
+    @NotNull(message = "Средний чек не может быть пустым")
     private Integer price;
 }
