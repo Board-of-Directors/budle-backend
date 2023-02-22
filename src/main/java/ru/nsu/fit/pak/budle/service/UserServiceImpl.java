@@ -10,6 +10,7 @@ import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dto.UserDto;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 import ru.nsu.fit.pak.budle.exceptions.UserAlreadyExistsException;
+import ru.nsu.fit.pak.budle.exceptions.UserNotFoundException;
 import ru.nsu.fit.pak.budle.mapper.UserMapper;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 
@@ -27,7 +28,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final PasswordEncoder encoder;
 
-    // TODO: Хеширование пароля, Security
     @Override
     public Boolean registerUser(UserDto userDto) {
 
@@ -47,7 +47,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userMapper.modelListToDtoList(userRepository.findAll());
     }
 
-    //TODO: Совместить два исключения в одно
     @Override
     public Boolean loginUser(UserDto userDto) {
         try {
@@ -56,10 +55,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             if (user.getPassword().equals(userDto.getPassword())) {
                 return true;
             } else {
-                throw new IncorrectDataException("Номер или пароль введены неправильно.");
+                throw new IncorrectDataException();
             }
         } catch (NoSuchElementException e) {
-            throw new IncorrectDataException("Пользователя с такими данными не существует.");
+            throw new UserNotFoundException("Пользователя с такими данными не существует.");
         }
     }
 

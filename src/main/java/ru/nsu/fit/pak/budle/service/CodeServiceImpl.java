@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.Code;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
+import ru.nsu.fit.pak.budle.exceptions.IncorrectPhoneNumberException;
 import ru.nsu.fit.pak.budle.exceptions.UserAlreadyExistsException;
 import ru.nsu.fit.pak.budle.repository.CodeRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
@@ -26,7 +27,7 @@ public class CodeServiceImpl implements CodeService {
         if (codeRepository.existsByPhoneNumberAndCode(phoneNumber, code)) {
             return true;
         } else {
-            throw new IncorrectDataException("Код введен неверно.");
+            throw new IncorrectDataException();
         }
     }
 
@@ -37,7 +38,7 @@ public class CodeServiceImpl implements CodeService {
         } else {
             Map<String, Object> map = requestSender.sendUCaller(phoneNumber);
             if (map.get("status").equals(false)) {
-                throw new IncorrectDataException((String) map.get("error"));
+                throw new IncorrectPhoneNumberException();
             } else {
                 Code code = new Code();
                 code.setCode((String) map.get("code"));

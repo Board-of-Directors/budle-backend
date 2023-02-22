@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class IncorrectDataException extends BaseException {
 
-    public IncorrectDataException(String message) {
-        super(message, "IncorrectData");
+    public IncorrectDataException() {
+        super("Данные введены неверно", "IncorrectData");
     }
 }
