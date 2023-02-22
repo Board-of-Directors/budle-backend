@@ -3,14 +3,14 @@ package ru.nsu.fit.pak.budle.dao;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 
 public enum Category {
-    restaurant("рестораны"),
-    hotel("отели"),
-    bank("банки"),
-    medicine("медицина"),
-    government("государственные"),
-    cars("машины"),
-    entertainment("развлечения"),
-    building("строительство");
+    restaurant("Рестораны"),
+    hotel("Отели"),
+    bank("Банки"),
+    medicine("Медицинские"),
+    government("Государственные"),
+    cars("Автомобильные"),
+    entertainment("Развлекательный"),
+    building("Строительные");
     public final String value;
 
     Category(String value) {
