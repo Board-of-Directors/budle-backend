@@ -1,14 +1,14 @@
 package ru.nsu.fit.pak.budle.dao;
 
 public enum Category {
-    restaurant("restaurant"),
-    hotel("hotel"),
-    bank("bank"),
-    medicine("medicine"),
-    government("government"),
-    cars("cars"),
-    entertainment("entertainment"),
-    building("building");
+    restaurant("рестораны"),
+    hotel("отели"),
+    bank("банки"),
+    medicine("медицина"),
+    government("государственные"),
+    cars("машины"),
+    entertainment("развлечения"),
+    building("строительство");
     public final String value;
 
     Category(String value) {

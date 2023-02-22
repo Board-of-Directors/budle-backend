@@ -10,13 +10,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Establishment;
-import ru.nsu.fit.pak.budle.dto.CategoryDto;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
-import ru.nsu.fit.pak.budle.repository.UserRepository;
-import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +24,6 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     private static final Logger log = LoggerFactory.getLogger(EstablishmentServiceImpl.class);
     private final EstablishmentRepository establishmentRepository;
     private final EstablishmentMapper establishmentMapper;
-    private final UserRepository userRepository;
 
     public List<EstablishmentDto> getEstablishmentByParams(String category,
                                                            Boolean hasMap,
@@ -56,13 +52,10 @@ public class EstablishmentServiceImpl implements EstablishmentService {
             throw new EstablishmentAlreadyExistsException("Establishment with such name and address already exists");
         }
         Establishment establishment = establishmentMapper.dtoToModel(dto);
-        ImageWorker imageWorker = new ImageWorker();
-        establishment.setImage(imageWorker.saveImage(establishment));
-        establishment.setOwner(userRepository.getReferenceById(1L));
         establishmentRepository.save(establishment);
     }
 
-    public List<CategoryDto> getCategories() {
-        return Arrays.stream(Category.values()).map(CategoryDto::new).toList();
+    public List<String> getCategories() {
+        return Arrays.stream(Category.values()).map(x -> x.value).toList();
     }
 }

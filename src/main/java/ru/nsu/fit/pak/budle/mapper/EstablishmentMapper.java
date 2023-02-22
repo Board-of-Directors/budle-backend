@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Establishment;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
+import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
 import java.util.List;
@@ -16,10 +18,12 @@ import java.util.List;
 public class EstablishmentMapper {
     private final ModelMapper modelMapper;
     private final ImageWorker imageWorker;
+    private final UserRepository userRepository;
 
     public EstablishmentDto modelToDto(Establishment establishment) {
         EstablishmentDto establishmentDto = modelMapper.map(establishment, EstablishmentDto.class);
         establishmentDto.setImage(imageWorker.loadImage(establishment));
+        establishmentDto.setCategory(establishment.getCategory().value);
         return establishmentDto;
     }
 
@@ -31,6 +35,10 @@ public class EstablishmentMapper {
     }
 
     public Establishment dtoToModel(EstablishmentDto dto) {
-        return modelMapper.map(dto, Establishment.class);
+        Establishment establishment = modelMapper.map(dto, Establishment.class);
+        establishment.setImage(imageWorker.saveImage(establishment));
+        establishment.setOwner(userRepository.getReferenceById(1L));
+        establishment.setCategory(Category.valueOf(dto.getCategory()));
+        return establishment;
     }
 }

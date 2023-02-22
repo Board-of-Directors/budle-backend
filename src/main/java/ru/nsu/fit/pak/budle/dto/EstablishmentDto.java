@@ -1,7 +1,6 @@
 package ru.nsu.fit.pak.budle.dto;
 
 import lombok.Data;
-import ru.nsu.fit.pak.budle.dao.Category;
 
 import javax.validation.constraints.*;
 
@@ -24,7 +23,7 @@ public class EstablishmentDto {
     @NotNull(message = "Map flag cannot be null")
     private boolean hasMap;
     @NotNull(message = "Category cannot be null")
-    private Category category;
+    private String category;
     @NotNull(message = "Image cannot be null")
     private String image;
     @Min(value = 1, message = "Rating cannot be less than 1")

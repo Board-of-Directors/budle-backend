@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.nsu.fit.pak.budle.dto.CategoryDto;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.EstablishmentListDto;
 import ru.nsu.fit.pak.budle.dto.OrderDto;
@@ -46,7 +45,7 @@ public class EstablishmentController {
     }
 
     @GetMapping(value = "/category")
-    public List<CategoryDto> category() {
+    public List<String> category() {
         return establishmentService.getCategories();
     }
 
