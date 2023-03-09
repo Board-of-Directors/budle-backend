@@ -8,6 +8,7 @@ import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
+import ru.nsu.fit.pak.budle.utils.EstablishmentFactory;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
 import java.util.List;
@@ -20,8 +21,11 @@ public class EstablishmentMapper {
     private final ImageWorker imageWorker;
     private final UserRepository userRepository;
 
+    private final EstablishmentFactory establishmentFactory = new EstablishmentFactory();
+
     public EstablishmentDto modelToDto(Establishment establishment) {
-        EstablishmentDto establishmentDto = modelMapper.map(establishment, EstablishmentDto.class);
+        EstablishmentDto establishmentDto = modelMapper.map(establishment,
+                establishmentFactory.getEstablishmentDto(establishment.getCategory().toString()));
         establishmentDto.setImage(imageWorker.loadImage(establishment));
         establishmentDto.setCategory(establishment.getCategory().value);
         return establishmentDto;
