@@ -39,7 +39,8 @@ public class EstablishmentMapper {
     }
 
     public Establishment dtoToModel(EstablishmentDto dto) {
-        Establishment establishment = modelMapper.map(dto, Establishment.class);
+        Establishment establishment = modelMapper.map(dto,
+                establishmentFactory.getEstablishmentEntity(dto.getCategory()));
         establishment.setImage(imageWorker.saveImage(establishment));
         establishment.setOwner(userRepository.getReferenceById(1L));
         establishment.setCategory(Category.valueOf(dto.getCategory()));
