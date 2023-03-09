@@ -6,6 +6,7 @@ import ru.nsu.fit.pak.budle.dao.establishment.restaurant.Restaurant;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.HotelDto;
 import ru.nsu.fit.pak.budle.dto.RestaurantDto;
+import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,5 +30,21 @@ public class EstablishmentFactory {
     private void initDtoFactory() {
         dtoFactory.put("hotel", new HotelDto());
         dtoFactory.put("restaurant", new RestaurantDto());
+    }
+
+    public Class<? extends Establishment> getEstablishmentEntity(String type) {
+        Establishment establishment = entityFactory.get(type);
+        if (establishment == null) {
+            throw new IncorrectDataException();
+        }
+        return establishment.getClass();
+    }
+
+    public Class<? extends EstablishmentDto> getEstablishmentDto(String type) {
+        EstablishmentDto establishmentDto = dtoFactory.get(type);
+        if (establishmentDto == null) {
+            throw new IncorrectDataException();
+        }
+        return establishmentDto.getClass();
     }
 }
