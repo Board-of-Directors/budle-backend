@@ -37,6 +37,8 @@ create table establishments
     owner_id         bigserial    not null,
     image            varchar,
     category         varchar      not null,
+    stars_count      integer,
+    cuisine_country  int4,
     foreign key (owner_id) references users (id),
     primary key (id),
     unique ("name", address)

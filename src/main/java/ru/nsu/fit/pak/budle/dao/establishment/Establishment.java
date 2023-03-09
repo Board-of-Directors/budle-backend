@@ -18,6 +18,7 @@ import java.util.List;
 @Entity
 @Table(name = "establishments")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "category")
 public class Establishment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +31,7 @@ public class Establishment {
     private Float rating;
     private Integer price;
     @Enumerated(EnumType.STRING)
+    @Column(name = "category", insertable = false, updatable = false)
     private Category category;
 
     private String image;
