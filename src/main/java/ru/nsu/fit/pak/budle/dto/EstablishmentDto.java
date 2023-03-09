@@ -1,9 +1,22 @@
 package ru.nsu.fit.pak.budle.dto;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 
 import javax.validation.constraints.*;
 
+
+@JsonTypeInfo(
+        include = JsonTypeInfo.As.EXISTING_PROPERTY,
+        property = "category",
+        use = JsonTypeInfo.Id.NAME,
+        visible = true
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = RestaurantDto.class, name = "Restaurant"),
+        @JsonSubTypes.Type(value = HotelDto.class, name = "Hotel"),
+})
 @Data
 public class EstablishmentDto {
     @Null
