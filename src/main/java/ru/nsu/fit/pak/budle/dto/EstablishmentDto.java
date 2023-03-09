@@ -14,8 +14,8 @@ import javax.validation.constraints.*;
         visible = true
 )
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = RestaurantDto.class, name = "Restaurant"),
-        @JsonSubTypes.Type(value = HotelDto.class, name = "Hotel"),
+        @JsonSubTypes.Type(value = RestaurantDto.class, name = "restaurant"),
+        @JsonSubTypes.Type(value = HotelDto.class, name = "hotel"),
 })
 @Data
 public class EstablishmentDto {
