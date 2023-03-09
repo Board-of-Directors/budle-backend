@@ -1,9 +1,13 @@
-package ru.nsu.fit.pak.budle.dao;
+package ru.nsu.fit.pak.budle.dao.establishment;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import ru.nsu.fit.pak.budle.dao.Category;
+import ru.nsu.fit.pak.budle.dao.Order;
+import ru.nsu.fit.pak.budle.dao.User;
+import ru.nsu.fit.pak.budle.dao.Worker;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
 @Table(name = "establishments")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Establishment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

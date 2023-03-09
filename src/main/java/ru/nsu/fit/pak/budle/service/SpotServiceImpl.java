@@ -2,7 +2,7 @@ package ru.nsu.fit.pak.budle.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.nsu.fit.pak.budle.dao.Establishment;
+import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.SpotDto;
 import ru.nsu.fit.pak.budle.mapper.SpotMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
