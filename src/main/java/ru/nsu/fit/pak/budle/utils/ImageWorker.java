@@ -2,7 +2,7 @@ package ru.nsu.fit.pak.budle.utils;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
-import ru.nsu.fit.pak.budle.dao.Establishment;
+import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 
 import java.io.File;
 import java.time.LocalDateTime;

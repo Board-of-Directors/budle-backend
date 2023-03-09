@@ -23,7 +23,7 @@ public enum Category {
                 return e;
             }
         }
-        throw new IncorrectDataException("Such category does not exist");// not found
+        throw new IncorrectDataException();
     }
 
 }

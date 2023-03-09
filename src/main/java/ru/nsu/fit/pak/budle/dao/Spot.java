@@ -2,6 +2,7 @@ package ru.nsu.fit.pak.budle.dao;
 
 import lombok.Getter;
 import lombok.Setter;
+import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 
 import javax.persistence.*;
 

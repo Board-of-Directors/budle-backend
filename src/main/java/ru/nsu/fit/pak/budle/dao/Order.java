@@ -3,6 +3,7 @@ package ru.nsu.fit.pak.budle.dao;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 
 import javax.persistence.*;
 import java.sql.Time;
