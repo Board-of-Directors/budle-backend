@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 
 import javax.validation.constraints.*;
+import java.util.List;
 
 
 @JsonTypeInfo(
@@ -47,4 +48,7 @@ public class EstablishmentDto {
     @Min(value = 500, message = "Средний чек не может быть меньше 500")
     @NotNull(message = "Средний чек не может быть пустым")
     private Integer price;
+
+    private List<WorkingHoursDto> workingHours;
+
 }
