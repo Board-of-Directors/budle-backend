@@ -21,11 +21,7 @@ public class WorkingHours {
 
     private LocalTime endTime;
 
-    private LocalTime breakTime;
-
     private Integer dayOfWeek;
-
-    private Boolean aroundTheClock;
 
 
 }

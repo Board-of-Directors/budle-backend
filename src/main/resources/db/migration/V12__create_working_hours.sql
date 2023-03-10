@@ -5,8 +5,6 @@ create table working_hours
     day_of_week      int4      not null,
     start_time       time,
     end_time         time,
-    around_the_clock boolean,
-    break_time       time,
     foreign key (establishment_id) references establishments (id)
 
 
