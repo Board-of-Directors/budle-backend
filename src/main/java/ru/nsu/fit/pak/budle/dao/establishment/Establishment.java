@@ -4,10 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import ru.nsu.fit.pak.budle.dao.Category;
-import ru.nsu.fit.pak.budle.dao.Order;
-import ru.nsu.fit.pak.budle.dao.User;
-import ru.nsu.fit.pak.budle.dao.Worker;
+import ru.nsu.fit.pak.budle.dao.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -37,6 +34,7 @@ public class Establishment {
     private String image;
     @OneToOne
     private User owner;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "worker_establishments",
             joinColumns = @JoinColumn(name = "establishment_id"),
@@ -45,6 +43,11 @@ public class Establishment {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "id")
     private List<Order> orders;
+
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = "establishment",
+            cascade = CascadeType.ALL)
+    private List<WorkingHours> workingHours;
 
     public Establishment(Category category, Boolean hasMap, Boolean hasCardPayment) {
         this.category = category;
