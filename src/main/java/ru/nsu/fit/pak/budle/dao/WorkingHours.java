@@ -12,20 +12,20 @@ import java.time.LocalTime;
 public class WorkingHours {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    Establishment establishment;
+    private Establishment establishment;
 
-    LocalTime startTime;
+    private LocalTime startTime;
 
-    LocalTime endTime;
+    private LocalTime endTime;
 
-    LocalTime breakTime;
+    private LocalTime breakTime;
 
-    Integer dayOfWeek;
+    private Integer dayOfWeek;
 
-    Boolean aroundTheClock;
+    private Boolean aroundTheClock;
 
 
 }
