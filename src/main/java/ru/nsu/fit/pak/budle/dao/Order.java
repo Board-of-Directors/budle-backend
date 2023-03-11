@@ -28,6 +28,6 @@ public class Order {
     @OneToOne
     private User user;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Establishment establishment;
 }
