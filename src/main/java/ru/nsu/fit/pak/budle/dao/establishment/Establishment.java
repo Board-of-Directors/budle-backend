@@ -7,7 +7,7 @@ import lombok.Setter;
 import ru.nsu.fit.pak.budle.dao.*;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -39,15 +39,15 @@ public class Establishment {
     @JoinTable(name = "worker_establishments",
             joinColumns = @JoinColumn(name = "establishment_id"),
             inverseJoinColumns = @JoinColumn(name = "worker_id"))
-    private List<Worker> workers;
+    private Set<Worker> workers;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "id")
-    private List<Order> orders;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
+    private Set<Order> orders;
 
-    @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "establishment",
+    @OneToMany(fetch = FetchType.EAGER,
+            mappedBy = "id",
             cascade = CascadeType.ALL)
-    private List<WorkingHours> workingHours;
+    private Set<WorkingHours> workingHours;
 
     public Establishment(Category category, Boolean hasMap, Boolean hasCardPayment) {
         this.category = category;

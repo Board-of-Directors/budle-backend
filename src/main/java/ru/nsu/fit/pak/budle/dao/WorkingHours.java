@@ -4,7 +4,7 @@ import lombok.Data;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 
 import javax.persistence.*;
-import java.time.LocalTime;
+import java.sql.Time;
 
 @Data
 @Entity
@@ -17,9 +17,9 @@ public class WorkingHours {
     @ManyToOne(fetch = FetchType.LAZY)
     private Establishment establishment;
 
-    private LocalTime startTime;
+    private Time startTime;
 
-    private LocalTime endTime;
+    private Time endTime;
 
     private Integer dayOfWeek;
 

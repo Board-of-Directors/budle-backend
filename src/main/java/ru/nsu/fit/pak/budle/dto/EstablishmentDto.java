@@ -48,7 +48,7 @@ public class EstablishmentDto {
     @Min(value = 500, message = "Средний чек не может быть меньше 500")
     @NotNull(message = "Средний чек не может быть пустым")
     private Integer price;
-
+    @NotNull(message = "Рабочие часы не могут быть пустыми.")
     private List<WorkingHoursDto> workingHours;
 
 }
