@@ -11,12 +11,14 @@ import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
+import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +26,8 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     private static final Logger log = LoggerFactory.getLogger(EstablishmentServiceImpl.class);
     private final EstablishmentRepository establishmentRepository;
     private final EstablishmentMapper establishmentMapper;
+
+    private final WorkingHoursService workingHoursService;
 
     public List<EstablishmentDto> getEstablishmentByParams(String category,
                                                            Boolean hasMap,
@@ -53,8 +57,10 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         if (establishmentRepository.existsByAddressAndName(address, name)) {
             throw new EstablishmentAlreadyExistsException(name, address);
         }
+        Set<WorkingHoursDto> workingHoursDto = dto.getWorkingHours();
         Establishment establishment = establishmentMapper.dtoToModel(dto);
-        establishmentRepository.save(establishment);
+        Establishment savedEstablishment = establishmentRepository.save(establishment);
+        workingHoursService.saveWorkingHours(workingHoursDto, savedEstablishment);
     }
 
     public List<String> getCategories() {
