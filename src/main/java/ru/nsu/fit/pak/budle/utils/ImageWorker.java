@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 @Component
 public class ImageWorker {
     public String saveImage(String imageName) {
-        String filepath = "./" + LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + ".jpg";
+        String filepath = "./assets/" + LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + ".jpg";
         try {
             File file = new File(filepath);
             byte[] imageBytes = Base64.getDecoder().decode(imageName);
