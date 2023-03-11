@@ -7,11 +7,13 @@ import org.springframework.stereotype.Component;
 import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
+import ru.nsu.fit.pak.budle.dto.TagDto;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.utils.EstablishmentFactory;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -26,8 +28,13 @@ public class EstablishmentMapper {
     public EstablishmentDto modelToDto(Establishment establishment) {
         EstablishmentDto establishmentDto = modelMapper.map(establishment,
                 establishmentFactory.getEstablishmentDto(establishment.getCategory().toString()));
-        establishmentDto.setImage(imageWorker.loadImage(establishment));
+        establishmentDto.setImage(imageWorker.loadImage(establishment.getImage()));
         establishmentDto.setCategory(establishment.getCategory().value);
+        establishmentDto.setTags(establishment
+                .getTags()
+                .stream()
+                .map(x -> new TagDto(x.translate, imageWorker.loadImage(x.assets)))
+                .collect(Collectors.toSet()));
         return establishmentDto;
     }
 
@@ -41,7 +48,7 @@ public class EstablishmentMapper {
     public Establishment dtoToModel(EstablishmentDto dto) {
         Establishment establishment = modelMapper.map(dto,
                 establishmentFactory.getEstablishmentEntity(dto.getCategory()));
-        establishment.setImage(imageWorker.saveImage(establishment));
+        establishment.setImage(imageWorker.saveImage(establishment.getImage()));
         establishment.setOwner(userRepository.getReferenceById(1L));
         establishment.setCategory(Category.valueOf(dto.getCategory()));
         establishment.setWorkingHours(null);

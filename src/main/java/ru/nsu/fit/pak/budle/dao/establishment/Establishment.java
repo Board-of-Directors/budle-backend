@@ -50,7 +50,7 @@ public class Establishment {
     private Set<WorkingHours> workingHours;
 
 
-    @ElementCollection(targetClass = Tag.class)
+    @ElementCollection(targetClass = Tag.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "establishment_tags", joinColumns = @JoinColumn(name = "establishment_id"))
     @Column(name = "tag_name")

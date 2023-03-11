@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.Category;
+import ru.nsu.fit.pak.budle.dao.Tag;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
@@ -19,6 +20,7 @@ import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -50,15 +52,23 @@ public class EstablishmentServiceImpl implements EstablishmentService {
                 .toList();
     }
 
-    // TODO: Удалить пользователя из этой части кода
     public void createEstablishment(EstablishmentDto dto) {
         String address = dto.getAddress();
         String name = dto.getName();
         if (establishmentRepository.existsByAddressAndName(address, name)) {
             throw new EstablishmentAlreadyExistsException(name, address);
         }
+
         Set<WorkingHoursDto> workingHoursDto = dto.getWorkingHours();
         Establishment establishment = establishmentMapper.dtoToModel(dto);
+
+        Set<Tag> tags = dto
+                .getTags()
+                .stream()
+                .map(x -> Tag.parseEnum(x.getName()))
+                .collect(Collectors.toSet());
+        establishment.setTags(tags);
+
         Establishment savedEstablishment = establishmentRepository.save(establishment);
         workingHoursService.saveWorkingHours(workingHoursDto, savedEstablishment);
     }
@@ -66,4 +76,5 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     public List<String> getCategories() {
         return Arrays.stream(Category.values()).map(x -> x.value).toList();
     }
+
 }
