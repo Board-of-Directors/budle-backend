@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 
 import javax.validation.constraints.*;
-import java.util.List;
+import java.util.Set;
 
 
 @JsonTypeInfo(
@@ -49,6 +49,7 @@ public class EstablishmentDto {
     @NotNull(message = "Средний чек не может быть пустым")
     private Integer price;
     @NotNull(message = "Рабочие часы не могут быть пустыми.")
-    private List<WorkingHoursDto> workingHours;
+    @Size(min = 1, max = 7, message = "Дней работы не может быть меньше 1 и больше 7")
+    private Set<WorkingHoursDto> workingHours;
 
 }
