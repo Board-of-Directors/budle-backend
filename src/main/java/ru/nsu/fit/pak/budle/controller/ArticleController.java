@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -58,6 +59,13 @@ public class ArticleController extends ResponseEntityExceptionHandler implements
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .toList()
                 .get(0);
+        BaseResponse<Object> response = new BaseResponse<>(message, "notValidException");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        String message = ex.getMessage();
         BaseResponse<Object> response = new BaseResponse<>(message, "notValidException");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
