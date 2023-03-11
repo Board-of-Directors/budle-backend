@@ -2,7 +2,6 @@ package ru.nsu.fit.pak.budle.utils;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
-import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -13,11 +12,11 @@ import java.util.logging.Logger;
 
 @Component
 public class ImageWorker {
-    public String saveImage(Establishment establishment) {
+    public String saveImage(String imageName) {
         String filepath = "./" + LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + ".jpg";
         try {
             File file = new File(filepath);
-            byte[] imageBytes = Base64.getDecoder().decode(establishment.getImage());
+            byte[] imageBytes = Base64.getDecoder().decode(imageName);
             FileUtils.writeByteArrayToFile(file, imageBytes);
             return filepath;
         } catch (Exception e) {
@@ -27,9 +26,9 @@ public class ImageWorker {
         }
     }
 
-    public String loadImage(Establishment establishment) {
+    public String loadImage(String imageName) {
         try {
-            File inputFile = new File(establishment.getImage());
+            File inputFile = new File(imageName);
             byte[] fileContent = FileUtils.readFileToByteArray(inputFile);
             return Base64.getEncoder().encodeToString(fileContent);
         } catch (Exception e) {

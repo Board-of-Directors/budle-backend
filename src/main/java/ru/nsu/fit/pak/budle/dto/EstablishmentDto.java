@@ -51,5 +51,7 @@ public class EstablishmentDto {
     @NotNull(message = "Рабочие часы не могут быть пустыми.")
     @Size(min = 1, max = 7, message = "Дней работы не может быть меньше 1 и больше 7")
     private Set<WorkingHoursDto> workingHours;
+    @NotNull(message = "Тэги не могут быть пустыми.")
+    private Set<TagDto> tags;
 
 }

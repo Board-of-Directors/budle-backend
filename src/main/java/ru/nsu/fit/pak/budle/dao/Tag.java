@@ -1,5 +1,7 @@
 package ru.nsu.fit.pak.budle.dao;
 
+import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
+
 public enum Tag {
     wifi("WI-FI", "./assets/wifi.png"),
     power("Розетки", "./assets/power.png"),
@@ -15,5 +17,14 @@ public enum Tag {
     Tag(String translate, String assets) {
         this.translate = translate;
         this.assets = assets;
+    }
+
+    public static Tag parseEnum(String name) {
+        for (Tag tag : Tag.values()) {
+            if (name.equals(tag.translate)) {
+                return tag;
+            }
+        }
+        throw new IncorrectDataException();
     }
 }
