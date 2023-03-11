@@ -41,11 +41,11 @@ public class Establishment {
             inverseJoinColumns = @JoinColumn(name = "worker_id"))
     private Set<Worker> workers;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "establishment")
     private Set<Order> orders;
 
     @OneToMany(fetch = FetchType.EAGER,
-            mappedBy = "id",
+            mappedBy = "establishment",
             cascade = CascadeType.ALL)
     private Set<WorkingHours> workingHours;
 
