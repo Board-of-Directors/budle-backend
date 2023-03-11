@@ -49,6 +49,13 @@ public class Establishment {
             cascade = CascadeType.ALL)
     private Set<WorkingHours> workingHours;
 
+
+    @ElementCollection(targetClass = Tag.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "establishment_tags", joinColumns = @JoinColumn(name = "establishment_id"))
+    @Column(name = "tag_name")
+    private Set<Tag> tags;
+
     public Establishment(Category category, Boolean hasMap, Boolean hasCardPayment) {
         this.category = category;
         this.hasMap = hasMap;
