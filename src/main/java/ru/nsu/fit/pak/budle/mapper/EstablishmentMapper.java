@@ -44,6 +44,7 @@ public class EstablishmentMapper {
         establishment.setImage(imageWorker.saveImage(establishment));
         establishment.setOwner(userRepository.getReferenceById(1L));
         establishment.setCategory(Category.valueOf(dto.getCategory()));
+        establishment.setWorkingHours(null);
         return establishment;
     }
 }
