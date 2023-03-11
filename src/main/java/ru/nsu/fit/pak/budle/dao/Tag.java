@@ -3,12 +3,12 @@ package ru.nsu.fit.pak.budle.dao;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 
 public enum Tag {
-    wifi("WI-FI", "./assets/wifi.png"),
-    power("Розетки", "./assets/power.png"),
-    television("Телевизоры", "./assets/television.png"),
-    quite("Тихое место", "./assets/quite.png"),
-    kitchen("Кухня", "./assets/kitchen.png"),
-    dance("Танцпол", "./assets/dance.png");
+    wifi("WI-FI", "./assets/wifi.jpg"),
+    power("Розетки", "./assets/zap.jpg"),
+    television("Телевизоры", "./assets/tv.jpg"),
+    quite("Тихое место", "./assets/headphones.jpg"),
+    kitchen("Кухня", "./assets/eye.jpg"),
+    dance("Танцпол", "./assets/music.jpg");
 
     public final String translate;
 
