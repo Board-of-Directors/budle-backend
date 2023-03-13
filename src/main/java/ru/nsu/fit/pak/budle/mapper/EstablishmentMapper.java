@@ -33,7 +33,7 @@ public class EstablishmentMapper {
         establishmentDto.setTags(establishment
                 .getTags()
                 .stream()
-                .map(x -> new TagDto(x.translate, imageWorker.loadImage(x.assets)))
+                .map(x -> new TagDto(x.translate, imageWorker.getImageFromResource(x.assets)))
                 .collect(Collectors.toSet()));
         return establishmentDto;
     }
