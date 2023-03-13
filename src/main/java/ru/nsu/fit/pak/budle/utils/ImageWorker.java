@@ -1,13 +1,11 @@
 package ru.nsu.fit.pak.budle.utils;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Base64;
@@ -18,7 +16,7 @@ import java.util.logging.Logger;
 public class ImageWorker {
 
     public String saveImage(String imageName) {
-        String filepath = "./images" + LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + ".jpg";
+        String filepath = "./images/" + LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + ".jpg";
         try {
             File file = new File(filepath);
             byte[] imageBytes = Base64.getDecoder().decode(imageName);
