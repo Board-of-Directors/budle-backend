@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.EstablishmentListDto;
 import ru.nsu.fit.pak.budle.dto.OrderDto;
+import ru.nsu.fit.pak.budle.dto.TagDto;
 import ru.nsu.fit.pak.budle.service.EstablishmentServiceImpl;
 import ru.nsu.fit.pak.budle.service.OrderService;
 
@@ -53,6 +54,11 @@ public class EstablishmentController {
     @GetMapping(value = "/order")
     public List<OrderDto> orders(@RequestParam Long establishmentId) {
         return orderService.getOrders(establishmentId, Boolean.FALSE);
+    }
+
+    @GetMapping(value = "/tags")
+    public List<TagDto> tags() {
+        return establishmentService.getTags();
     }
 
     @PutMapping(value = "/order")

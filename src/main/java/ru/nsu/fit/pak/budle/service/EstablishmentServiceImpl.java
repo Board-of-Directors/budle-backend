@@ -12,10 +12,12 @@ import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Tag;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
+import ru.nsu.fit.pak.budle.dto.TagDto;
 import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
+import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +32,8 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     private final EstablishmentMapper establishmentMapper;
 
     private final WorkingHoursService workingHoursService;
+
+    private final ImageWorker imageWorker;
 
     public List<EstablishmentDto> getEstablishmentByParams(String category,
                                                            Boolean hasMap,
@@ -77,4 +81,9 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         return Arrays.stream(Category.values()).map(x -> x.value).toList();
     }
 
+    public List<TagDto> getTags() {
+        return Arrays.stream(Tag.values())
+                .map(x -> new TagDto(x.translate, imageWorker.getImageFromResource(x.assets)))
+                .toList();
+    }
 }
