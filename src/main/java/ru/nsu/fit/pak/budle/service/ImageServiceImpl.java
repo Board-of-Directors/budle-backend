@@ -21,8 +21,9 @@ public class ImageServiceImpl implements ImageService {
         Set<Photo> photos = photosDto
                 .stream()
                 .map(x -> new Photo(imageWorker.saveImage(x.getImage())))
-                .collect(Collectors.toSet());
-        photos.forEach(x -> x.setEstablishment(establishment));
+                .peek((x) -> x.setEstablishment(establishment)).collect(Collectors.toSet());
         imageRepository.saveAll(photos);
     }
+
+
 }

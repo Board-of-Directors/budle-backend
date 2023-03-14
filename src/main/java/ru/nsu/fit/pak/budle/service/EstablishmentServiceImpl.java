@@ -68,8 +68,8 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         }
 
         Set<WorkingHoursDto> workingHoursDto = dto.getWorkingHours();
+        Set<PhotoDto> photos = dto.getPhotosInput();
         Establishment establishment = establishmentMapper.dtoToModel(dto);
-
         Set<Tag> tags = dto
                 .getTags()
                 .stream()
@@ -79,7 +79,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
         Establishment savedEstablishment = establishmentRepository.save(establishment);
         workingHoursService.saveWorkingHours(workingHoursDto, savedEstablishment);
-        imageService.saveImages(dto.getPhotos(), savedEstablishment);
+        imageService.saveImages(photos, savedEstablishment);
     }
 
     public List<String> getCategories() {
@@ -98,8 +98,9 @@ public class EstablishmentServiceImpl implements EstablishmentService {
                 .findById(establishmentId).orElseThrow(
                         () -> new EstablishmentNotFoundException(establishmentId)
                 );
-        return establishment
-                .getPhotos()
+
+
+        return establishment.getPhotos()
                 .stream()
                 .map((photo) -> new PhotoDto(imageWorker.loadImage(photo.getFilepath())))
                 .collect(Collectors.toSet());

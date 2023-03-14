@@ -52,6 +52,7 @@ public class EstablishmentMapper {
         establishment.setOwner(userRepository.getReferenceById(1L));
         establishment.setCategory(Category.valueOf(dto.getCategory()));
         establishment.setWorkingHours(null);
+        establishment.setPhotos(null);
         return establishment;
     }
 }

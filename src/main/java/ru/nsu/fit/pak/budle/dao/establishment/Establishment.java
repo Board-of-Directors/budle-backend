@@ -49,7 +49,7 @@ public class Establishment {
             cascade = CascadeType.ALL)
     private Set<WorkingHours> workingHours;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "establishment", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "establishment", cascade = CascadeType.ALL)
     private Set<Photo> photos;
 
 
