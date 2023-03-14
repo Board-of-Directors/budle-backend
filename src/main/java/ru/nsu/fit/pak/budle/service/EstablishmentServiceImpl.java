@@ -12,9 +12,11 @@ import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Tag;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
+import ru.nsu.fit.pak.budle.dto.PhotoDto;
 import ru.nsu.fit.pak.budle.dto.TagDto;
 import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
+import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
@@ -88,5 +90,18 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         return Arrays.stream(Tag.values())
                 .map(x -> new TagDto(x.translate, imageWorker.getImageFromResource(x.assets)))
                 .toList();
+    }
+
+    @Override
+    public Set<PhotoDto> getPhotos(Long establishmentId) {
+        Establishment establishment = establishmentRepository
+                .findById(establishmentId).orElseThrow(
+                        () -> new EstablishmentNotFoundException(establishmentId)
+                );
+        return establishment
+                .getPhotos()
+                .stream()
+                .map((photo) -> new PhotoDto(imageWorker.loadImage(photo.getFilepath())))
+                .collect(Collectors.toSet());
     }
 }

@@ -8,4 +8,9 @@ import java.util.Set;
 public class PhotoListDto {
     private int count;
     private Set<PhotoDto> set;
+
+    public PhotoListDto(Set<PhotoDto> set, int size) {
+        this.count = size;
+        this.set = set;
+    }
 }
