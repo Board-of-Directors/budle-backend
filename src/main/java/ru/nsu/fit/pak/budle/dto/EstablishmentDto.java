@@ -53,6 +53,6 @@ public class EstablishmentDto {
     private Set<WorkingHoursDto> workingHours;
     @NotNull(message = "Тэги не могут быть пустыми.")
     private Set<TagDto> tags;
-    private Set<PhotoDto> photos;
+    private Set<PhotoDto> photosInput;
 
 }
