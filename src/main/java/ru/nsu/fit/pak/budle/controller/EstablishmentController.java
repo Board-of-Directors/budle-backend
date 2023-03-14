@@ -6,15 +6,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
-import ru.nsu.fit.pak.budle.dto.EstablishmentListDto;
-import ru.nsu.fit.pak.budle.dto.OrderDto;
-import ru.nsu.fit.pak.budle.dto.TagDto;
+import ru.nsu.fit.pak.budle.dto.*;
 import ru.nsu.fit.pak.budle.service.EstablishmentServiceImpl;
 import ru.nsu.fit.pak.budle.service.OrderService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
 
 
 @RestController
@@ -71,6 +69,12 @@ public class EstablishmentController {
     public void deleteOrder(@RequestParam Long orderId,
                             @RequestParam Long establishmentId) {
         orderService.deleteOrder(orderId, establishmentId, Boolean.FALSE);
+    }
+
+    @GetMapping(value = "/images/{establishmentId}")
+    public PhotoListDto getImages(@PathVariable Long establishmentId) {
+        Set<PhotoDto> set = establishmentService.getPhotos(establishmentId);
+        return new PhotoListDto(set, set.size());
     }
 
 
