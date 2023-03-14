@@ -49,6 +49,9 @@ public class Establishment {
             cascade = CascadeType.ALL)
     private Set<WorkingHours> workingHours;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "establishment", cascade = CascadeType.ALL)
+    private Set<Photo> photos;
+
 
     @ElementCollection(targetClass = Tag.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
