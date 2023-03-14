@@ -16,12 +16,13 @@ import java.util.logging.Logger;
 public class ImageWorker {
 
     public String saveImage(String imageName) {
-        String filepath = "./images/" + LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + ".jpg";
+        String databaseFilepath = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + ".jpg";
+        String saveFilepath = "./images/" + databaseFilepath;
         try {
-            File file = new File(filepath);
+            File file = new File(saveFilepath);
             byte[] imageBytes = Base64.getDecoder().decode(imageName);
             FileUtils.writeByteArrayToFile(file, imageBytes);
-            return filepath;
+            return databaseFilepath;
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(Level.WARNING, e.getMessage());
             return null;
@@ -31,7 +32,7 @@ public class ImageWorker {
 
     public String loadImage(String imageName) {
         try {
-            File inputFile = new File("./images" + imageName);
+            File inputFile = new File("./images/" + imageName);
             byte[] fileContent = FileUtils.readFileToByteArray(inputFile);
             return Base64.getEncoder().encodeToString(fileContent);
         } catch (Exception e) {
