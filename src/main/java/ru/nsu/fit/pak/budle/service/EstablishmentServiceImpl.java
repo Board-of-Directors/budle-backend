@@ -29,6 +29,8 @@ import java.util.stream.Collectors;
 public class EstablishmentServiceImpl implements EstablishmentService {
     private static final Logger log = LoggerFactory.getLogger(EstablishmentServiceImpl.class);
     private final EstablishmentRepository establishmentRepository;
+
+    private final ImageService imageService;
     private final EstablishmentMapper establishmentMapper;
 
     private final WorkingHoursService workingHoursService;
@@ -75,6 +77,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
         Establishment savedEstablishment = establishmentRepository.save(establishment);
         workingHoursService.saveWorkingHours(workingHoursDto, savedEstablishment);
+        imageService.saveImages(dto.getPhotos(), savedEstablishment);
     }
 
     public List<String> getCategories() {
