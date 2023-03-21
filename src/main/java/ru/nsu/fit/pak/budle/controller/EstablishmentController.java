@@ -6,11 +6,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.xml.sax.SAXException;
 import ru.nsu.fit.pak.budle.dto.*;
 import ru.nsu.fit.pak.budle.service.EstablishmentServiceImpl;
 import ru.nsu.fit.pak.budle.service.OrderService;
+import ru.nsu.fit.pak.budle.service.SpotService;
 
 import javax.validation.Valid;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -22,18 +27,13 @@ public class EstablishmentController {
     private final EstablishmentServiceImpl establishmentService;
     private final OrderService orderService;
 
+    private final SpotService spotService;
+
 
     @GetMapping
-    public EstablishmentListDto getEstablishments(@RequestParam(required = false, defaultValue = "") String name,
-                                                  @RequestParam(required = false) String category,
-                                                  @RequestParam(required = false) Boolean hasMap,
-                                                  @RequestParam(required = false) Boolean hasCardPayment,
-                                                  @RequestParam(required = false, defaultValue = "0") Integer offset,
-                                                  @RequestParam(required = false, defaultValue = "100") Integer limit,
-                                                  @RequestParam(required = false, defaultValue = "name") String sortValue) {
+    public EstablishmentListDto getEstablishments(@RequestParam(required = false, defaultValue = "") String name, @RequestParam(required = false) String category, @RequestParam(required = false) Boolean hasMap, @RequestParam(required = false) Boolean hasCardPayment, @RequestParam(required = false, defaultValue = "0") Integer offset, @RequestParam(required = false, defaultValue = "100") Integer limit, @RequestParam(required = false, defaultValue = "name") String sortValue) {
         EstablishmentListDto list = new EstablishmentListDto();
-        list.setEstablishments(establishmentService.getEstablishmentByParams(category, hasMap, hasCardPayment, name,
-                PageRequest.of(offset, limit, Sort.by(sortValue))));
+        list.setEstablishments(establishmentService.getEstablishmentByParams(category, hasMap, hasCardPayment, name, PageRequest.of(offset, limit, Sort.by(sortValue))));
         list.setCount(list.getEstablishments().size());
         return list;
     }
@@ -60,14 +60,12 @@ public class EstablishmentController {
     }
 
     @PutMapping(value = "/order")
-    public void accept(@RequestParam Long establishmentId,
-                       @RequestParam Long orderId) {
+    public void accept(@RequestParam Long establishmentId, @RequestParam Long orderId) {
         orderService.acceptOrder(orderId, establishmentId);
     }
 
     @DeleteMapping
-    public void deleteOrder(@RequestParam Long orderId,
-                            @RequestParam Long establishmentId) {
+    public void deleteOrder(@RequestParam Long orderId, @RequestParam Long establishmentId) {
         orderService.deleteOrder(orderId, establishmentId, Boolean.FALSE);
     }
 
@@ -75,6 +73,11 @@ public class EstablishmentController {
     public PhotoListDto getImages(@PathVariable Long establishmentId) {
         Set<PhotoDto> set = establishmentService.getPhotos(establishmentId);
         return new PhotoListDto(set, set.size());
+    }
+
+    @PutMapping(value = "/map/{establishmentId}", consumes = "application/xml")
+    public void createMap(@PathVariable Long establishmentId, @RequestBody String map) throws ParserConfigurationException, IOException, SAXException, TransformerException {
+        establishmentService.addMap(establishmentId, map);
     }
 
 

@@ -36,6 +36,7 @@ create table establishments
     rating           float        not null,
     owner_id         bigserial    not null,
     image            varchar      not null,
+    map              varchar,
     category         varchar      not null,
     stars_count      integer,
     cuisine_country  int4,

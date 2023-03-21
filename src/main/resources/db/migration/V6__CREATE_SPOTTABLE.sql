@@ -1,10 +1,10 @@
 drop table if exists spots cascade;
 
-create table spots(
-    id bigserial not null,
+create table spots
+(
+    id               bigserial not null,
     establishment_id bigserial not null,
-    tags varchar(255),
-    status varchar(1) not null,
+    local_id         int8      not null,
     primary key (id),
-    foreign key (establishment_id) references establishments(id)
+    foreign key (establishment_id) references establishments (id)
 )
