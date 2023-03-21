@@ -30,4 +30,8 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Establishment establishment;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Spot spot;
+
 }

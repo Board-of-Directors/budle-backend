@@ -13,6 +13,9 @@ import java.util.List;
 public class SpotMapper {
     private final ModelMapper modelMapper;
 
+    public SpotDto modelToDto(Spot spot) {
+        return modelMapper.map(spot, SpotDto.class);
+    }
 
     public List<SpotDto> ListModelToListDto(List<Spot> spots) {
         return spots
