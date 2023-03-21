@@ -8,6 +8,11 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Tag;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
@@ -21,6 +26,18 @@ import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +48,7 @@ import java.util.stream.Collectors;
 public class EstablishmentServiceImpl implements EstablishmentService {
     private static final Logger log = LoggerFactory.getLogger(EstablishmentServiceImpl.class);
     private final EstablishmentRepository establishmentRepository;
+    private final SpotService spotService;
 
     private final ImageService imageService;
     private final EstablishmentMapper establishmentMapper;
@@ -104,5 +122,21 @@ public class EstablishmentServiceImpl implements EstablishmentService {
                 .stream()
                 .map((photo) -> new PhotoDto(imageWorker.loadImage(photo.getFilepath())))
                 .collect(Collectors.toSet());
+    }
+
+    public void addMap(Long establishmentId, String map) throws IOException, SAXException, ParserConfigurationException, TransformerException {
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document document = builder.parse(new InputSource(new StringReader(map)));
+        NodeList elems = document.getDocumentElement().getElementsByTagName("path");
+        for (int i = 0; i < elems.getLength(); i++) {
+            spotService.createSpot((long) i, establishmentId);
+            Element elem = (Element) elems.item(i);
+            elem.setAttribute("id", i + "");
+        }
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+        DOMSource source = new DOMSource(document);
+        StreamResult result = new StreamResult(new File("./" + establishmentId + ".svg"));
+        transformer.transform(source, result);
     }
 }

@@ -17,14 +17,15 @@ public class Spot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String tags;
-    private String status;
+
+    private Long localId;
     @OneToOne
     private Establishment establishment;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "spot")
     private Set<Order> orders;
 
-    public Spot(Establishment establishment) {
+    public Spot(Long localId, Establishment establishment) {
+        this.localId = localId;
         this.establishment = establishment;
     }
 

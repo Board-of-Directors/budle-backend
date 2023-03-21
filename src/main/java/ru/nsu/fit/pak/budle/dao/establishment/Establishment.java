@@ -32,6 +32,7 @@ public class Establishment {
     private Category category;
 
     private String image;
+    private String map;
     @OneToOne
     private User owner;
 

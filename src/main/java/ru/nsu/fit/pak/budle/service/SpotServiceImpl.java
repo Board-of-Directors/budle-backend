@@ -26,12 +26,16 @@ public class SpotServiceImpl implements SpotService {
         return spotMapper.ListModelToListDto(spotRepository.findByEstablishment(establishment));
     }
 
+    @Override
     public SpotDto getSpotById(Long spotId) {
         return spotMapper.modelToDto(spotRepository.findById(spotId)
                 .orElseThrow());
     }
 
-    public void createSpot(Long establishmentId) {
-        spotRepository.save(new Spot(establishmentRepository.getReferenceById(establishmentId)));
+    @Override
+    public void createSpot(Long localId, Long establishmentId) {
+        spotRepository.save(
+                new Spot(localId, establishmentRepository.getReferenceById(establishmentId))
+        );
     }
 }
