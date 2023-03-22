@@ -117,7 +117,6 @@ public class EstablishmentServiceImpl implements EstablishmentService {
                         () -> new EstablishmentNotFoundException(establishmentId)
                 );
 
-
         return establishment.getPhotos()
                 .stream()
                 .map((photo) -> new PhotoDto(imageWorker.loadImage(photo.getFilepath())))
@@ -125,18 +124,29 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     public void addMap(Long establishmentId, String map) throws IOException, SAXException, ParserConfigurationException, TransformerException {
+        Establishment establishment = establishmentRepository.findById(establishmentId)
+                .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
+
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = builder.parse(new InputSource(new StringReader(map)));
         NodeList elems = document.getDocumentElement().getElementsByTagName("path");
+
+        //FIXME: SAVE ALL SPOTS IN ONE QUERY
         for (int i = 0; i < elems.getLength(); i++) {
             spotService.createSpot((long) i, establishmentId);
             Element elem = (Element) elems.item(i);
             elem.setAttribute("id", i + "");
         }
+
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         transformer.setOutputProperty(OutputKeys.METHOD, "xml");
         DOMSource source = new DOMSource(document);
-        StreamResult result = new StreamResult(new File("./" + establishmentId + ".svg"));
+
+        String mapPath = "./maps" + establishmentId + ".svg";
+        establishment.setMap(mapPath);
+        establishmentRepository.save(establishment);
+
+        StreamResult result = new StreamResult(new File(mapPath));
         transformer.transform(source, result);
     }
 }
