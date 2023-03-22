@@ -144,6 +144,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
         String mapPath = "./maps" + establishmentId + ".svg";
         establishment.setMap(mapPath);
+        establishment.setHasMap(true);
         establishmentRepository.save(establishment);
 
         StreamResult result = new StreamResult(new File(mapPath));
