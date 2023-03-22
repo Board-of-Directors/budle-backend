@@ -54,5 +54,6 @@ public class EstablishmentDto {
     @NotNull(message = "Тэги не могут быть пустыми.")
     private Set<TagDto> tags;
     private Set<PhotoDto> photosInput;
+    private String map;
 
 }

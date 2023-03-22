@@ -12,6 +12,8 @@ import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.utils.EstablishmentFactory;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +37,19 @@ public class EstablishmentMapper {
                 .stream()
                 .map(x -> new TagDto(x.translate, imageWorker.getImageFromResource(x.assets)))
                 .collect(Collectors.toSet()));
+        try {
+            if (establishment.getHasMap()) {
+                BufferedReader mapXml = new BufferedReader(new FileReader(establishment.getMap()));
+                StringBuilder builder = new StringBuilder();
+                while (mapXml.ready()) {
+                    builder.append(mapXml.readLine());
+                }
+                establishmentDto.setMap(builder.toString());
+            }
+
+        } catch (Exception e) {
+            System.out.println("Parsing map " + establishment.getMap() + " was broken");
+        }
         return establishmentDto;
     }
 
