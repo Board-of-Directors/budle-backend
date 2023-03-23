@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.nsu.fit.pak.budle.dao.Order;
 import ru.nsu.fit.pak.budle.dto.OrderDto;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
+import ru.nsu.fit.pak.budle.repository.SpotRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 
 @Component
@@ -12,6 +13,8 @@ import ru.nsu.fit.pak.budle.repository.UserRepository;
 public class OrderMapper {
     private final UserRepository userRepository;
     private final EstablishmentRepository establishmentRepository;
+
+    private final SpotRepository spotRepository;
 
     public Order dtoToOrder(OrderDto dto) {
         Order order = new Order();
@@ -21,6 +24,7 @@ public class OrderMapper {
         order.setGuestCount(dto.getGuestCount());
         order.setUser(userRepository.getReferenceById(dto.getUserId()));
         order.setEstablishment(establishmentRepository.getReferenceById(dto.getEstablishmentId()));
+        order.setSpot(spotRepository.getReferenceById(dto.getSpotId()));
         return order;
     }
 }

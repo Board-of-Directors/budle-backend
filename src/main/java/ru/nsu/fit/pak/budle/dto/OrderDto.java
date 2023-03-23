@@ -16,4 +16,5 @@ public class OrderDto {
     private Time time;
     private Long establishmentId;
     private Long userId;
+    private Long spotId;
 }
