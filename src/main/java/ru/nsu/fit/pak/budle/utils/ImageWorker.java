@@ -1,6 +1,7 @@
 package ru.nsu.fit.pak.budle.utils;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -9,11 +10,10 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Base64;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Component
 public class ImageWorker {
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     public String saveImage(String imageName) {
         String databaseFilepath = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + ".jpg";
@@ -24,7 +24,7 @@ public class ImageWorker {
             FileUtils.writeByteArrayToFile(file, imageBytes);
             return databaseFilepath;
         } catch (Exception e) {
-            Logger.getAnonymousLogger().log(Level.WARNING, e.getMessage());
+            logger.warn(e.getMessage());
             return null;
 
         }
@@ -36,7 +36,7 @@ public class ImageWorker {
             byte[] fileContent = FileUtils.readFileToByteArray(inputFile);
             return Base64.getEncoder().encodeToString(fileContent);
         } catch (Exception e) {
-            Logger.getAnonymousLogger().log(Level.WARNING, e.getMessage());
+            logger.warn(e.getMessage());
             return null;
         }
     }
@@ -47,7 +47,7 @@ public class ImageWorker {
                 return Base64.getEncoder().encodeToString(stream.readAllBytes());
             }
         } catch (IOException e) {
-            Logger.getAnonymousLogger().log(Level.WARNING, e.getMessage());
+            logger.warn(e.getMessage());
             return null;
         }
         return null;
