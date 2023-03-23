@@ -1,6 +1,8 @@
 package ru.nsu.fit.pak.budle.service;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.Code;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
@@ -10,7 +12,6 @@ import ru.nsu.fit.pak.budle.repository.CodeRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.utils.RequestSender;
 
-import java.io.IOException;
 import java.util.Map;
 
 @Service
@@ -22,9 +23,13 @@ public class CodeServiceImpl implements CodeService {
 
     private final RequestSender requestSender;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+
     @Override
     public boolean checkCode(String phoneNumber, String code) {
+        logger.info("Checking code");
         if (codeRepository.existsByPhoneNumberAndCode(phoneNumber, code)) {
+            logger.debug("Checking code was true");
             return true;
         } else {
             throw new IncorrectDataException();
@@ -32,21 +37,30 @@ public class CodeServiceImpl implements CodeService {
     }
 
     @Override
-    public boolean generateCode(String phoneNumber) throws IOException {
+    public boolean generateCode(String phoneNumber) {
+        logger.info("Generating code");
         if (userRepository.existsByPhoneNumber(phoneNumber)) {
+            logger.debug("User with number " + phoneNumber + " already exists");
             throw new UserAlreadyExistsException();
         } else {
-            Map<String, Object> map = requestSender.sendUCaller(phoneNumber);
-            if (map.get("status").equals(false)) {
+            Map<String, Object> response = requestSender.sendUCaller(phoneNumber);
+            if (codeRequestWasFalse(response)) {
+                logger.debug("Checking code for " + phoneNumber + " was false");
                 throw new IncorrectPhoneNumberException();
             } else {
+                logger.info("Creating new instance of code");
                 Code code = new Code();
-                code.setCode((String) map.get("code"));
+                code.setCode((String) response.get("code"));
                 code.setPhoneNumber(phoneNumber);
                 codeRepository.save(code);
+                logger.debug("Code " + code + "was created successfully ");
                 return true;
             }
         }
+    }
+
+    private boolean codeRequestWasFalse(Map<String, Object> response) {
+        return response.get("status").equals(false);
     }
 
 }
