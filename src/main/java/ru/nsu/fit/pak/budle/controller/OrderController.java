@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.nsu.fit.pak.budle.dto.OrderDto;
+import ru.nsu.fit.pak.budle.dto.OrderDtoOutput;
 import ru.nsu.fit.pak.budle.service.OrderService;
 
 import javax.validation.Valid;
@@ -28,7 +29,7 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<OrderDto> get(@RequestParam Long userId) {
+    public List<OrderDtoOutput> get(@RequestParam Long userId) {
         return orderService.getOrders(userId, Boolean.TRUE);
     }
 

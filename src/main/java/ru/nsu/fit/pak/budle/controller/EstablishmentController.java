@@ -50,7 +50,7 @@ public class EstablishmentController {
 
 
     @GetMapping(value = "/order")
-    public List<OrderDto> orders(@RequestParam Long establishmentId) {
+    public List<OrderDtoOutput> orders(@RequestParam Long establishmentId) {
         return orderService.getOrders(establishmentId, Boolean.FALSE);
     }
 
