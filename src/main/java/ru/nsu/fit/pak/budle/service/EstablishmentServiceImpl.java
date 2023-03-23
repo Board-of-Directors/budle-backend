@@ -12,7 +12,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Tag;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
@@ -28,15 +27,12 @@ import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
-import java.io.IOException;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;
@@ -46,7 +42,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class EstablishmentServiceImpl implements EstablishmentService {
-    private static final Logger log = LoggerFactory.getLogger(EstablishmentServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(EstablishmentServiceImpl.class);
     private final EstablishmentRepository establishmentRepository;
     private final SpotService spotService;
 
@@ -62,9 +58,16 @@ public class EstablishmentServiceImpl implements EstablishmentService {
                                                            Boolean hasCardPayment,
                                                            String name,
                                                            Pageable page) {
-        log.info("getEstablishmentByParams\n" + "Category: " + category + "\n" +
+        logger.info("Getting establishment by parameters");
+
+        logger.debug("Parameters\n" +
+                "Category: " + category + "\n" +
                 "HasMap: " + hasMap + "\n" +
-                "HasCardPayment " + hasCardPayment + "\n" + "Name: " + name);
+                "HasCardPayment " + hasCardPayment + "\n" +
+                "Name: " + name + "\n" +
+                "Page: " + page + "\n");
+
+
         ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues();
         Category categoryEnum = null;
         if (category != null) {
@@ -72,6 +75,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         }
         Example<Establishment> exampleQuery = Example.of(new Establishment(categoryEnum, hasMap, hasCardPayment), matcher);
         Page<Establishment> results = establishmentRepository.findAll(exampleQuery, page);
+        logger.debug("Results was " + results);
         return establishmentMapper.modelListToDtoList(results)
                 .stream()
                 .filter(establishment -> establishment.getName().contains(name))
@@ -79,9 +83,12 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     public void createEstablishment(EstablishmentDto dto) {
+        logger.info("Creating new establishment");
         String address = dto.getAddress();
         String name = dto.getName();
+        logger.debug("Establishment parameters:" + dto);
         if (establishmentRepository.existsByAddressAndName(address, name)) {
+            logger.warn("Establishment " + name + " " + address + " already exists");
             throw new EstablishmentAlreadyExistsException(name, address);
         }
 
@@ -98,9 +105,11 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         Establishment savedEstablishment = establishmentRepository.save(establishment);
         workingHoursService.saveWorkingHours(workingHoursDto, savedEstablishment);
         imageService.saveImages(photos, savedEstablishment);
+        logger.info("Establishment was saved");
     }
 
     public List<String> getCategories() {
+        logger.info("Getting categories");
         return Arrays.stream(Category.values()).map(x -> x.value).toList();
     }
 
@@ -112,6 +121,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     public Set<PhotoDto> getPhotos(Long establishmentId) {
+        logger.info("Getting photos");
         Establishment establishment = establishmentRepository
                 .findById(establishmentId).orElseThrow(
                         () -> new EstablishmentNotFoundException(establishmentId)
@@ -123,31 +133,48 @@ public class EstablishmentServiceImpl implements EstablishmentService {
                 .collect(Collectors.toSet());
     }
 
-    public void addMap(Long establishmentId, String map) throws IOException, SAXException, ParserConfigurationException, TransformerException {
+    public void addMap(Long establishmentId, String map) {
+        logger.info("Creating map of establishment  " + establishmentId);
         Establishment establishment = establishmentRepository.findById(establishmentId)
                 .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
+        Transformer transformer;
+        DOMSource source;
+        try {
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document document = builder.parse(new InputSource(new StringReader(map)));
+            NodeList elems = document.getDocumentElement().getElementsByTagName("path");
 
-        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        Document document = builder.parse(new InputSource(new StringReader(map)));
-        NodeList elems = document.getDocumentElement().getElementsByTagName("path");
+            //FIXME: SAVE ALL SPOTS IN ONE QUERY
+            for (int i = 0; i < elems.getLength(); i++) {
+                spotService.createSpot((long) i, establishmentId);
+                Element elem = (Element) elems.item(i);
+                elem.setAttribute("id", i + "");
+            }
 
-        //FIXME: SAVE ALL SPOTS IN ONE QUERY
-        for (int i = 0; i < elems.getLength(); i++) {
-            spotService.createSpot((long) i, establishmentId);
-            Element elem = (Element) elems.item(i);
-            elem.setAttribute("id", i + "");
+            transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+            source = new DOMSource(document);
+        } catch (Exception e) {
+            logger.warn("Map parsing was exited with exception");
+            logger.warn(e.getMessage());
+            return;
         }
 
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-        DOMSource source = new DOMSource(document);
-
         String mapPath = "./maps" + establishmentId + ".svg";
+        logger.debug("Map path was " + mapPath);
+
         establishment.setMap(mapPath);
         establishment.setHasMap(true);
         establishmentRepository.save(establishment);
 
+        logger.info("Map was saved");
+
         StreamResult result = new StreamResult(new File(mapPath));
-        transformer.transform(source, result);
+        try {
+            transformer.transform(source, result);
+        } catch (Exception e) {
+            logger.warn("Transform exception");
+            logger.warn(e.getMessage());
+        }
     }
 }
