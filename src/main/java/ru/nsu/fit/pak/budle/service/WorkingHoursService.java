@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.nsu.fit.pak.budle.dao.DayOfWeek;
 import ru.nsu.fit.pak.budle.dao.WorkingHours;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
@@ -25,6 +26,7 @@ public class WorkingHoursService {
         for (WorkingHoursDto dto : workingHoursDto) {
             logger.debug("Saving " + dto);
             WorkingHours workingHours = mapper.map(dto, WorkingHours.class);
+            workingHours.setDayOfWeek(DayOfWeek.getDayByString(dto.getDayOfWeek()));
             workingHours.setEstablishment(establishment);
             workingHoursRepository.save(workingHours);
         }

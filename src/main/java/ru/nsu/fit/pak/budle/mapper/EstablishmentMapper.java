@@ -8,6 +8,7 @@ import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.TagDto;
+import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.utils.EstablishmentFactory;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
@@ -28,10 +29,22 @@ public class EstablishmentMapper {
     private final EstablishmentFactory establishmentFactory = new EstablishmentFactory();
 
     public EstablishmentDto modelToDto(Establishment establishment) {
-        EstablishmentDto establishmentDto = modelMapper.map(establishment,
-                establishmentFactory.getEstablishmentDto(establishment.getCategory().toString()));
+        Class<? extends EstablishmentDto> classOfDto = establishmentFactory
+                .getEstablishmentDto(establishment.getCategory().toString());
+        EstablishmentDto establishmentDto = modelMapper.map(establishment, classOfDto);
         establishmentDto.setImage(imageWorker.loadImage(establishment.getImage()));
         establishmentDto.setCategory(establishment.getCategory().value);
+
+        establishmentDto.setWorkingHours(establishment
+                .getWorkingHours()
+                .stream()
+                .map(x -> {
+                    WorkingHoursDto dto = modelMapper.map(x, WorkingHoursDto.class);
+                    dto.setDayOfWeek(x.getDayOfWeek().getTranslate());
+                    return dto;
+                })
+                .collect(Collectors.toSet()));
+
         establishmentDto.setTags(establishment
                 .getTags()
                 .stream()
