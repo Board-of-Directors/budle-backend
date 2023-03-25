@@ -22,7 +22,8 @@ public class WorkingHours {
 
     private LocalTime endTime;
 
-    private Integer dayOfWeek;
+    @Enumerated(EnumType.ORDINAL)
+    private DayOfWeek dayOfWeek;
 
 
 }

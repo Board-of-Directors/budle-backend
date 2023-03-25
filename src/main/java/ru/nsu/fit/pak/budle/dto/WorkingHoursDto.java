@@ -9,7 +9,7 @@ import java.time.LocalTime;
 @Data
 public class WorkingHoursDto {
     @NotNull
-    private Integer dayOfWeek;
+    private String dayOfWeek;
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime startTime;
