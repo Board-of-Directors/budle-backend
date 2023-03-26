@@ -29,8 +29,10 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<OrderDtoOutput> get(@RequestParam Long userId) {
-        return orderService.getOrders(userId, Boolean.TRUE);
+    public List<OrderDtoOutput> get(@RequestParam Long userId,
+                                    @RequestParam(required = false) Integer status) {
+
+        return orderService.getOrders(userId, Boolean.TRUE, status);
     }
 
 

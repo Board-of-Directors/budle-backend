@@ -43,8 +43,9 @@ public class EstablishmentController {
 
 
     @GetMapping(value = "/order")
-    public List<OrderDtoOutput> orders(@RequestParam Long establishmentId) {
-        return orderService.getOrders(establishmentId, Boolean.FALSE);
+    public List<OrderDtoOutput> orders(@RequestParam Long establishmentId,
+                                       @RequestParam(required = false) Integer status) {
+        return orderService.getOrders(establishmentId, Boolean.FALSE, status);
     }
 
     @GetMapping(value = "/tags")
