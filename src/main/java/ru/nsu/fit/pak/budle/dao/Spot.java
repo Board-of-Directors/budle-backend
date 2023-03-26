@@ -22,7 +22,7 @@ public class Spot {
     @OneToOne
     private Establishment establishment;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "spot")
-    private Set<Order> orders;
+    private Set<OrderWithSpot> orders;
 
     public Spot(Long localId, Establishment establishment) {
         this.localId = localId;
