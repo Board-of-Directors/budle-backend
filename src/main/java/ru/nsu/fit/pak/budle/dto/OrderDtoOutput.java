@@ -8,6 +8,7 @@ import java.util.Date;
 
 @Data
 public class OrderDtoOutput {
+    private Long id;
     private Integer guestCount;
     @JsonFormat
             (shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
