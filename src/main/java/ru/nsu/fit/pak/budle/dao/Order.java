@@ -31,7 +31,4 @@ public class Order {
     @ManyToOne(fetch = FetchType.EAGER)
     private Establishment establishment;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Spot spot;
-
 }

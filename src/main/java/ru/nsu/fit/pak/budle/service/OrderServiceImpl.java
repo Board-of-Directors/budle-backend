@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.Order;
+import ru.nsu.fit.pak.budle.dao.OrderWithSpot;
 import ru.nsu.fit.pak.budle.dao.Spot;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
@@ -42,22 +43,30 @@ public class OrderServiceImpl implements OrderService {
     public void createOrder(OrderDto dto) {
         logger.info("Creating order");
         logger.debug(dto.toString());
-        Order order = modelMapper.map(dto, Order.class);
-        User user = userRepository
-                .findById(dto.getUserId())
-                .orElseThrow(UserNotFoundException::new);
-        order.setUser(user);
+
         Establishment establishment = establishmentRepository
                 .findById(dto.getEstablishmentId())
                 .orElseThrow(() ->
                         new EstablishmentNotFoundException(dto.getEstablishmentId()));
-        order.setEstablishment(establishment);
+        Order order;
         if (establishment.getHasMap()) {
+            order = new OrderWithSpot();
             Spot spot = spotRepository
                     .findById(dto.getSpotId())
                     .orElseThrow(IncorrectDataException::new);
-            order.setSpot(spot);
+            ((OrderWithSpot) order).setSpot(spot);
+        } else {
+            order = new Order();
         }
+        order.setTime(dto.getTime());
+        order.setGuestCount(dto.getGuestCount());
+        order.setDate(dto.getDate());
+        order.setStatus(0);
+        User user = userRepository
+                .findById(dto.getUserId())
+                .orElseThrow(UserNotFoundException::new);
+        order.setUser(user);
+        order.setEstablishment(establishment);
         orderRepository.save(order);
     }
 
