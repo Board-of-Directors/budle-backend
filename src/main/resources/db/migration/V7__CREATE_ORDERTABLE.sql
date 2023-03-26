@@ -5,7 +5,7 @@ create table orders
     id               bigserial not null,
     user_id          bigserial not null,
     establishment_id bigserial not null,
-    spot_id          bigserial not null,
+    spot_id          bigserial,
     date             timestamp not null,
     time             time      not null,
     status           int4      not null,

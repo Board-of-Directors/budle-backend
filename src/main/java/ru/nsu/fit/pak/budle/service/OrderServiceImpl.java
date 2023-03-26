@@ -6,15 +6,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.Order;
+import ru.nsu.fit.pak.budle.dao.Spot;
+import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.OrderDto;
 import ru.nsu.fit.pak.budle.dto.OrderDtoOutput;
-import ru.nsu.fit.pak.budle.exceptions.NotEnoughRightsException;
-import ru.nsu.fit.pak.budle.exceptions.OrderNotFoundException;
+import ru.nsu.fit.pak.budle.exceptions.*;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
-import ru.nsu.fit.pak.budle.mapper.OrderMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.OrderRepository;
+import ru.nsu.fit.pak.budle.repository.SpotRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 
 import javax.transaction.Transactional;
@@ -24,7 +25,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
-    private final OrderMapper orderMapper;
 
     private final ModelMapper modelMapper;
 
@@ -34,13 +34,30 @@ public class OrderServiceImpl implements OrderService {
 
     private final EstablishmentMapper establishmentMapper;
 
+    private final SpotRepository spotRepository;
+
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public void createOrder(OrderDto dto) {
         logger.info("Creating order");
         logger.debug(dto.toString());
-        Order order = orderMapper.dtoToOrder(dto);
+        Order order = modelMapper.map(dto, Order.class);
+        User user = userRepository
+                .findById(dto.getUserId())
+                .orElseThrow(UserNotFoundException::new);
+        order.setUser(user);
+        Establishment establishment = establishmentRepository
+                .findById(dto.getEstablishmentId())
+                .orElseThrow(() ->
+                        new EstablishmentNotFoundException(dto.getEstablishmentId()));
+        order.setEstablishment(establishment);
+        if (establishment.getHasMap()) {
+            Spot spot = spotRepository
+                    .findById(dto.getSpotId())
+                    .orElseThrow(IncorrectDataException::new);
+            order.setSpot(spot);
+        }
         orderRepository.save(order);
     }
 
