@@ -92,7 +92,7 @@ public class OrderServiceImpl implements OrderService {
                 .findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
         if (byUser && order.getUser().getId().equals(id)) {
-            order.setStatus(2);
+            orderRepository.delete(order);
         } else if (order.getEstablishment().getId().equals(id)) {
             order.setStatus(2);
         } else {
