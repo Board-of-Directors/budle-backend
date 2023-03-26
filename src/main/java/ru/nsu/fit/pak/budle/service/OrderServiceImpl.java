@@ -62,7 +62,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDtoOutput> getOrders(Long id, Boolean byUser) {
+    public List<OrderDtoOutput> getOrders(Long id, Boolean byUser, Integer status) {
         logger.info("Getting orders");
         logger.debug("byUser " + byUser + "\n"
                 + "id " + id);
@@ -71,6 +71,8 @@ public class OrderServiceImpl implements OrderService {
                 orderRepository.findAllByEstablishment(establishmentRepository.getReferenceById(id));
 
         logger.debug("Result: " + orders);
+
+
         return orders
                 .stream()
                 .map(order -> {
@@ -79,6 +81,13 @@ public class OrderServiceImpl implements OrderService {
                     orderDtoOutput.setEstablishment(establishmentMapper.modelToDto(establishmentSource));
                     return orderDtoOutput;
                 })
+                .filter(
+                        x -> {
+                            if (status == null) {
+                                return true;
+                            } else return x.getStatus().equals(status);
+                        }
+                )
                 .toList();
     }
 
