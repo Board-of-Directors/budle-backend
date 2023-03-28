@@ -5,5 +5,5 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class GameClub extends EstablishmentDto {
+public class GameClubDto extends EstablishmentDto {
 }

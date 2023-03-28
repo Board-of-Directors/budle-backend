@@ -12,7 +12,7 @@ public enum Category {
     entertainment("Развлекательный"),
     building("Строительные"),
     game_club("Игровые клубы"),
-    barbershop("Парикмахерская");
+    barbershop("Парикмахерские");
     public final String value;
 
     Category(String value) {
