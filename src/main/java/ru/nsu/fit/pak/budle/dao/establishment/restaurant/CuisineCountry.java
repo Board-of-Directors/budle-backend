@@ -24,4 +24,8 @@ public enum CuisineCountry {
         }
         throw new IncorrectDataException();
     }
+
+    public String getValue() {
+        return value;
+    }
 }
