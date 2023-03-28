@@ -17,6 +17,8 @@ import java.util.Set;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = RestaurantDto.class, name = "restaurant"),
         @JsonSubTypes.Type(value = HotelDto.class, name = "hotel"),
+        @JsonSubTypes.Type(value = BarbershopDto.class, name = "barbershop"),
+        @JsonSubTypes.Type(value = GameClub.class, name = "game_club")
 })
 @Data
 public class EstablishmentDto {

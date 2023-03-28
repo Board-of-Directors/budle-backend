@@ -10,7 +10,9 @@ public enum Category {
     government("Государственные"),
     cars("Автомобильные"),
     entertainment("Развлекательный"),
-    building("Строительные");
+    building("Строительные"),
+    game_club("Игровые клубы"),
+    barbershop("Парикмахерская");
     public final String value;
 
     Category(String value) {
