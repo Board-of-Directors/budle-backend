@@ -172,6 +172,19 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         return times;
     }
 
+    @Override
+    public List<TagDto> getSpotTags(Long establishmentId) {
+        Establishment establishment = establishmentRepository.findById(establishmentId)
+                .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
+        return establishment
+                .getTags()
+                .stream()
+                .map(x -> new TagDto(x.translateForSpot, x.assets))
+                .peek(x -> x.setImage(imageWorker.getImageFromResource(x.getImage())))
+                .collect(Collectors.toList());
+
+    }
+
     public void addMap(Long establishmentId, String map) {
         logger.info("Creating map of establishment  " + establishmentId);
         Establishment establishment = establishmentRepository.findById(establishmentId)

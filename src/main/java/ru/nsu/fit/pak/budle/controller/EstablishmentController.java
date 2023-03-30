@@ -74,6 +74,11 @@ public class EstablishmentController {
         return establishmentService.getValidTime(establishmentId);
     }
 
+    @GetMapping(value = "/spotTags")
+    public List<TagDto> getTags(@RequestParam Long establishmentId) {
+        return establishmentService.getSpotTags(establishmentId);
+    }
+
     @PutMapping(value = "/map", consumes = "application/xml")
     public void createMap(@RequestParam Long establishmentId, @RequestBody String map) {
         establishmentService.addMap(establishmentId, map);
