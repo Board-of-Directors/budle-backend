@@ -3,18 +3,21 @@ package ru.nsu.fit.pak.budle.dao;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 
 public enum DayOfWeek {
-    Monday("Пн"),
-    Tuesday("Вт"),
-    Wednesday("Ср"),
-    Thursday("Чт"),
-    Friday("Пт"),
-    Saturday("Сб"),
-    Sunday("Вс");
+    Monday("Пн", "пн"),
+    Tuesday("Вт", "вт"),
+    Wednesday("Ср", "ср"),
+    Thursday("Чт", "чт"),
+    Friday("Пт", "пт"),
+    Saturday("Сб", "сб"),
+    Sunday("Вс", "вс");
 
     private final String translate;
+    private final String translateLittle;
 
-    DayOfWeek(String translate) {
+    DayOfWeek(String translate, String translateLittle) {
+
         this.translate = translate;
+        this.translateLittle = translateLittle;
     }
 
     static public DayOfWeek getDayByString(String day) {
@@ -28,5 +31,9 @@ public enum DayOfWeek {
 
     public String getTranslate() {
         return translate;
+    }
+
+    public String getTranslateLittle() {
+        return translateLittle;
     }
 }

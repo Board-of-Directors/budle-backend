@@ -21,7 +21,7 @@ import java.util.Set;
 public class EstablishmentController {
     private final EstablishmentServiceImpl establishmentService;
     private final OrderService orderService;
-    
+
 
     @GetMapping
     public EstablishmentListDto getEstablishments(@RequestParam(required = false, defaultValue = "") String name, @RequestParam(required = false) String category, @RequestParam(required = false) Boolean hasMap, @RequestParam(required = false) Boolean hasCardPayment, @RequestParam(required = false, defaultValue = "0") Integer offset, @RequestParam(required = false, defaultValue = "100") Integer limit, @RequestParam(required = false, defaultValue = "name") String sortValue) {
@@ -67,6 +67,11 @@ public class EstablishmentController {
     public PhotoListDto getImages(@RequestParam Long establishmentId) {
         Set<PhotoDto> set = establishmentService.getPhotos(establishmentId);
         return new PhotoListDto(set, set.size());
+    }
+
+    @GetMapping(value = "/time")
+    public List<ValidTimeDto> getTime(@RequestParam Long establishmentId) {
+        return establishmentService.getValidTime(establishmentId);
     }
 
     @PutMapping(value = "/map", consumes = "application/xml")
