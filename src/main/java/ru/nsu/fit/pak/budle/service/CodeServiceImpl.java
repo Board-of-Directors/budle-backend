@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.Code;
+import ru.nsu.fit.pak.budle.dao.CodeType;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectPhoneNumberException;
 import ru.nsu.fit.pak.budle.exceptions.UserAlreadyExistsException;
@@ -52,6 +53,7 @@ public class CodeServiceImpl implements CodeService {
                 Code code = new Code();
                 code.setCode((String) response.get("code"));
                 code.setPhoneNumber(phoneNumber);
+                code.setType(CodeType.registration);
                 codeRepository.save(code);
                 logger.debug("Code " + code + "was created successfully ");
                 return true;
