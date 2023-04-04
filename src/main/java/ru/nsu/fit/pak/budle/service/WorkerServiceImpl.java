@@ -44,9 +44,13 @@ public class WorkerServiceImpl implements WorkerService {
     public void deleteWorker(Long workerId) {
         logger.info("Deleting worker");
         logger.debug("Worker with ID: " + workerId);
-        Worker worker = workerRepository.findWorkerById(workerId)
-                .orElseThrow(() -> new WorkerNotFoundException(workerId));
+        Worker worker = getWorkerById(workerId);
         workerRepository.delete(worker);
+    }
+
+    private Worker getWorkerById(Long workerId) {
+        return workerRepository.findWorkerById(workerId)
+                .orElseThrow(() -> new WorkerNotFoundException(workerId));
     }
 
 }

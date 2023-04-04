@@ -37,3 +37,7 @@ dependencies {
 springBoot {
     mainClass = "ru.nsu.fit.pak.budle.BudleApplication"
 }
+
+test {
+    useJUnitPlatform()
+}
