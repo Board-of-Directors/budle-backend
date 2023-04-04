@@ -14,7 +14,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Tag;
-import ru.nsu.fit.pak.budle.dao.WorkingHours;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.*;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
@@ -32,10 +31,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.StringReader;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.TextStyle;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -132,40 +130,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     @Override
     public List<ValidTimeDto> getValidTime(Long establishmentId) {
         Establishment establishment = getEstablishmentById(establishmentId);
-
-        List<ValidTimeDto> times = new ArrayList<>();
-        Set<WorkingHours> workingHours = establishment.getWorkingHours();
-        int dayCountInOneWeek = 7;
-
-        for (int i = 0; i < dayCountInOneWeek; i++) {
-            ValidTimeDto currentDto = new ValidTimeDto();
-            LocalDate today = LocalDate.now()
-                    .plusDays(i);
-            String todayDayName = today.getDayOfWeek()
-                    .getDisplayName(TextStyle.SHORT, new Locale("ru"));
-
-            for (WorkingHours currentHours : workingHours) {
-                if (currentHours.getDayOfWeek().getTranslateLittle().equals(todayDayName)) {
-
-                    currentDto.setMonthName(today.getMonth()
-                            .getDisplayName(TextStyle.SHORT, new Locale("ru")));
-                    currentDto.setDayName(todayDayName);
-                    currentDto.setDayNumber(today.getDayOfMonth() + " ");
-
-                    int extraMinutes = 30 - currentHours.getStartTime().getMinute() % 30;
-                    List<String> currentDayList = new ArrayList<>();
-                    for (LocalTime currentTime = currentHours.getStartTime().plusMinutes(extraMinutes);
-                         currentTime.isBefore(currentHours.getEndTime());
-                         currentTime = currentTime.plusMinutes(30)) {
-                        currentDayList.add(currentTime.toString());
-                    }
-                    currentDto.setTimes(currentDayList);
-                    times.add(currentDto);
-                }
-
-            }
-        }
-        return times;
+        return workingHoursService.getValidBookingHoursByEstablishment(establishment);
     }
 
     @Override
