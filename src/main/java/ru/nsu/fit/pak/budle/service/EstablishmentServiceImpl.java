@@ -50,6 +50,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     private final ImageWorker imageWorker;
 
+    @Override
     public List<EstablishmentDto> getEstablishmentByParams(String category,
                                                            Boolean hasMap,
                                                            Boolean hasCardPayment,
@@ -79,6 +80,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
                 .toList();
     }
 
+    @Override
     public void createEstablishment(EstablishmentDto dto) {
         logger.info("Creating new establishment");
         String address = dto.getAddress();
@@ -105,11 +107,13 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         logger.info("Establishment was saved");
     }
 
+    @Override
     public List<String> getCategories() {
         logger.info("Getting categories");
         return Arrays.stream(Category.values()).map(x -> x.value).toList();
     }
 
+    @Override
     public List<TagDto> getTags() {
         return Arrays.stream(Tag.values())
                 .map(x -> new TagDto(x.translate, imageWorker.getImageFromResource(x.assets)))
@@ -145,6 +149,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     }
 
+    @Override
     public void addMap(Long establishmentId, String map) {
         logger.info("Creating map of establishment  " + establishmentId);
         Establishment establishment = getEstablishmentById(establishmentId);
