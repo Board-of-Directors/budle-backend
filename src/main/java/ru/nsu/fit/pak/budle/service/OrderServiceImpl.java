@@ -40,6 +40,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @Override
     public void createOrder(OrderDto dto) {
         logger.info("Creating order");
         logger.debug(dto.toString());
