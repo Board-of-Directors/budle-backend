@@ -121,10 +121,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     @Override
     public Set<PhotoDto> getPhotos(Long establishmentId) {
         logger.info("Getting photos");
-        Establishment establishment = establishmentRepository
-                .findById(establishmentId).orElseThrow(
-                        () -> new EstablishmentNotFoundException(establishmentId)
-                );
+        Establishment establishment = getEstablishmentById(establishmentId);
 
         return establishment.getPhotos()
                 .stream()
@@ -134,8 +131,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     public List<ValidTimeDto> getValidTime(Long establishmentId) {
-        Establishment establishment = establishmentRepository.findById(establishmentId)
-                .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
+        Establishment establishment = getEstablishmentById(establishmentId);
 
         List<ValidTimeDto> times = new ArrayList<>();
         Set<WorkingHours> workingHours = establishment.getWorkingHours();
@@ -174,8 +170,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     public List<TagDto> getSpotTags(Long establishmentId) {
-        Establishment establishment = establishmentRepository.findById(establishmentId)
-                .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
+        Establishment establishment = getEstablishmentById(establishmentId);
         return establishment
                 .getTags()
                 .stream()
@@ -187,8 +182,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     public void addMap(Long establishmentId, String map) {
         logger.info("Creating map of establishment  " + establishmentId);
-        Establishment establishment = establishmentRepository.findById(establishmentId)
-                .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
+        Establishment establishment = getEstablishmentById(establishmentId);
         Transformer transformer;
         DOMSource source;
         try {
@@ -228,5 +222,12 @@ public class EstablishmentServiceImpl implements EstablishmentService {
             logger.warn("Transform exception");
             logger.warn(e.getMessage());
         }
+    }
+
+    private Establishment getEstablishmentById(Long establishmentId) {
+        return establishmentRepository
+                .findById(establishmentId).orElseThrow(
+                        () -> new EstablishmentNotFoundException(establishmentId)
+                );
     }
 }

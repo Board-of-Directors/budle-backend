@@ -104,11 +104,10 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void deleteOrder(Long orderId, Long id, Boolean byUser) {
         logger.info("Deleting order");
-        logger.debug("OrderID " + orderId + "\n"
-                + "id " + id);
-        Order order = orderRepository
-                .findById(orderId)
-                .orElseThrow(() -> new OrderNotFoundException(orderId));
+        logger.debug("OrderID " + orderId + "\n" + "id " + id);
+
+        Order order = getOrderById(orderId);
+
         if (byUser && order.getUser().getId().equals(id)) {
             orderRepository.delete(order);
         } else if (order.getEstablishment().getId().equals(id)) {
@@ -123,10 +122,14 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void acceptOrder(Long orderId, Long establishmentId) {
         logger.info("Accepting order");
-        Order order = orderRepository.findById(orderId).orElseThrow(() ->
-                new OrderNotFoundException(orderId));
+        Order order = getOrderById(orderId);
         order.setStatus(1);
         orderRepository.save(order);
+    }
+
+    private Order getOrderById(Long orderId) {
+        return orderRepository.findById(orderId).orElseThrow(() ->
+                new OrderNotFoundException(orderId));
     }
 
 }
