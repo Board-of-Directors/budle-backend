@@ -33,7 +33,10 @@ public class SecurityServiceImpl implements SecurityService {
         if (userDetails == null) {
             throw new UsernameNotFoundException("User with this username does not exist");
         }
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                new UsernamePasswordAuthenticationToken(userDetails,
+                        password,
+                        userDetails.getAuthorities());
 
 
         authenticationManager.authenticate(usernamePasswordAuthenticationToken);
