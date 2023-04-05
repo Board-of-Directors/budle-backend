@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.nsu.fit.pak.budle.BaseResponse;
 import ru.nsu.fit.pak.budle.exceptions.*;
+import ru.nsu.fit.pak.budle.utils.BaseResponse;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.LinkedHashMap;
