@@ -12,11 +12,19 @@ import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class that represent establishment factory.
+ * Used for reflecting establishment and convert additional fields.
+ * Contains two maps: for entities and for dto.
+ */
 @Component
 public class EstablishmentFactory {
-    Map<String, Establishment> entityFactory;
-    Map<String, EstablishmentDto> dtoFactory;
+    private final Map<String, Establishment> entityFactory;
+    private final Map<String, EstablishmentDto> dtoFactory;
 
+    /**
+     * Default constructor of establishment factory.
+     */
     public EstablishmentFactory() {
         entityFactory = new HashMap<>();
         dtoFactory = new HashMap<>();
@@ -24,6 +32,9 @@ public class EstablishmentFactory {
         initDtoFactory();
     }
 
+    /**
+     * Initial state of entity factory.
+     */
     private void initEntityFactory() {
         entityFactory.put("hotel", new Hotel());
         entityFactory.put("restaurant", new Restaurant());
@@ -31,6 +42,9 @@ public class EstablishmentFactory {
         entityFactory.put("barbershop", new Barbershop());
     }
 
+    /**
+     * Initial state of dto factory.
+     */
     private void initDtoFactory() {
         dtoFactory.put("hotel", new HotelDto());
         dtoFactory.put("restaurant", new RestaurantDto());
@@ -38,6 +52,12 @@ public class EstablishmentFactory {
         dtoFactory.put("barbershop", new BarbershopDto());
     }
 
+    /**
+     * Function that returned class of establishment by name of category.
+     *
+     * @param type of establishment
+     * @return class
+     */
     public Class<? extends Establishment> getEstablishmentEntity(String type) {
         Establishment establishment = entityFactory.get(type);
         if (establishment == null) {
@@ -46,6 +66,12 @@ public class EstablishmentFactory {
         return establishment.getClass();
     }
 
+    /**
+     * Function that returned class of establishment dto by name of category.
+     *
+     * @param type of establishment
+     * @return class
+     */
     public Class<? extends EstablishmentDto> getEstablishmentDto(String type) {
         EstablishmentDto establishmentDto = dtoFactory.get(type);
         if (establishmentDto == null) {
