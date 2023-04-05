@@ -6,22 +6,22 @@ import org.springframework.stereotype.Component;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dto.UserDto;
 
-import java.util.List;
-
+/**
+ * Class, that represent mapper for user class.
+ */
 @Component
 @RequiredArgsConstructor
 public class UserMapper {
     private final ModelMapper modelMapper;
 
+    /**
+     * Convert user dto object to user model object.
+     *
+     * @param userDto object.
+     * @return user model object.
+     */
 
     public User dtoToModel(UserDto userDto) {
         return modelMapper.map(userDto, User.class);
-    }
-
-    public List<UserDto> modelListToDtoList(List<User> userList) {
-        return userList
-                .stream()
-                .map(user -> modelMapper.map(user, UserDto.class))
-                .toList();
     }
 }
