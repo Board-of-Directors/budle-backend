@@ -8,14 +8,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dto.UserDto;
-import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 import ru.nsu.fit.pak.budle.exceptions.UserAlreadyExistsException;
-import ru.nsu.fit.pak.budle.exceptions.UserNotFoundException;
 import ru.nsu.fit.pak.budle.mapper.UserMapper;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
-
-import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +24,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final PasswordEncoder encoder;
 
     @Override
-    public Boolean registerUser(UserDto userDto) {
+    public void registerUser(UserDto userDto) {
 
         if (userRepository.existsByPhoneNumber(userDto.getPhoneNumber()) ||
                 userRepository.existsByUsername(userDto.getUsername())) {
@@ -38,16 +33,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             User user = userMapper.dtoToModel(userDto);
             user.setPassword(encoder.encode(user.getPassword()));
             userRepository.save(user);
-            return true;
         }
     }
 
-    @Override
-    public List<UserDto> getUsers() {
-        return userMapper.modelListToDtoList(userRepository.findAll());
-    }
 
-    @Override
+    /*@Override
     public Boolean loginUser(UserDto userDto) {
         try {
             User user = userRepository.findByPhoneNumber(userDto.getPhoneNumber()).orElseThrow();
@@ -66,6 +56,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public Boolean existsPhoneNumber(String phoneNumber) {
         return !userRepository.existsByPhoneNumber(phoneNumber);
     }
+
+     */
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
