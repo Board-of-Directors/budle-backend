@@ -1,6 +1,7 @@
 package ru.nsu.fit.pak.budle.utils;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
@@ -17,10 +18,21 @@ import java.util.Base64;
 import java.util.Iterator;
 
 
+/**
+ * Class, that responsible for image saving into file system
+ * and image loading from file system.
+ * Also, have methods for compress images and getting images from resources.
+ */
 @Component
 public class ImageWorker {
-    private final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
+    /**
+     * Method that saves image of establishment.
+     *
+     * @param imageContent string content representation (Base64).
+     * @return filepath of image that will be saved in database.
+     */
     public String saveImage(String imageContent) {
         String databaseFilepath = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + ".jpg";
         String saveFilepath = "./images/" + databaseFilepath;
@@ -37,37 +49,47 @@ public class ImageWorker {
         }
     }
 
-    public void compressImage(String filepath) throws IOException {
-        BufferedImage image = null;
-        OutputStream os = null;
+    /**
+     * Compress existed image.
+     *
+     * @param filepath of image that we need to compress.
+     */
+    public void compressImage(String filepath) {
         try {
             File input = new File(filepath);
-            image = ImageIO.read(input);
+            BufferedImage image = ImageIO.read(input);
 
             File compressedImageFile = new File(filepath);
-            os = new FileOutputStream(compressedImageFile);
+            OutputStream outputStream = new FileOutputStream(compressedImageFile);
 
+            Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpeg");
+            ImageWriter writer = writers.next();
+
+            ImageWriteParam param = writer.getDefaultWriteParam();
+
+            param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+            param.setCompressionQuality(0.7f);
+
+            ImageOutputStream imageOutputStream = ImageIO.createImageOutputStream(outputStream);
+            writer.setOutput(imageOutputStream);
+
+            writer.write(null, new IIOImage(image, null, null), param);
+
+            outputStream.close();
+            imageOutputStream.close();
+            writer.dispose();
         } catch (IOException exception) {
             System.out.println(exception.getMessage());
         }
 
-        Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
-        ImageWriter writer = writers.next();
-
-        ImageOutputStream ios = ImageIO.createImageOutputStream(os);
-        writer.setOutput(ios);
-
-        ImageWriteParam param = writer.getDefaultWriteParam();
-
-        param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-        param.setCompressionQuality(0.7f);
-        writer.write(null, new IIOImage(image, null, null), param);
-
-        os.close();
-        ios.close();
-        writer.dispose();
-
     }
+
+    /**
+     * Load existing image and return content of this image.
+     *
+     * @param imageName name of file in images folder.
+     * @return Base64 encoded content of the image.
+     */
 
     public String loadImage(String imageName) {
         try {
@@ -80,6 +102,12 @@ public class ImageWorker {
         }
     }
 
+    /**
+     * Load existing image from resources and return content of this image.
+     *
+     * @param imageName name of image in the resource folder.
+     * @return Base64 encoded content of the image.
+     */
     public String getImageFromResource(String imageName) {
         try (InputStream stream = this.getClass().getClassLoader().getResourceAsStream("images" + imageName)) {
             if (stream != null) {
@@ -87,7 +115,6 @@ public class ImageWorker {
             }
         } catch (IOException e) {
             logger.warn(e.getMessage());
-            return null;
         }
         return null;
     }
