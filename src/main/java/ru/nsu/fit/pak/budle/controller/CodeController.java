@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.nsu.fit.pak.budle.dto.CodeDto;
 import ru.nsu.fit.pak.budle.service.CodeService;
 
-import java.io.IOException;
-
 /**
  * Class that represents code controller.
  * Main aim of this controller - creating user codes and checking user codes.
@@ -27,12 +25,10 @@ public class CodeController {
      *
      * @param phoneNumber of user, who wants to register his account.
      * @return boolean variable, that indicates success of this request.
-     * @throws IOException - when it was some exception
      */
     // TODO: GET -> POST
-    // FIXME: delete IOException
     @GetMapping
-    public Boolean getCode(@RequestParam String phoneNumber) throws IOException {
+    public Boolean getCode(@RequestParam String phoneNumber) {
         return codeService.generateCode(phoneNumber);
     }
 
