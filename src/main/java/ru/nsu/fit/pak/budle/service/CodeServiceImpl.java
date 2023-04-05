@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.Code;
 import ru.nsu.fit.pak.budle.dao.CodeType;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
-import ru.nsu.fit.pak.budle.exceptions.IncorrectPhoneNumberException;
+import ru.nsu.fit.pak.budle.exceptions.IncorrectPhoneNumberFormatException;
 import ru.nsu.fit.pak.budle.exceptions.UserAlreadyExistsException;
 import ru.nsu.fit.pak.budle.repository.CodeRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
@@ -47,7 +47,7 @@ public class CodeServiceImpl implements CodeService {
             Map<String, Object> response = requestSender.sendUCaller(phoneNumber);
             if (codeRequestWasFalse(response)) {
                 logger.debug("Checking code for " + phoneNumber + " was false");
-                throw new IncorrectPhoneNumberException();
+                throw new IncorrectPhoneNumberFormatException();
             } else {
                 logger.info("Creating new instance of code");
                 Code code = new Code();
