@@ -21,7 +21,9 @@ import java.io.FileReader;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+/**
+ * Class, that provide mapping operations for establishments.
+ */
 @Component
 @RequiredArgsConstructor
 public class EstablishmentMapper {
@@ -29,17 +31,34 @@ public class EstablishmentMapper {
     private final ImageWorker imageWorker;
     private final UserRepository userRepository;
 
-    private final EstablishmentFactory establishmentFactory = new EstablishmentFactory();
+    private final EstablishmentFactory establishmentFactory;
+
+    /**
+     * Converts establishment model to establishment dto.
+     * First stage: Use establishment factory to get class of establishment.
+     * Second stage: Use model mapper with provided from factory class
+     * to convert some field automatically.
+     * Third stage: Use image worker to get image from file system and
+     * convert bytes to BASE64.
+     * Other: Convert other fields to those dto.
+     * FIXME: need to reduce code, do some refactoring, maybe deal with model mapper
+     *
+     * @param establishment object that we need to convert.
+     * @return establishmentDto with provided fields.
+     */
 
     public EstablishmentDto modelToDto(Establishment establishment) {
         Class<? extends EstablishmentDto> classOfDto = establishmentFactory
                 .getEstablishmentDto(establishment.getCategory().toString());
+
         EstablishmentDto establishmentDto = modelMapper.map(establishment, classOfDto);
+
         establishmentDto.setImage(imageWorker.loadImage(establishment.getImage()));
         establishmentDto.setCategory(establishment.getCategory().value);
-        if (establishment instanceof Restaurant) {
-            String name = ((Restaurant) establishment).getCuisineCountry().getValue();
-            ((RestaurantDto) establishmentDto).setCuisineCountry(name);
+        if (establishment instanceof Restaurant restaurant &&
+                establishmentDto instanceof RestaurantDto restaurantDto) {
+            String name = restaurant.getCuisineCountry().getValue();
+            restaurantDto.setCuisineCountry(name);
         }
         establishmentDto.setWorkingHours(establishment
                 .getWorkingHours()
@@ -72,6 +91,13 @@ public class EstablishmentMapper {
         return establishmentDto;
     }
 
+    /**
+     * Convert list of establishment models to list of establishment dto.
+     *
+     * @param establishmentList list of establishment models
+     * @return list of establishment dto.
+     */
+
     public List<EstablishmentDto> modelListToDtoList(Page<Establishment> establishmentList) {
         return establishmentList
                 .stream()
@@ -79,12 +105,23 @@ public class EstablishmentMapper {
                 .toList();
     }
 
+    /**
+     * Converts establishment dto to establishment model.
+     * Stages are similar to opposite mapping.
+     * FIXME: User hardcoded.
+     *
+     * @param dto establishment dto object.
+     * @return establishment model object.
+     */
+
     public Establishment dtoToModel(EstablishmentDto dto) {
         Establishment establishment = modelMapper.map(dto,
                 establishmentFactory.getEstablishmentEntity(dto.getCategory()));
-        if (dto instanceof RestaurantDto) {
-            String name = ((RestaurantDto) dto).getCuisineCountry();
-            ((Restaurant) establishment).setCuisineCountry(CuisineCountry.getEnumByValue(name));
+
+        if (dto instanceof RestaurantDto restaurantDto &&
+                establishment instanceof Restaurant restaurant) {
+            String name = restaurantDto.getCuisineCountry();
+            restaurant.setCuisineCountry(CuisineCountry.getEnumByValue(name));
         }
         establishment.setImage(imageWorker.saveImage(establishment.getImage()));
         establishment.setOwner(userRepository.getReferenceById(1L));

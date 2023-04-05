@@ -1,5 +1,6 @@
 package ru.nsu.fit.pak.budle.utils;
 
+import org.springframework.stereotype.Component;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dao.establishment.beauty.Barbershop;
 import ru.nsu.fit.pak.budle.dao.establishment.entertainment.GameClub;
@@ -11,6 +12,7 @@ import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class EstablishmentFactory {
     Map<String, Establishment> entityFactory;
     Map<String, EstablishmentDto> dtoFactory;
