@@ -7,10 +7,8 @@ import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.Worker;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.WorkerDto;
-import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
 import ru.nsu.fit.pak.budle.exceptions.WorkerNotFoundException;
 import ru.nsu.fit.pak.budle.mapper.WorkerMapper;
-import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.WorkerRepository;
 
 import java.util.List;
@@ -20,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WorkerServiceImpl implements WorkerService {
     private final WorkerRepository workerRepository;
-    private final EstablishmentRepository establishmentRepository;
+    private final EstablishmentService establishmentService;
 
     private final WorkerMapper workerMapper;
 
@@ -31,8 +29,7 @@ public class WorkerServiceImpl implements WorkerService {
     public List<WorkerDto> getWorkers(Long establishmentId) {
         logger.info("Getting workers list");
         logger.debug("Establishment ID: " + establishmentId);
-        Establishment establishment = establishmentRepository.findById(establishmentId)
-                .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
+        Establishment establishment = establishmentService.getEstablishmentById(establishmentId);
         return workerRepository
                 .findByEstablishments(establishment)
                 .stream()
