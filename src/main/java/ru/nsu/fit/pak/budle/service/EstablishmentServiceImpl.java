@@ -19,6 +19,7 @@ import ru.nsu.fit.pak.budle.dto.*;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
+import ru.nsu.fit.pak.budle.mapper.TagMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
@@ -50,6 +51,8 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     private final ImageWorker imageWorker;
 
+    private final TagMapper tagMapper;
+
     @Override
     public List<EstablishmentDto> getEstablishmentByParams(String category,
                                                            Boolean hasMap,
@@ -67,10 +70,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
 
         ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues();
-        Category categoryEnum = null;
-        if (category != null) {
-            categoryEnum = Category.getEnumByValue(category);
-        }
+        Category categoryEnum = category == null ? null : Category.getEnumByValue(category);
         Example<Establishment> exampleQuery = Example.of(new Establishment(categoryEnum, hasMap, hasCardPayment), matcher);
         Page<Establishment> results = establishmentRepository.findAll(exampleQuery, page);
         logger.debug("Results was " + results);
@@ -94,11 +94,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         Set<WorkingHoursDto> workingHoursDto = dto.getWorkingHours();
         Set<PhotoDto> photos = dto.getPhotosInput();
         Establishment establishment = establishmentMapper.dtoToModel(dto);
-        Set<Tag> tags = dto
-                .getTags()
-                .stream()
-                .map(x -> Tag.parseEnum(x.getName()))
-                .collect(Collectors.toSet());
+        Set<Tag> tags = tagMapper.tagDtoSetToModelSet(dto.getTags());
         establishment.setTags(tags);
 
         Establishment savedEstablishment = establishmentRepository.save(establishment);
@@ -115,9 +111,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     public List<TagDto> getTags() {
-        return Arrays.stream(Tag.values())
-                .map(x -> new TagDto(x.translate, imageWorker.getImageFromResource(x.assets)))
-                .toList();
+        return tagMapper.modelArrayToTagDtoList(Tag.values());
     }
 
     @Override
@@ -140,12 +134,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     @Override
     public List<TagDto> getSpotTags(Long establishmentId) {
         Establishment establishment = getEstablishmentById(establishmentId);
-        return establishment
-                .getTags()
-                .stream()
-                .map(x -> new TagDto(x.translateForSpot, x.assets))
-                .peek(x -> x.setImage(imageWorker.getImageFromResource(x.getImage())))
-                .collect(Collectors.toList());
+        return tagMapper.modelSetToSpotTagDtoList(establishment.getTags());
 
     }
 
