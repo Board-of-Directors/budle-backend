@@ -19,9 +19,9 @@ import ru.nsu.fit.pak.budle.dto.*;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
+import ru.nsu.fit.pak.budle.mapper.PhotoMapper;
 import ru.nsu.fit.pak.budle.mapper.TagMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
-import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -35,7 +35,6 @@ import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +48,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     private final WorkingHoursService workingHoursService;
 
-    private final ImageWorker imageWorker;
+    private final PhotoMapper photoMapper;
 
     private final TagMapper tagMapper;
 
@@ -119,10 +118,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         logger.info("Getting photos");
         Establishment establishment = getEstablishmentById(establishmentId);
 
-        return establishment.getPhotos()
-                .stream()
-                .map((photo) -> new PhotoDto(imageWorker.loadImage(photo.getFilepath())))
-                .collect(Collectors.toSet());
+        return photoMapper.convertModelPhotoSetToDtoSet(establishment.getPhotos());
     }
 
     @Override
