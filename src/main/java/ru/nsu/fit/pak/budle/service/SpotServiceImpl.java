@@ -8,6 +8,7 @@ import ru.nsu.fit.pak.budle.dao.Spot;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.SpotDto;
 import ru.nsu.fit.pak.budle.mapper.SpotMapper;
+import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.SpotRepository;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 public class SpotServiceImpl implements SpotService {
     private final SpotRepository spotRepository;
 
-    private final EstablishmentService establishmentService;
+    private final EstablishmentRepository establishmentRepository;
 
     private final SpotMapper spotMapper;
 
@@ -27,7 +28,7 @@ public class SpotServiceImpl implements SpotService {
     public List<SpotDto> getSpotsByEstablishment(Long establishmentId) {
         logger.info("Getting spots by establishment");
         logger.debug("EstablishmentID: " + establishmentId);
-        Establishment establishment = establishmentService.getEstablishmentById(establishmentId);
+        Establishment establishment = establishmentRepository.getEstablishmentById(establishmentId);
         return spotMapper.ListModelToListDto(spotRepository.findByEstablishment(establishment));
     }
 
@@ -45,7 +46,7 @@ public class SpotServiceImpl implements SpotService {
         logger.debug("LocalID: " + localId);
         logger.debug("EstablishmentID: " + establishmentId);
         spotRepository.save(
-                new Spot(localId, establishmentService.getEstablishmentById(establishmentId))
+                new Spot(localId, establishmentRepository.getReferenceById(establishmentId))
         );
     }
 }

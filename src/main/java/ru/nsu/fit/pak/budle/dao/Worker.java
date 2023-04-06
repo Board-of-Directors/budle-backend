@@ -18,9 +18,8 @@ public class Worker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private WorkerStatus status;
-    private String workerType;
     @OneToOne
     private User user;
     @ManyToMany(fetch = FetchType.LAZY)
