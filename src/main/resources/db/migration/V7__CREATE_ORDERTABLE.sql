@@ -10,7 +10,7 @@ create table orders
     spot_id          bigserial,
     date             timestamp   not null,
     time             time        not null,
-    status           int4        not null,
+    status           int4        not null default 0,
     guest_count      int         not null,
     dtype            varchar(31) not null,
     primary key (id),

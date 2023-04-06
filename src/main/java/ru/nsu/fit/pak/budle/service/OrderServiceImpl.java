@@ -62,7 +62,6 @@ public class OrderServiceImpl implements OrderService {
         order.setTime(dto.getTime());
         order.setGuestCount(dto.getGuestCount());
         order.setDate(dto.getDate());
-        order.setStatus(0);
         User user = userRepository
                 .findById(dto.getUserId())
                 .orElseThrow(UserNotFoundException::new);
