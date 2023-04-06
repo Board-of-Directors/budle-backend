@@ -12,7 +12,5 @@ public class WorkerDto {
     @NotNull
     private Boolean onWork;
     @NotNull
-    private String workerType;
-    @NotNull
     private UserDto user;
 }

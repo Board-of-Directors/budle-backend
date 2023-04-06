@@ -22,6 +22,8 @@ public class WorkerMapper {
      * @return worker dto object.
      */
     public WorkerDto modelToDto(Worker worker) {
-        return modelMapper.map(worker, WorkerDto.class);
+        WorkerDto workerDto = modelMapper.map(worker, WorkerDto.class);
+        workerDto.setOnWork(worker.getStatus().value.equals(1));
+        return workerDto;
     }
 }
