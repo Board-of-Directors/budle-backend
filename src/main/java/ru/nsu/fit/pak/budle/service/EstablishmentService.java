@@ -1,6 +1,7 @@
 package ru.nsu.fit.pak.budle.service;
 
 import org.springframework.data.domain.Pageable;
+import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.PhotoDto;
 import ru.nsu.fit.pak.budle.dto.TagDto;
@@ -85,4 +86,14 @@ public interface EstablishmentService {
      * @return list of tag dto.
      */
     List<TagDto> getSpotTags(Long establishmentId);
+
+    /**
+     * Function, that returns establishment by provided id.
+     * Or else throw establishment not found exception.
+     *
+     * @param establishmentId which we are searching for.
+     * @return found establishment.
+     */
+
+    Establishment getEstablishmentById(Long establishmentId);
 }

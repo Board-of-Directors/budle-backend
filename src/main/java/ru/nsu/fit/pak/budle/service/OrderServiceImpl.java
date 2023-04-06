@@ -12,9 +12,11 @@ import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.OrderDto;
 import ru.nsu.fit.pak.budle.dto.OrderDtoOutput;
-import ru.nsu.fit.pak.budle.exceptions.*;
+import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
+import ru.nsu.fit.pak.budle.exceptions.NotEnoughRightsException;
+import ru.nsu.fit.pak.budle.exceptions.OrderNotFoundException;
+import ru.nsu.fit.pak.budle.exceptions.UserNotFoundException;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
-import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.OrderRepository;
 import ru.nsu.fit.pak.budle.repository.SpotRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
@@ -31,7 +33,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final UserRepository userRepository;
 
-    private final EstablishmentRepository establishmentRepository;
+    private final EstablishmentService establishmentService;
 
     private final EstablishmentMapper establishmentMapper;
 
@@ -45,10 +47,8 @@ public class OrderServiceImpl implements OrderService {
         logger.info("Creating order");
         logger.debug(dto.toString());
 
-        Establishment establishment = establishmentRepository
-                .findById(dto.getEstablishmentId())
-                .orElseThrow(() ->
-                        new EstablishmentNotFoundException(dto.getEstablishmentId()));
+        Establishment establishment = establishmentService
+                .getEstablishmentById(dto.getEstablishmentId());
         Order order;
         if (establishment.getHasMap()) {
             order = new OrderWithSpot();
@@ -77,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
                 + "id " + id);
         List<Order> orders = byUser ?
                 orderRepository.findAllByUser(userRepository.getReferenceById(id)) :
-                orderRepository.findAllByEstablishment(establishmentRepository.getReferenceById(id));
+                orderRepository.findAllByEstablishment(establishmentService.getEstablishmentById(id));
 
         logger.debug("Result: " + orders);
 

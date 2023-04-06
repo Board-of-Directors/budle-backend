@@ -183,7 +183,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         }
     }
 
-    private Establishment getEstablishmentById(Long establishmentId) {
+    public Establishment getEstablishmentById(Long establishmentId) {
         return establishmentRepository
                 .findById(establishmentId).orElseThrow(
                         () -> new EstablishmentNotFoundException(establishmentId)
