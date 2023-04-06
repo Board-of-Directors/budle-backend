@@ -14,10 +14,9 @@ CREATE TABLE users
 DROP TABLE IF EXISTS workers cascade;
 create table workers
 (
-    id          bigserial,
-    user_id     bigserial  not null,
-    worker_type varchar(1) not null,
-    status      varchar    not null,
+    id      bigserial,
+    user_id bigserial not null,
+    status  int4      not null default 0,
     foreign key (user_id) references users (id),
     primary key (id)
 );
