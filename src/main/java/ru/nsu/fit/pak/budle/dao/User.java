@@ -1,9 +1,6 @@
 package ru.nsu.fit.pak.budle.dao;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -14,6 +11,7 @@ import java.util.Collection;
 @Setter
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
+@AllArgsConstructor
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
