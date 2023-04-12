@@ -16,7 +16,7 @@ import javax.transaction.Transactional;
 
 @SpringBootTest(classes = BudleApplication.class)
 @Testcontainers
-class BudleApplicationTests {
+class UserBusinessLogicTests {
 
     @Autowired
     private UserService userService;

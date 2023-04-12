@@ -1,9 +1,6 @@
 package ru.nsu.fit.pak.budle.dao.establishment;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.nsu.fit.pak.budle.dao.*;
 
 import javax.persistence.*;
@@ -12,6 +9,7 @@ import java.util.Set;
 @Getter
 @Setter
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor
 @Entity
 @Table(name = "establishments")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
