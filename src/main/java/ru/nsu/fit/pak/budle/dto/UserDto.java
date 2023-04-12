@@ -1,5 +1,6 @@
 package ru.nsu.fit.pak.budle.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -7,6 +8,7 @@ import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
 @Data
+@AllArgsConstructor
 public class UserDto {
     @Null
     private Long id;
