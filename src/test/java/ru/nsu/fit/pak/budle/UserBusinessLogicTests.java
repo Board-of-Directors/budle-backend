@@ -29,7 +29,6 @@ class UserBusinessLogicTests {
         insertUsers();
         UserDto dto = new UserDto(4L, "3111", "Oleg", "+79321312213");
         Assertions.assertThrows(UserAlreadyExistsException.class, () -> userService.registerUser(dto));
-        System.out.println("TEST 1 WAS SUCCESS");
 
     }
 
@@ -39,7 +38,6 @@ class UserBusinessLogicTests {
         insertUsers();
         UserDto dto = new UserDto(4L, "3111", "Kerkey", "+7932131231");
         Assertions.assertThrows(UserAlreadyExistsException.class, () -> userService.registerUser(dto));
-        System.out.println("TEST 2 WAS SUCCESS");
     }
 
     @Test

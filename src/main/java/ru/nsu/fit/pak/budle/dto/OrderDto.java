@@ -1,12 +1,14 @@
 package ru.nsu.fit.pak.budle.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.sql.Time;
 import java.util.Date;
 
 @Data
+@AllArgsConstructor
 public class OrderDto {
     private Integer guestCount;
     @JsonFormat
