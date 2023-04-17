@@ -3,6 +3,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.14.RELEASE'
     id 'java'
     id 'org.flywaydb.flyway' version '9.8.1'
+    id 'jacoco'
 }
 
 group = 'ru.nsu.fit.pak'
@@ -39,10 +40,20 @@ dependencies {
 
 }
 
+
 springBoot {
     mainClass = "ru.nsu.fit.pak.budle.BudleApplication"
 }
 
+
+jacoco {
+    toolVersion = '0.8.8'
+}
+jacocoTestReport {
+    dependsOn test
+}
+
 test {
     useJUnitPlatform()
+    finalizedBy(jacocoTestReport)
 }

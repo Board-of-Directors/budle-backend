@@ -7,8 +7,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.nsu.fit.pak.budle.dao.Category;
+import ru.nsu.fit.pak.budle.dao.Tag;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
+import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
+import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
+import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.service.EstablishmentService;
@@ -29,6 +33,51 @@ class EstablishmentBusinessLogicTests {
     private UserRepository userRepository;
 
     private Establishment mainEstablishment;
+
+    @Test
+    @Transactional
+    public void testCreatingEstablishment_creatingExistingEstablishment() {
+        insertEstablishments();
+        EstablishmentDto creatingEstablishment = new EstablishmentDto();
+        creatingEstablishment.setName(mainEstablishment.getName());
+        creatingEstablishment.setAddress(mainEstablishment.getAddress());
+        Assertions.assertThrows(EstablishmentAlreadyExistsException.class,
+                () -> establishmentService.createEstablishment(creatingEstablishment));
+
+        creatingEstablishment.setName("Hello world");
+        Assertions.assertThrows(IncorrectDataException.class,
+                () -> establishmentService.createEstablishment(creatingEstablishment));
+
+        creatingEstablishment.setCategory("restaurant");
+        creatingEstablishment.setTags(Collections.emptySet());
+        creatingEstablishment.setWorkingHours(Collections.emptySet());
+        creatingEstablishment.setPhotosInput(Collections.emptySet());
+        establishmentService.createEstablishment(creatingEstablishment);
+    }
+
+    @Test
+    @Transactional
+    public void testCategoryNumber() {
+        Assertions.assertEquals(establishmentService.getCategories().size(), Category.values().length);
+    }
+
+    @Test
+    @Transactional
+    public void testTagsNumber() {
+        Assertions.assertEquals(establishmentService.getTags().size(), Tag.values().length);
+    }
+
+    @Test
+    @Transactional
+    public void testCreatingMap() {
+        insertEstablishments();
+        Establishment establishment = establishmentRepository.findAll().get(0);
+        String addedMap = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" height=\"555\" viewBox=\"0 0 375 555\" width=\"375\"/>";
+        establishmentService.addMap(establishment.getId(), addedMap);
+        EstablishmentDto dto = establishmentService.getEstablishmentByParams(null,
+                null, null, "", Pageable.ofSize(10)).get(0);
+        Assertions.assertEquals(dto.getMap(), addedMap);
+    }
 
     @Test
     @Transactional
@@ -109,7 +158,7 @@ class EstablishmentBusinessLogicTests {
 
     @Transactional
     public void insertEstablishments() {
-        User ownerOfAllEstablishments = new User(0L, "Oleg", "+79993332211", "123456");
+        User ownerOfAllEstablishments = new User(1L, "Oleg", "+79993332211", "123456");
         userRepository.saveAndFlush(ownerOfAllEstablishments);
 
         User user = userRepository.findAll().get(0);
@@ -123,7 +172,7 @@ class EstablishmentBusinessLogicTests {
                 400,
                 Category.barbershop,
                 "Some image",
-                "Some map",
+                null,
                 user,
                 Collections.emptySet(),
                 Collections.emptySet(),

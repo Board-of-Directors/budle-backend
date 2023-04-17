@@ -124,7 +124,7 @@ public class EstablishmentMapper {
             restaurant.setCuisineCountry(CuisineCountry.getEnumByValue(name));
         }
         establishment.setImage(imageWorker.saveImage(establishment.getImage()));
-        establishment.setOwner(userRepository.getReferenceById(1L));
+        establishment.setOwner(userRepository.findAll().get(0));
         establishment.setCategory(Category.valueOf(dto.getCategory()));
         establishment.setWorkingHours(null);
         establishment.setPhotos(null);

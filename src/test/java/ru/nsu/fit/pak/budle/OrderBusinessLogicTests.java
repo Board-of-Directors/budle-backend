@@ -10,6 +10,7 @@ import ru.nsu.fit.pak.budle.dao.Order;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.OrderDto;
+import ru.nsu.fit.pak.budle.dto.OrderDtoOutput;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.OrderRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
@@ -20,6 +21,7 @@ import javax.transaction.Transactional;
 import java.sql.Time;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 
 @SpringBootTest(classes = BudleApplication.class)
@@ -59,6 +61,12 @@ class OrderBusinessLogicTests {
         Assertions.assertEquals(createdOrder.getStatus(), 2);
         orderService.acceptOrder(createdOrder.getId(), mainEstablishment.getId());
         Assertions.assertEquals(createdOrder.getStatus(), 1);
+
+        List<OrderDtoOutput> listFromUser = orderService.getOrders(guest.getId(), true, 1);
+        List<OrderDtoOutput> listFromEstablishment = orderService.getOrders(mainEstablishment.getId(), false, 1);
+        Assertions.assertEquals(listFromEstablishment, listFromUser);
+
+
         orderService.deleteOrder(createdOrder.getId(), guest.getId(), Boolean.TRUE);
         Assertions.assertEquals(orderRepository.findAll().size(), orderCount);
 
