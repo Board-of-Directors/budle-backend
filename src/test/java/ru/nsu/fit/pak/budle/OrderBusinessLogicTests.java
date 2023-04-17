@@ -1,14 +1,17 @@
 package ru.nsu.fit.pak.budle;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.nsu.fit.pak.budle.dao.Category;
+import ru.nsu.fit.pak.budle.dao.Order;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.OrderDto;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
+import ru.nsu.fit.pak.budle.repository.OrderRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.service.EstablishmentService;
 import ru.nsu.fit.pak.budle.service.OrderService;
@@ -33,6 +36,9 @@ class OrderBusinessLogicTests {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private OrderRepository orderRepository;
+
     private Establishment mainEstablishment;
 
     private User guest;
@@ -40,15 +46,22 @@ class OrderBusinessLogicTests {
 
     @Test
     @Transactional
-    public void testOrderCreatingByUser() throws InterruptedException {
+    public void testOrder_creatingRejectingAcceptingAndDeletingSequential() {
         insertEstablishments();
+        long orderCount = orderRepository.findAll().size();
         OrderDto order = new OrderDto(4, new Date(), new Time(14, 30, 0),
                 mainEstablishment.getId(), guest.getId(), null);
         orderService.createOrder(order);
-        Thread.sleep(5000);
-        mainEstablishment = establishmentService.getEstablishmentById(mainEstablishment.getId());
-        //Assertions.assertEquals(1, mainEstablishment.getOrders().size());
-        //FIXME: не создается заказ
+        Order createdOrder = orderRepository.findAll().get(0);
+        System.out.println(createdOrder);
+        Assertions.assertEquals(orderRepository.findAll().size(), orderCount + 1);
+        orderService.deleteOrder(createdOrder.getId(), mainEstablishment.getId(), Boolean.FALSE);
+        Assertions.assertEquals(createdOrder.getStatus(), 2);
+        orderService.acceptOrder(createdOrder.getId(), mainEstablishment.getId());
+        Assertions.assertEquals(createdOrder.getStatus(), 1);
+        orderService.deleteOrder(createdOrder.getId(), guest.getId(), Boolean.TRUE);
+        Assertions.assertEquals(orderRepository.findAll().size(), orderCount);
+
     }
 
     @Transactional
