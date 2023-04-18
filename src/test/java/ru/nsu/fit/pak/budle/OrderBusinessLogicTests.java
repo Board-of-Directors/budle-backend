@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.nsu.fit.pak.budle.controller.EstablishmentController;
+import ru.nsu.fit.pak.budle.controller.OrderController;
 import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Order;
 import ru.nsu.fit.pak.budle.dao.User;
@@ -41,6 +43,12 @@ class OrderBusinessLogicTests {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private OrderController orderController;
+
+    @Autowired
+    private EstablishmentController establishmentController;
+
     private Establishment mainEstablishment;
 
     private User guest;
@@ -53,13 +61,13 @@ class OrderBusinessLogicTests {
         long orderCount = orderRepository.findAll().size();
         OrderDto order = new OrderDto(4, new Date(), new Time(14, 30, 0),
                 mainEstablishment.getId(), guest.getId(), null);
-        orderService.createOrder(order);
+        orderController.create(order);
         Order createdOrder = orderRepository.findAll().get(0);
         System.out.println(createdOrder);
         Assertions.assertEquals(orderRepository.findAll().size(), orderCount + 1);
-        orderService.deleteOrder(createdOrder.getId(), mainEstablishment.getId(), Boolean.FALSE);
+        establishmentController.deleteOrder(createdOrder.getId(), mainEstablishment.getId());
         Assertions.assertEquals(createdOrder.getStatus(), 2);
-        orderService.acceptOrder(createdOrder.getId(), mainEstablishment.getId());
+        establishmentController.accept(mainEstablishment.getId(), createdOrder.getId());
         Assertions.assertEquals(createdOrder.getStatus(), 1);
 
         List<OrderDtoOutput> listFromUser = orderService.getOrders(guest.getId(), true, 1);
@@ -67,7 +75,7 @@ class OrderBusinessLogicTests {
         Assertions.assertEquals(listFromEstablishment, listFromUser);
 
 
-        orderService.deleteOrder(createdOrder.getId(), guest.getId(), Boolean.TRUE);
+        orderController.delete(createdOrder.getId(), guest.getId());
         Assertions.assertEquals(orderRepository.findAll().size(), orderCount);
 
     }

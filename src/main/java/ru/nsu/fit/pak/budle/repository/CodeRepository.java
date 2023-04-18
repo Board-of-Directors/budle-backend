@@ -1,12 +1,12 @@
 package ru.nsu.fit.pak.budle.repository;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import ru.nsu.fit.pak.budle.dao.Code;
 
 /**
  * Repository, that connects code models with database.
  */
-public interface CodeRepository extends CrudRepository<Code, Long> {
+public interface CodeRepository extends JpaRepository<Code, Long> {
 
     /**
      * Indicates, if code number exist by phone number and code.
