@@ -59,7 +59,7 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
                     currentDto.setMonthName(today.getMonth()
                             .getDisplayName(TextStyle.SHORT, new Locale("ru")));
                     currentDto.setDayName(todayDayName);
-                    currentDto.setDayNumber(today.getDayOfMonth() + " ");
+                    currentDto.setDayNumber(today.getDayOfMonth() + "");
 
                     int extraMinutes = 30 - currentHours.getStartTime().getMinute() % 30;
                     List<String> currentDayList = new ArrayList<>();
