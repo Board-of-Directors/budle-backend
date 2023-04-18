@@ -13,6 +13,8 @@ import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.OrderDto;
 import ru.nsu.fit.pak.budle.dto.OrderDtoOutput;
+import ru.nsu.fit.pak.budle.exceptions.NotEnoughRightsException;
+import ru.nsu.fit.pak.budle.exceptions.OrderNotFoundException;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.OrderRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
@@ -67,17 +69,30 @@ class OrderBusinessLogicTests {
         Assertions.assertEquals(orderRepository.findAll().size(), orderCount + 1);
         establishmentController.deleteOrder(createdOrder.getId(), mainEstablishment.getId());
         Assertions.assertEquals(createdOrder.getStatus(), 2);
+
+        Assertions.assertThrows(NotEnoughRightsException.class,
+                () -> orderService.deleteOrder(createdOrder.getId(), mainEstablishment.getId() + 1, Boolean.FALSE));
+
         establishmentController.accept(mainEstablishment.getId(), createdOrder.getId());
         Assertions.assertEquals(createdOrder.getStatus(), 1);
 
-        List<OrderDtoOutput> listFromUser = orderService.getOrders(guest.getId(), true, 1);
-        List<OrderDtoOutput> listFromEstablishment = orderService.getOrders(mainEstablishment.getId(), false, 1);
+        List<OrderDtoOutput> listFromUser = orderController.get(guest.getId(), 1);
+        List<OrderDtoOutput> listFromEstablishment = establishmentController.orders(mainEstablishment.getId(), 1);
         Assertions.assertEquals(listFromEstablishment, listFromUser);
 
 
         orderController.delete(createdOrder.getId(), guest.getId());
         Assertions.assertEquals(orderRepository.findAll().size(), orderCount);
 
+    }
+
+
+    @Test
+    @Transactional
+    public void tryToGetNonExistedOrder_mustBeThrownException() {
+        Assertions.assertThrows(
+                OrderNotFoundException.class,
+                () -> orderService.acceptOrder(111L, 22L));
     }
 
     @Transactional
