@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.nsu.fit.pak.budle.controller.UserController;
 import ru.nsu.fit.pak.budle.dao.Code;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dto.UserDto;
@@ -14,6 +15,7 @@ import ru.nsu.fit.pak.budle.exceptions.UserAlreadyExistsException;
 import ru.nsu.fit.pak.budle.repository.CodeRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.service.CodeService;
+import ru.nsu.fit.pak.budle.service.SecurityService;
 import ru.nsu.fit.pak.budle.service.UserService;
 
 import javax.transaction.Transactional;
@@ -33,6 +35,12 @@ class UserBusinessLogicTests {
 
     @Autowired
     private CodeRepository codeRepository;
+
+    @Autowired
+    private UserController userController;
+
+    @Autowired
+    private SecurityService securityService;
 
     @Test
     @Transactional
@@ -57,8 +65,12 @@ class UserBusinessLogicTests {
         insertUsers();
         int oldSize = userRepository.findAll().size();
         UserDto dto = new UserDto(4L, "3111", "Kerkey", "+7932131239");
-        userService.registerUser(dto);
+        userController.register(dto);
         Assertions.assertEquals(userRepository.findAll().size(), oldSize + 1);
+
+        Assertions.assertTrue(userController.login(dto));
+
+        // Assertions.assertEquals(securityService.findLoggedInUsername(),  dto.getUsername());
     }
 
     @Test
