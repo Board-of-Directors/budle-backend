@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.nsu.fit.pak.budle.controller.EstablishmentController;
 import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Tag;
 import ru.nsu.fit.pak.budle.dao.User;
@@ -31,6 +32,9 @@ class EstablishmentBusinessLogicTests {
     private EstablishmentRepository establishmentRepository;
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private EstablishmentController establishmentController;
 
     private Establishment mainEstablishment;
 
@@ -64,7 +68,7 @@ class EstablishmentBusinessLogicTests {
     @Test
     @Transactional
     public void testTagsNumber() {
-        Assertions.assertEquals(establishmentService.getTags().size(), Tag.values().length);
+        Assertions.assertEquals(establishmentController.tags().size(), Tag.values().length);
     }
 
     @Test
@@ -83,13 +87,15 @@ class EstablishmentBusinessLogicTests {
     @Transactional
     public void testCreatingEstablishment_FindEstablishmentByParams_FindByWrongCategory() {
         insertEstablishments();
-        Assertions.assertTrue(establishmentService.getEstablishmentByParams(
+        Assertions.assertTrue(establishmentController.getEstablishments(
+                "",
                 Category.hotel.value,
                 null,
                 null,
-                "",
-                Pageable.ofSize(10)
-        ).isEmpty());
+                0,
+                10,
+                "name"
+        ).getEstablishments().isEmpty());
     }
 
     @Test
