@@ -24,7 +24,8 @@ public class Order {
     private Integer guestCount;
     private Date date;
     private Time time;
-    private Integer status;
+
+    private Integer status = 0;
     @OneToOne
     private User user;
 

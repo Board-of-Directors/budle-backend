@@ -10,14 +10,13 @@ import ru.nsu.fit.pak.budle.dao.WorkingHours;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
 import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
+import ru.nsu.fit.pak.budle.mapper.WorkingHoursMapper;
 import ru.nsu.fit.pak.budle.repository.WorkingHoursRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 @Service
@@ -25,6 +24,8 @@ import java.util.Set;
 public class WorkingHoursServiceImpl implements WorkingHoursService {
     private final ModelMapper mapper;
     private final WorkingHoursRepository workingHoursRepository;
+
+    private final WorkingHoursMapper workingHoursMapper;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -44,30 +45,27 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
     public List<ValidTimeDto> getValidBookingHoursByEstablishment(Establishment establishment) {
         List<ValidTimeDto> times = new ArrayList<>();
         Set<WorkingHours> workingHours = establishment.getWorkingHours();
-        int dayCountInOneWeek = 7;
+        final int DAY_COUNT = 7;
 
-        for (int i = 0; i < dayCountInOneWeek; i++) {
-            ValidTimeDto currentDto = new ValidTimeDto();
+        for (int i = 0; i < DAY_COUNT; i++) {
             LocalDate today = LocalDate.now()
                     .plusDays(i);
-            String todayDayName = today.getDayOfWeek()
-                    .getDisplayName(TextStyle.SHORT, new Locale("ru"));
-
+            ValidTimeDto currentDto = workingHoursMapper.convertFromDateAndTimeToValidTimeDto(today);
             for (WorkingHours currentHours : workingHours) {
-                if (currentHours.getDayOfWeek().getTranslateLittle().equals(todayDayName)) {
-
-                    currentDto.setMonthName(today.getMonth()
-                            .getDisplayName(TextStyle.SHORT, new Locale("ru")));
-                    currentDto.setDayName(todayDayName);
-                    currentDto.setDayNumber(today.getDayOfMonth() + "");
+                if (currentHours.getDayOfWeek()
+                        .getTranslateLittle()
+                        .equals(currentDto.getDayName())) {
 
                     int extraMinutes = 30 - currentHours.getStartTime().getMinute() % 30;
+
                     List<String> currentDayList = new ArrayList<>();
                     for (LocalTime currentTime = currentHours.getStartTime().plusMinutes(extraMinutes);
                          currentTime.isBefore(currentHours.getEndTime());
                          currentTime = currentTime.plusMinutes(30)) {
+
                         currentDayList.add(currentTime.toString());
                     }
+
                     currentDto.setTimes(currentDayList);
                     times.add(currentDto);
                 }

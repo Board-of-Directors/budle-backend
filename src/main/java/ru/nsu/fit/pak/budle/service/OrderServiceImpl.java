@@ -12,17 +12,18 @@ import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.OrderDto;
 import ru.nsu.fit.pak.budle.dto.OrderDtoOutput;
-import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
-import ru.nsu.fit.pak.budle.exceptions.NotEnoughRightsException;
-import ru.nsu.fit.pak.budle.exceptions.OrderNotFoundException;
-import ru.nsu.fit.pak.budle.exceptions.UserNotFoundException;
+import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
+import ru.nsu.fit.pak.budle.exceptions.*;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
+import ru.nsu.fit.pak.budle.mapper.WorkingHoursMapper;
 import ru.nsu.fit.pak.budle.repository.OrderRepository;
 import ru.nsu.fit.pak.budle.repository.SpotRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 
 import javax.transaction.Transactional;
+import java.sql.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +40,10 @@ public class OrderServiceImpl implements OrderService {
 
     private final SpotRepository spotRepository;
 
+    private final WorkingHoursService workingHoursService;
+
+    private final WorkingHoursMapper workingHoursMapper;
+
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -50,7 +55,7 @@ public class OrderServiceImpl implements OrderService {
         Establishment establishment = establishmentService
                 .getEstablishmentById(dto.getEstablishmentId());
         Order order;
-        if (establishment.getHasMap()) {
+        if (dto.getSpotId() != null) {
             order = new OrderWithSpot();
             Spot spot = spotRepository
                     .findById(dto.getSpotId())
@@ -59,15 +64,36 @@ public class OrderServiceImpl implements OrderService {
         } else {
             order = new Order();
         }
+        if (!bookingTimeIsValid(establishment, dto)) {
+            throw new InvalidBookingTime();
+        }
         order.setTime(dto.getTime());
         order.setGuestCount(dto.getGuestCount());
-        order.setDate(dto.getDate());
+        order.setDate(Date.valueOf(dto.getDate()));
         User user = userRepository
                 .findById(dto.getUserId())
                 .orElseThrow(UserNotFoundException::new);
         order.setUser(user);
         order.setEstablishment(establishment);
         orderRepository.save(order);
+    }
+
+    private boolean bookingTimeIsValid(Establishment establishment, OrderDto order) {
+        List<ValidTimeDto> validTimeDtos =
+                workingHoursService.getValidBookingHoursByEstablishment(establishment);
+        ValidTimeDto orderTime = workingHoursMapper.convertFromDateAndTimeToValidTimeDto(order.getDate());
+        String bookingTime = order.getTime().toString().substring(0, order.getTime().toString().length() - 3);
+        System.out.println(bookingTime);
+        for (ValidTimeDto time : validTimeDtos) {
+            if (Objects.equals(time.getDayName(), orderTime.getDayName()) &&
+                    Objects.equals(time.getMonthName(), orderTime.getMonthName()) &&
+                    Objects.equals(time.getDayNumber(), orderTime.getDayNumber()) &&
+                    time.getTimes().contains(bookingTime)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -90,13 +116,7 @@ public class OrderServiceImpl implements OrderService {
                     orderDtoOutput.setEstablishment(establishmentMapper.modelToDto(establishmentSource));
                     return orderDtoOutput;
                 })
-                .filter(
-                        x -> {
-                            if (status == null) {
-                                return true;
-                            } else return x.getStatus().equals(status);
-                        }
-                )
+                .filter(order -> filterOrdersByStatus(order, status))
                 .toList();
     }
 
@@ -130,6 +150,12 @@ public class OrderServiceImpl implements OrderService {
     private Order getOrderById(Long orderId) {
         return orderRepository.findById(orderId).orElseThrow(() ->
                 new OrderNotFoundException(orderId));
+    }
+
+    private boolean filterOrdersByStatus(OrderDtoOutput order, Integer status) {
+        if (status == null) {
+            return true;
+        } else return order.getStatus().equals(status);
     }
 
 }
