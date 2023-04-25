@@ -61,7 +61,7 @@ public class OrderServiceImpl implements OrderService {
             order = new OrderWithSpot();
             Spot spot = spotRepository
                     .findById(dto.getSpotId())
-                    .orElseThrow(IncorrectDataException::new);
+                    .orElseThrow(() -> new SpotNotFoundException(dto.getSpotId()));
             ((OrderWithSpot) order).setSpot(spot);
         } else {
             order = new Order();
