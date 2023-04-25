@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.nsu.fit.pak.budle.dto.SpotDto;
+import ru.nsu.fit.pak.budle.dto.TimelineDto;
 import ru.nsu.fit.pak.budle.service.SpotServiceImpl;
 
 /**
@@ -27,5 +28,10 @@ public class SpotController {
     @GetMapping()
     public SpotDto get(@RequestParam Long spotId) {
         return spotService.getSpotById(spotId);
+    }
+
+    @GetMapping(value = "/timeline")
+    public TimelineDto getTimeline(@RequestParam Long spotId) {
+        return spotService.getSpotTimeline(spotId);
     }
 }

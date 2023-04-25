@@ -1,6 +1,7 @@
 package ru.nsu.fit.pak.budle.service;
 
 import ru.nsu.fit.pak.budle.dto.SpotDto;
+import ru.nsu.fit.pak.budle.dto.TimelineDto;
 
 import java.util.List;
 
@@ -31,4 +32,6 @@ public interface SpotService {
      * @param establishmentId in what establishment we need to create new spot.
      */
     void createSpot(Long localId, Long establishmentId);
+
+    TimelineDto getSpotTimeline(Long spotId);
 }

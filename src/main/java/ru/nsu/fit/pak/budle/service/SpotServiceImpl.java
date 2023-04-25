@@ -5,13 +5,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.Spot;
+import ru.nsu.fit.pak.budle.dao.WorkingHours;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
+import ru.nsu.fit.pak.budle.dto.BookingTimesDto;
 import ru.nsu.fit.pak.budle.dto.SpotDto;
+import ru.nsu.fit.pak.budle.dto.TimelineDto;
 import ru.nsu.fit.pak.budle.mapper.SpotMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.SpotRepository;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +30,7 @@ public class SpotServiceImpl implements SpotService {
     private final EstablishmentRepository establishmentRepository;
 
     private final SpotMapper spotMapper;
+
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -48,5 +58,46 @@ public class SpotServiceImpl implements SpotService {
         spotRepository.save(
                 new Spot(localId, establishmentRepository.getReferenceById(establishmentId))
         );
+    }
+
+    @Override
+    public TimelineDto getSpotTimeline(Long spotId) {
+        logger.info("Getting spot timeline");
+        Spot spot = spotRepository.findById(spotId).orElseThrow();
+        Set<WorkingHours> workingHours = spot.getEstablishment().getWorkingHours();
+        LocalDate dateNow = LocalDate.now();
+        String today = dateNow.getDayOfWeek().getDisplayName(TextStyle.SHORT,
+                new Locale("ru"));
+        WorkingHours todayHours = workingHours.stream()
+                .filter(x -> x.getDayOfWeek()
+                        .getTranslateLittle()
+                        .equals(today))
+                .findFirst()
+                .orElseThrow();
+
+
+        TimelineDto timelineDto = new TimelineDto();
+        timelineDto.setStart(todayHours.getStartTime());
+        timelineDto.setEnd(todayHours.getEndTime());
+
+
+        Set<BookingTimesDto> times = spot.getEstablishment()
+                .getOrders()
+                .stream()
+                .filter(x -> x.getDate().equals(Date.valueOf(dateNow)))
+                .sorted((o1, o2) -> {
+                    if (o1.getStartTime().toLocalTime().isBefore(o2.getStartTime().toLocalTime())) {
+                        return 1;
+                    } else if (o1.equals(o2)) {
+                        return 0;
+                    } else {
+                        return -1;
+                    }
+                })
+                .map(x -> new BookingTimesDto(x.getStartTime().toString(), x.getEndTime().toString()))
+                .collect(Collectors.toSet());
+        timelineDto.setTimes(times);
+        return timelineDto;
+
     }
 }
