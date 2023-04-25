@@ -23,7 +23,11 @@ public class Order {
 
     private Integer guestCount;
     private Date date;
-    private Time time;
+    private Time startTime;
+    private Time endTime;
+
+    @Transient
+    private int duration = 240;
 
     private Integer status = 0;
     @OneToOne
