@@ -20,4 +20,6 @@ public interface SpotRepository extends JpaRepository<Spot, Long> {
      * @return list of all spots.
      */
     List<Spot> findByEstablishment(Establishment establishment);
+
+    Spot findByEstablishmentAndLocalId(Establishment establishment, Long localId);
 }
