@@ -6,9 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.Code;
 import ru.nsu.fit.pak.budle.dao.CodeType;
-import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectPhoneNumberFormatException;
 import ru.nsu.fit.pak.budle.exceptions.UserAlreadyExistsException;
+import ru.nsu.fit.pak.budle.exceptions.VerificationCodeWasFalseException;
 import ru.nsu.fit.pak.budle.repository.CodeRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.utils.RequestSender;
@@ -33,7 +33,7 @@ public class CodeServiceImpl implements CodeService {
             logger.debug("Checking code was true");
             return true;
         } else {
-            throw new IncorrectDataException();
+            throw new VerificationCodeWasFalseException();
         }
     }
 

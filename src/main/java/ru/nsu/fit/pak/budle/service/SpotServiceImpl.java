@@ -11,6 +11,7 @@ import ru.nsu.fit.pak.budle.dto.BookingTimesDto;
 import ru.nsu.fit.pak.budle.dto.SpotDto;
 import ru.nsu.fit.pak.budle.dto.TimelineDto;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
+import ru.nsu.fit.pak.budle.exceptions.SpotNotFoundException;
 import ru.nsu.fit.pak.budle.mapper.SpotMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.SpotRepository;
@@ -47,7 +48,7 @@ public class SpotServiceImpl implements SpotService {
         logger.info("Getting spot by id");
         logger.debug("SpotID: " + spotId);
         return spotMapper.modelToDto(spotRepository.findById(spotId)
-                .orElseThrow());
+                .orElseThrow(() -> new SpotNotFoundException(spotId)));
     }
 
     @Override
@@ -75,7 +76,7 @@ public class SpotServiceImpl implements SpotService {
                         .getTranslateLittle()
                         .equals(today))
                 .findFirst()
-                .orElseThrow();
+                .orElseThrow(() -> new SpotNotFoundException(localId));
 
 
         TimelineDto timelineDto = new TimelineDto();
