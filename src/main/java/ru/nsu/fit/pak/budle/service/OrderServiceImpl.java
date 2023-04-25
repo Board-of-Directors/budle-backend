@@ -22,6 +22,8 @@ import ru.nsu.fit.pak.budle.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import java.sql.Date;
+import java.sql.Time;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 
@@ -67,7 +69,8 @@ public class OrderServiceImpl implements OrderService {
         if (!bookingTimeIsValid(establishment, dto)) {
             throw new InvalidBookingTime();
         }
-        order.setTime(dto.getTime());
+        order.setStartTime(dto.getTime());
+        order.setEndTime(Time.valueOf(dto.getTime().toLocalTime().plus(order.getDuration(), ChronoUnit.MINUTES)));
         order.setGuestCount(dto.getGuestCount());
         order.setDate(Date.valueOf(dto.getDate()));
         User user = userRepository
@@ -83,7 +86,6 @@ public class OrderServiceImpl implements OrderService {
                 workingHoursService.getValidBookingHoursByEstablishment(establishment);
         ValidTimeDto orderTime = workingHoursMapper.convertFromDateAndTimeToValidTimeDto(order.getDate());
         String bookingTime = order.getTime().toString().substring(0, order.getTime().toString().length() - 3);
-        System.out.println(bookingTime);
         for (ValidTimeDto time : validTimeDtos) {
             if (Objects.equals(time.getDayName(), orderTime.getDayName()) &&
                     Objects.equals(time.getMonthName(), orderTime.getMonthName()) &&
