@@ -33,5 +33,5 @@ public interface SpotService {
      */
     void createSpot(Long localId, Long establishmentId);
 
-    TimelineDto getSpotTimeline(Long spotId);
+    TimelineDto getSpotTimeline(Long localId, Long establishmentId);
 }

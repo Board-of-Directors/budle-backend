@@ -10,11 +10,11 @@ import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.BookingTimesDto;
 import ru.nsu.fit.pak.budle.dto.SpotDto;
 import ru.nsu.fit.pak.budle.dto.TimelineDto;
+import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
 import ru.nsu.fit.pak.budle.mapper.SpotMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.SpotRepository;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.List;
@@ -61,9 +61,11 @@ public class SpotServiceImpl implements SpotService {
     }
 
     @Override
-    public TimelineDto getSpotTimeline(Long spotId) {
+    public TimelineDto getSpotTimeline(Long localId, Long establishmentId) {
         logger.info("Getting spot timeline");
-        Spot spot = spotRepository.findById(spotId).orElseThrow();
+        Establishment establishment = establishmentRepository.findById(establishmentId)
+                .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
+        Spot spot = spotRepository.findByEstablishmentAndLocalId(establishment, localId);
         Set<WorkingHours> workingHours = spot.getEstablishment().getWorkingHours();
         LocalDate dateNow = LocalDate.now();
         String today = dateNow.getDayOfWeek().getDisplayName(TextStyle.SHORT,
@@ -84,7 +86,7 @@ public class SpotServiceImpl implements SpotService {
         Set<BookingTimesDto> times = spot.getEstablishment()
                 .getOrders()
                 .stream()
-                .filter(x -> x.getDate().equals(Date.valueOf(dateNow)))
+                .filter(x -> x.getDate().getDay() == dateNow.getDayOfWeek().getValue() % 7)
                 .sorted((o1, o2) -> {
                     if (o1.getStartTime().toLocalTime().isBefore(o2.getStartTime().toLocalTime())) {
                         return 1;

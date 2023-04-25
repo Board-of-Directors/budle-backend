@@ -31,7 +31,7 @@ public class SpotController {
     }
 
     @GetMapping(value = "/timeline")
-    public TimelineDto getTimeline(@RequestParam Long spotId) {
-        return spotService.getSpotTimeline(spotId);
+    public TimelineDto getTimeline(@RequestParam Long spotId, @RequestParam Long establishmentId) {
+        return spotService.getSpotTimeline(spotId, establishmentId);
     }
 }
