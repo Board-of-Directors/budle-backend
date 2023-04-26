@@ -83,9 +83,13 @@ public class SpotServiceImpl implements SpotService {
         TimelineDto timelineDto = new TimelineDto();
         timelineDto.setStart(todayHours.getStartTime());
         timelineDto.setEnd(todayHours.getEndTime());
+        Set<BookingTimesDto> times = establishmentRepository
+                .findWorkingHoursByDay(dateNow.getDayOfWeek().getValue() - 1)
+                .stream()
+                .map(x -> new BookingTimesDto(x.getStartTime().toString(), x.getEndTime().toString()))
+                .collect(Collectors.toSet());
 
-
-        Set<BookingTimesDto> times = spot.getEstablishment()
+       /* Set<BookingTimesDto> times = spot.getEstablishment()
                 .getOrders()
                 .stream()
                 .filter(x -> x.getDate().getDay() == dateNow.getDayOfWeek().getValue() % 7)
@@ -100,6 +104,8 @@ public class SpotServiceImpl implements SpotService {
                 })
                 .map(x -> new BookingTimesDto(x.getStartTime().toString(), x.getEndTime().toString()))
                 .collect(Collectors.toSet());
+
+        */
         timelineDto.setTimes(times);
         return timelineDto;
 
