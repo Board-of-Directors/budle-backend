@@ -24,5 +24,7 @@ public interface WorkerService {
      *
      * @param workerId what worker we need to delete.
      */
-    void deleteWorker(Long workerId);
+    void deleteWorker(Long workerId, Long establishmentId);
+
+    void createWorker(String phoneNumber, Long establishmentId);
 }

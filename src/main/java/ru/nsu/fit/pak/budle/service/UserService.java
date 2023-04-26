@@ -1,5 +1,6 @@
 package ru.nsu.fit.pak.budle.service;
 
+import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dto.UserDto;
 
 /**
@@ -19,4 +20,6 @@ public interface UserService {
     Boolean existsPhoneNumber(String phoneNumber);
 
     */
+
+    User findByPhoneNumber(String phoneNumber);
 }

@@ -32,12 +32,18 @@ public class WorkerController {
 
     /**
      * Delete request, delete worker from current establishment.
-     * (no, just delete worker from db, need to FIXME)
      *
      * @param workerId - id of worker what we want to delete.
      */
     @DeleteMapping
-    public void delete(@RequestParam Long workerId) {
-        workerService.deleteWorker(workerId);
+    public void delete(@RequestParam Long workerId,
+                       @RequestParam Long establishmentId) {
+        workerService.deleteWorker(workerId, establishmentId);
+    }
+
+    @PutMapping
+    public void invite(@RequestParam String phoneNumber,
+                       @RequestParam Long establishmentId) {
+        workerService.createWorker(phoneNumber, establishmentId);
     }
 }
