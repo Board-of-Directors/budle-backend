@@ -66,7 +66,8 @@ public class SpotServiceImpl implements SpotService {
         logger.info("Getting spot timeline");
         Establishment establishment = establishmentRepository.findById(establishmentId)
                 .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
-        Spot spot = spotRepository.findByEstablishmentAndLocalId(establishment, localId);
+        Spot spot = spotRepository.findByEstablishmentAndLocalId(establishment, localId)
+                .orElseThrow(() -> new SpotNotFoundException(localId));
         Set<WorkingHours> workingHours = spot.getEstablishment().getWorkingHours();
         LocalDate dateNow = LocalDate.now();
         String today = dateNow.getDayOfWeek().getDisplayName(TextStyle.SHORT,
