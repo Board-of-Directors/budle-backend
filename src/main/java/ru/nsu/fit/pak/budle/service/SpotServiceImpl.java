@@ -74,7 +74,7 @@ public class SpotServiceImpl implements SpotService {
                 new Locale("ru"));
 
         WorkingHours todayHours = establishmentRepository
-                .findWorkingHoursByDay(DayOfWeek.geyDayByLittleString(today));
+                .findWorkingHoursByDay(DayOfWeek.getDayByLittleString(today));
 
 
         TimelineDto timelineDto = new TimelineDto();
