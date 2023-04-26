@@ -8,7 +8,6 @@ import ru.nsu.fit.pak.budle.dao.DayOfWeek;
 import ru.nsu.fit.pak.budle.dao.Spot;
 import ru.nsu.fit.pak.budle.dao.WorkingHours;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
-import ru.nsu.fit.pak.budle.dto.BookingTimesDto;
 import ru.nsu.fit.pak.budle.dto.SpotDto;
 import ru.nsu.fit.pak.budle.dto.TimelineDto;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
@@ -19,10 +18,9 @@ import ru.nsu.fit.pak.budle.repository.SpotRepository;
 
 import java.time.LocalDate;
 import java.time.format.TextStyle;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -69,26 +67,27 @@ public class SpotServiceImpl implements SpotService {
                 .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
         Spot spot = spotRepository.findByEstablishmentAndLocalId(establishment, localId)
                 .orElseThrow(() -> new SpotNotFoundException(localId));
-        Set<WorkingHours> workingHours = spot.getEstablishment().getWorkingHours();
+
+
         LocalDate dateNow = LocalDate.now();
         String today = dateNow.getDayOfWeek().getDisplayName(TextStyle.SHORT,
                 new Locale("ru"));
-        WorkingHours todayHours = workingHours.stream()
-                .filter(x -> x.getDayOfWeek()
-                        .getTranslateLittle()
-                        .equals(today))
-                .findFirst()
-                .orElseThrow(() -> new SpotNotFoundException(localId));
+
+        WorkingHours todayHours = establishmentRepository
+                .findWorkingHoursByDay(DayOfWeek.geyDayByLittleString(today));
 
 
         TimelineDto timelineDto = new TimelineDto();
         timelineDto.setStart(todayHours.getStartTime());
         timelineDto.setEnd(todayHours.getEndTime());
-        Set<BookingTimesDto> times = establishmentRepository
+
+
+       /* Set<BookingTimesDto> times = establishmentRepository
                 .findWorkingHoursByDay(DayOfWeek.getDayByOrdinal(dateNow.getDayOfWeek().getValue()))
                 .stream()
                 .map(x -> new BookingTimesDto(x.getStartTime().toString(), x.getEndTime().toString()))
                 .collect(Collectors.toSet());
+        */
 
        /* Set<BookingTimesDto> times = spot.getEstablishment()
                 .getOrders()
@@ -107,7 +106,7 @@ public class SpotServiceImpl implements SpotService {
                 .collect(Collectors.toSet());
 
         */
-        timelineDto.setTimes(times);
+        timelineDto.setTimes(Collections.emptySet());
         return timelineDto;
 
     }

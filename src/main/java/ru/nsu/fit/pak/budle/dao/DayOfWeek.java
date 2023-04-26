@@ -32,6 +32,15 @@ public enum DayOfWeek {
         throw new IncorrectDataException();
     }
 
+    static public DayOfWeek geyDayByLittleString(String day) {
+        for (DayOfWeek dayOfWeek : DayOfWeek.values()) {
+            if (dayOfWeek.translateLittle.equals(day)) {
+                return dayOfWeek;
+            }
+        }
+        throw new IncorrectDataException();
+    }
+
     static public DayOfWeek getDayByOrdinal(Integer number) {
         for (DayOfWeek dayOfWeek : DayOfWeek.values()) {
             if (dayOfWeek.ordinal.equals(number)) {

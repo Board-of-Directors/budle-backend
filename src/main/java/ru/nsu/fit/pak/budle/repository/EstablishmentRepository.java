@@ -8,8 +8,6 @@ import ru.nsu.fit.pak.budle.dao.DayOfWeek;
 import ru.nsu.fit.pak.budle.dao.WorkingHours;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 
-import java.util.List;
-
 /**
  * Repository, that connects establishment models with database.
  */
@@ -36,6 +34,6 @@ public interface EstablishmentRepository extends JpaRepository<Establishment, Lo
 
     @Query(value = "SELECT wh from Establishment e inner join WorkingHours wh " +
             "on e.id = wh.establishment.id where wh.dayOfWeek = :day order by wh.startTime")
-    List<WorkingHours> findWorkingHoursByDay(@Param("day") DayOfWeek day);
+    WorkingHours findWorkingHoursByDay(@Param("day") DayOfWeek day);
 
 }
