@@ -14,10 +14,7 @@ import ru.nsu.fit.pak.budle.mapper.WorkingHoursMapper;
 import ru.nsu.fit.pak.budle.repository.WorkingHoursRepository;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -47,31 +44,25 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
         Set<WorkingHours> workingHours = establishment.getWorkingHours();
 
         final int DAY_COUNT = 7;
-
         for (int i = 0; i < DAY_COUNT; i++) {
-            LocalDate today = LocalDate.now()
-                    .plusDays(i);
+            LocalDate today = LocalDate.now().plusDays(i);
             ValidTimeDto currentDto = workingHoursMapper.convertFromDateAndTimeToValidTimeDto(today);
-            for (WorkingHours currentHours : workingHours) {
-                if (currentHours.getDayOfWeek()
-                        .getTranslateLittle()
-                        .equals(currentDto.getDayName())) {
-
-                    final int DURATION = 30;
-
-                    List<String> currentDayTimes = workingHoursMapper.generateTimes(
-                                    currentHours.getStartTime(),
-                                    currentHours.getEndTime(),
-                                    DURATION
-                            )
-                            .stream()
-                            .map(Objects::toString)
-                            .toList();
-
-                    currentDto.setTimes(currentDayTimes);
-                    times.add(currentDto);
-                }
-
+            Optional<WorkingHours> currentHours = workingHours
+                    .stream()
+                    .filter(x -> x.getDayOfWeek().getTranslateLittle().equals(currentDto.getDayName()))
+                    .findFirst();
+            if (currentHours.isPresent()) {
+                final int DURATION = 30;
+                List<String> currentDayTimes = workingHoursMapper.generateTimes(
+                                currentHours.get().getStartTime(),
+                                currentHours.get().getEndTime(),
+                                DURATION
+                        )
+                        .stream()
+                        .map(Objects::toString)
+                        .toList();
+                currentDto.setTimes(currentDayTimes);
+                times.add(currentDto);
             }
         }
         return times;
