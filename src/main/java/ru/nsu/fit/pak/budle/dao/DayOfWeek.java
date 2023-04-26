@@ -2,6 +2,9 @@ package ru.nsu.fit.pak.budle.dao;
 
 import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 
+import java.time.format.TextStyle;
+import java.util.Locale;
+
 public enum DayOfWeek {
     Monday("Пн", "пн", 1),
     Tuesday("Вт", "вт", 2),
@@ -21,6 +24,11 @@ public enum DayOfWeek {
         this.translate = translate;
         this.translateLittle = translateLittle;
         this.ordinal = ordinal;
+    }
+
+    static public DayOfWeek getDayFromDayOfWeek(java.time.DayOfWeek day) {
+        String dayName = day.getDisplayName(TextStyle.SHORT, new Locale("ru"));
+        return getDayByLittleString(dayName);
     }
 
     static public DayOfWeek getDayByString(String day) {

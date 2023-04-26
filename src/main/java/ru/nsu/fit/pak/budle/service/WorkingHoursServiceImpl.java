@@ -14,9 +14,9 @@ import ru.nsu.fit.pak.budle.mapper.WorkingHoursMapper;
 import ru.nsu.fit.pak.budle.repository.WorkingHoursRepository;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -45,6 +45,7 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
     public List<ValidTimeDto> getValidBookingHoursByEstablishment(Establishment establishment) {
         List<ValidTimeDto> times = new ArrayList<>();
         Set<WorkingHours> workingHours = establishment.getWorkingHours();
+
         final int DAY_COUNT = 7;
 
         for (int i = 0; i < DAY_COUNT; i++) {
@@ -56,17 +57,18 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
                         .getTranslateLittle()
                         .equals(currentDto.getDayName())) {
 
-                    int extraMinutes = 30 - currentHours.getStartTime().getMinute() % 30;
+                    final int DURATION = 30;
 
-                    List<String> currentDayList = new ArrayList<>();
-                    for (LocalTime currentTime = currentHours.getStartTime().plusMinutes(extraMinutes);
-                         currentTime.isBefore(currentHours.getEndTime());
-                         currentTime = currentTime.plusMinutes(30)) {
+                    List<String> currentDayTimes = workingHoursMapper.generateTimes(
+                                    currentHours.getStartTime(),
+                                    currentHours.getEndTime(),
+                                    DURATION
+                            )
+                            .stream()
+                            .map(Objects::toString)
+                            .toList();
 
-                        currentDayList.add(currentTime.toString());
-                    }
-
-                    currentDto.setTimes(currentDayList);
+                    currentDto.setTimes(currentDayTimes);
                     times.add(currentDto);
                 }
 
