@@ -24,7 +24,7 @@ public class SwaggerConfig {
     @Bean
     public Docket create() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .host("http://localhost:8080")
+                .host("80.64.174.33:8080")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("ru.nsu.fit.pak.budle.controller"))
                 .paths(PathSelectors.any())
