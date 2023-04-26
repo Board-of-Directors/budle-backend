@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import ru.nsu.fit.pak.budle.dao.DayOfWeek;
 import ru.nsu.fit.pak.budle.dao.WorkingHours;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 
@@ -35,6 +36,6 @@ public interface EstablishmentRepository extends JpaRepository<Establishment, Lo
 
     @Query(value = "SELECT wh from Establishment e inner join WorkingHours wh " +
             "on e.id = wh.establishment.id where wh.dayOfWeek = :day order by wh.startTime")
-    List<WorkingHours> findWorkingHoursByDay(@Param("day") Integer dayOfWeek);
+    List<WorkingHours> findWorkingHoursByDay(@Param("day") DayOfWeek day);
 
 }
