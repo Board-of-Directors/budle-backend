@@ -5,10 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.nsu.fit.pak.budle.dao.Order;
-import ru.nsu.fit.pak.budle.dao.OrderWithSpot;
-import ru.nsu.fit.pak.budle.dao.Spot;
-import ru.nsu.fit.pak.budle.dao.User;
+import ru.nsu.fit.pak.budle.dao.*;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.OrderDto;
 import ru.nsu.fit.pak.budle.dto.OrderDtoOutput;
@@ -16,6 +13,7 @@ import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
 import ru.nsu.fit.pak.budle.exceptions.*;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
 import ru.nsu.fit.pak.budle.mapper.WorkingHoursMapper;
+import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.OrderRepository;
 import ru.nsu.fit.pak.budle.repository.SpotRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
@@ -39,6 +37,8 @@ public class OrderServiceImpl implements OrderService {
     private final EstablishmentService establishmentService;
 
     private final EstablishmentMapper establishmentMapper;
+
+    private final EstablishmentRepository establishmentRepository;
 
     private final SpotRepository spotRepository;
 
@@ -82,6 +82,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private boolean bookingTimeIsValid(Establishment establishment, OrderDto order) {
+        DayOfWeek dayOfWeek = DayOfWeek.getDayFromDayOfWeek(order.getDate().getDayOfWeek());
+        WorkingHours workingHours = establishmentRepository.findWorkingHoursByDay(dayOfWeek);
+
+
         List<ValidTimeDto> validTimeDtos =
                 workingHoursService.getValidBookingHoursByEstablishment(establishment);
         ValidTimeDto orderTime = workingHoursMapper.convertFromDateAndTimeToValidTimeDto(order.getDate());
