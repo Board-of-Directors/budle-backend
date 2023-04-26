@@ -41,29 +41,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(UserNotFoundException::new);
     }
 
-
-    /*@Override
-    public Boolean loginUser(UserDto userDto) {
-        try {
-            User user = userRepository.findByPhoneNumber(userDto.getPhoneNumber()).orElseThrow();
-
-            if (user.getPassword().equals(userDto.getPassword())) {
-                return true;
-            } else {
-                throw new IncorrectDataException();
-            }
-        } catch (NoSuchElementException e) {
-            throw new UserNotFoundException();
-        }
-    }
-
-    @Override
-    public Boolean existsPhoneNumber(String phoneNumber) {
-        return !userRepository.existsByPhoneNumber(phoneNumber);
-    }
-
-     */
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username);
