@@ -56,7 +56,7 @@ public class OrderController {
     public List<OrderDtoOutput> get(@RequestParam Long userId,
                                     @RequestParam(required = false) Integer status) {
 
-        return orderService.getOrders(userId, Boolean.TRUE, status);
+        return orderService.getOrders(userId, null, status);
     }
 
 
