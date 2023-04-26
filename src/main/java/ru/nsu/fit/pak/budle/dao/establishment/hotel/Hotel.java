@@ -14,5 +14,5 @@ import javax.persistence.Entity;
 @DiscriminatorValue(value = "hotel")
 public class Hotel extends Establishment {
     private final Category category = Category.hotel;
-    private int starsCount;
+    private Integer starsCount;
 }
