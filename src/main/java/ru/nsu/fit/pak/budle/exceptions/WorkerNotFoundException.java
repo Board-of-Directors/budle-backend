@@ -14,6 +14,6 @@ public class WorkerNotFoundException extends BaseException {
      * @param id - id of the worker that does not exist.
      */
     public WorkerNotFoundException(Long id) {
-        super("Работник с id " + id + " не существует", ERROR_TYPE);
+        super("Работник с id " + id + " не находится в данном заведении или не существует.", ERROR_TYPE);
     }
 }

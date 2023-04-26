@@ -9,13 +9,14 @@ import ru.nsu.fit.pak.budle.dao.Worker;
 import ru.nsu.fit.pak.budle.dao.WorkerStatus;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.WorkerDto;
-import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
 import ru.nsu.fit.pak.budle.exceptions.WorkerNotFoundException;
 import ru.nsu.fit.pak.budle.mapper.WorkerMapper;
 import ru.nsu.fit.pak.budle.repository.WorkerRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Service
@@ -52,7 +53,7 @@ public class WorkerServiceImpl implements WorkerService {
                 .stream()
                 .filter(est -> est.getId().equals(establishmentId))
                 .findFirst()
-                .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
+                .orElseThrow(() -> new WorkerNotFoundException(workerId));
         worker.getEstablishments().remove(establishment);
         workerRepository.save(worker);
     }
@@ -69,7 +70,7 @@ public class WorkerServiceImpl implements WorkerService {
         } else {
             worker = new Worker();
             worker.setStatus(WorkerStatus.absent);
-            worker.setEstablishments(List.of(establishment));
+            worker.setEstablishments(Stream.of(establishment).collect(Collectors.toSet()));
             worker.setUser(user);
         }
         workerRepository.save(worker);

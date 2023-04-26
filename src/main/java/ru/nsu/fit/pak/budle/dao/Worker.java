@@ -7,7 +7,7 @@ import lombok.Setter;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,9 +22,9 @@ public class Worker {
     private WorkerStatus status;
     @OneToOne
     private User user;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "worker_establishments",
             joinColumns = @JoinColumn(name = "worker_id"),
             inverseJoinColumns = @JoinColumn(name = "establishment_id"))
-    private List<Establishment> establishments;
+    private Set<Establishment> establishments;
 }
