@@ -53,9 +53,6 @@ public class OrderServiceImpl implements OrderService {
     public void createOrder(OrderDto dto) {
         logger.info("Creating order");
         logger.debug(dto.toString());
-
-        Establishment establishment = establishmentService
-                .getEstablishmentById(dto.getEstablishmentId());
         Order order;
         if (dto.getSpotId() != null) {
             order = new OrderWithSpot();
@@ -66,6 +63,9 @@ public class OrderServiceImpl implements OrderService {
         } else {
             order = new Order();
         }
+
+        Establishment establishment = establishmentService
+                .getEstablishmentById(dto.getEstablishmentId());
         if (!bookingTimeIsValid(establishment, dto)) {
             throw new InvalidBookingTime();
         }
@@ -107,12 +107,12 @@ public class OrderServiceImpl implements OrderService {
         logger.info("Getting orders");
         logger.debug("byUser " + byUser + "\n"
                 + "id " + id);
+
         List<Order> orders = byUser ?
                 orderRepository.findAllByUser(userRepository.getReferenceById(id)) :
                 orderRepository.findAllByEstablishment(establishmentService.getEstablishmentById(id));
 
         logger.debug("Result: " + orders);
-
 
         return orders
                 .stream()

@@ -20,7 +20,8 @@ public class PhotoMapper {
         return photoDtos
                 .stream()
                 .map(x -> new Photo(imageWorker.saveImage(x.getImage())))
-                .peek((x) -> x.setEstablishment(establishment)).collect(Collectors.toSet());
+                .peek((x) -> x.setEstablishment(establishment))
+                .collect(Collectors.toSet());
     }
 
     public Set<PhotoDto> convertModelPhotoSetToDtoSet(Set<Photo> photos) {

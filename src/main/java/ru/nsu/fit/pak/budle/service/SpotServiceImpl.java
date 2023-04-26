@@ -8,19 +8,23 @@ import ru.nsu.fit.pak.budle.dao.DayOfWeek;
 import ru.nsu.fit.pak.budle.dao.Spot;
 import ru.nsu.fit.pak.budle.dao.WorkingHours;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
+import ru.nsu.fit.pak.budle.dto.BookingTimesDto;
 import ru.nsu.fit.pak.budle.dto.SpotDto;
 import ru.nsu.fit.pak.budle.dto.TimelineDto;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
 import ru.nsu.fit.pak.budle.exceptions.SpotNotFoundException;
 import ru.nsu.fit.pak.budle.mapper.SpotMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
+import ru.nsu.fit.pak.budle.repository.OrderRepository;
 import ru.nsu.fit.pak.budle.repository.SpotRepository;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +34,8 @@ public class SpotServiceImpl implements SpotService {
     private final EstablishmentRepository establishmentRepository;
 
     private final SpotMapper spotMapper;
+
+    private final OrderRepository orderRepository;
 
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -65,9 +71,9 @@ public class SpotServiceImpl implements SpotService {
         logger.info("Getting spot timeline");
         Establishment establishment = establishmentRepository.findById(establishmentId)
                 .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
+
         Spot spot = spotRepository.findByEstablishmentAndLocalId(establishment, localId)
                 .orElseThrow(() -> new SpotNotFoundException(localId));
-
 
         LocalDate dateNow = LocalDate.now();
         String today = dateNow.getDayOfWeek().getDisplayName(TextStyle.SHORT,
@@ -76,37 +82,17 @@ public class SpotServiceImpl implements SpotService {
         WorkingHours todayHours = establishmentRepository
                 .findWorkingHoursByDay(DayOfWeek.getDayByLittleString(today));
 
-
         TimelineDto timelineDto = new TimelineDto();
         timelineDto.setStart(todayHours.getStartTime());
         timelineDto.setEnd(todayHours.getEndTime());
-
-
-       /* Set<BookingTimesDto> times = establishmentRepository
-                .findWorkingHoursByDay(DayOfWeek.getDayByOrdinal(dateNow.getDayOfWeek().getValue()))
+        Set<BookingTimesDto> times = orderRepository.findAllByDateAndEstablishment(
+                        Date.valueOf(dateNow),
+                        spot.getEstablishment()
+                )
                 .stream()
                 .map(x -> new BookingTimesDto(x.getStartTime().toString(), x.getEndTime().toString()))
                 .collect(Collectors.toSet());
-        */
-
-       /* Set<BookingTimesDto> times = spot.getEstablishment()
-                .getOrders()
-                .stream()
-                .filter(x -> x.getDate().getDay() == dateNow.getDayOfWeek().getValue() % 7)
-                .sorted((o1, o2) -> {
-                    if (o1.getStartTime().toLocalTime().isBefore(o2.getStartTime().toLocalTime())) {
-                        return 1;
-                    } else if (o1.equals(o2)) {
-                        return 0;
-                    } else {
-                        return -1;
-                    }
-                })
-                .map(x -> new BookingTimesDto(x.getStartTime().toString(), x.getEndTime().toString()))
-                .collect(Collectors.toSet());
-
-        */
-        timelineDto.setTimes(Collections.emptySet());
+        timelineDto.setTimes(times);
         return timelineDto;
 
     }
