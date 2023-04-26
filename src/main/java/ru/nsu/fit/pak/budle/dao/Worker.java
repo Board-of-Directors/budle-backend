@@ -1,9 +1,6 @@
 package ru.nsu.fit.pak.budle.dao;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 
 import javax.persistence.*;
@@ -12,6 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Entity
 @Table(name = "workers")
 public class Worker {

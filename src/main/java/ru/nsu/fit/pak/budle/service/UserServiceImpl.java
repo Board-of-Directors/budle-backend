@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dto.UserDto;
 import ru.nsu.fit.pak.budle.exceptions.UserAlreadyExistsException;
+import ru.nsu.fit.pak.budle.exceptions.UserNotFoundException;
 import ru.nsu.fit.pak.budle.mapper.UserMapper;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 
@@ -26,14 +27,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public void registerUser(UserDto userDto) {
 
-        if (userRepository.existsByPhoneNumber(userDto.getPhoneNumber()) ||
-                userRepository.existsByUsername(userDto.getUsername())) {
+        if (userRepository.existsByPhoneNumber(userDto.getPhoneNumber()) || userRepository.existsByUsername(userDto.getUsername())) {
             throw new UserAlreadyExistsException();
         } else {
             User user = userMapper.dtoToModel(userDto);
             user.setPassword(encoder.encode(user.getPassword()));
             userRepository.save(user);
         }
+    }
+
+    @Override
+    public User findByPhoneNumber(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(UserNotFoundException::new);
     }
 
 

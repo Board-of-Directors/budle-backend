@@ -2,6 +2,7 @@ package ru.nsu.fit.pak.budle.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.Worker;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 
@@ -29,5 +30,7 @@ public interface WorkerRepository extends CrudRepository<Worker, Long> {
      */
 
     List<Worker> findByEstablishments(Establishment establishment);
+
+    Optional<Worker> findByUser(User user);
 
 }
