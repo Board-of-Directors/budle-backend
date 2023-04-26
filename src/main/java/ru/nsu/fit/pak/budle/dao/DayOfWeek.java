@@ -32,7 +32,7 @@ public enum DayOfWeek {
         throw new IncorrectDataException();
     }
 
-    static public DayOfWeek geyDayByLittleString(String day) {
+    static public DayOfWeek getDayByLittleString(String day) {
         for (DayOfWeek dayOfWeek : DayOfWeek.values()) {
             if (dayOfWeek.translateLittle.equals(day)) {
                 return dayOfWeek;
