@@ -58,9 +58,10 @@ public class Establishment {
     @Column(name = "tag_name")
     private Set<Tag> tags;
 
-    public Establishment(Category category, Boolean hasMap, Boolean hasCardPayment) {
+    public Establishment(Category category, Boolean hasMap, Boolean hasCardPayment, String name) {
         this.category = category;
         this.hasMap = hasMap;
         this.hasCardPayment = hasCardPayment;
+        this.name = name;
     }
 }

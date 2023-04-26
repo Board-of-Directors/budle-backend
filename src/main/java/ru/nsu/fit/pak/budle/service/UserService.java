@@ -15,11 +15,5 @@ public interface UserService {
      */
     void registerUser(UserDto userDto);
 
-   /* Boolean loginUser(UserDto userDto);
-
-    Boolean existsPhoneNumber(String phoneNumber);
-
-    */
-
     User findByPhoneNumber(String phoneNumber);
 }

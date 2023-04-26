@@ -67,16 +67,15 @@ public class EstablishmentServiceImpl implements EstablishmentService {
                 "Name: " + name + "\n" +
                 "Page: " + page + "\n");
 
-
-        ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues();
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                .withIgnoreNullValues()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
         Category categoryEnum = category == null ? null : Category.getEnumByValue(category);
-        Example<Establishment> exampleQuery = Example.of(new Establishment(categoryEnum, hasMap, hasCardPayment), matcher);
+        Example<Establishment> exampleQuery = Example.of(new Establishment(categoryEnum, hasMap, hasCardPayment, name), matcher);
         Page<Establishment> results = establishmentRepository.findAll(exampleQuery, page);
         logger.debug("Results was " + results);
-        return establishmentMapper.modelListToDtoList(results)
-                .stream()
-                .filter(establishment -> establishment.getName().contains(name))
-                .toList();
+        return establishmentMapper.modelListToDtoList(results);
     }
 
     @Override

@@ -85,7 +85,6 @@ public class OrderServiceImpl implements OrderService {
         DayOfWeek dayOfWeek = DayOfWeek.getDayFromDayOfWeek(order.getDate().getDayOfWeek());
         WorkingHours workingHours = establishmentRepository.findWorkingHoursByDay(dayOfWeek);
 
-
         List<ValidTimeDto> validTimeDtos =
                 workingHoursService.getValidBookingHoursByEstablishment(establishment);
         ValidTimeDto orderTime = workingHoursMapper.convertFromDateAndTimeToValidTimeDto(order.getDate());
