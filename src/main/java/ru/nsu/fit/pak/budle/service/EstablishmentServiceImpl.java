@@ -82,21 +82,17 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     @Override
     public void createEstablishment(EstablishmentDto dto) {
         logger.info("Creating new establishment");
-        String address = dto.getAddress();
-        String name = dto.getName();
         logger.debug("Establishment parameters:" + dto);
-        if (establishmentRepository.existsByAddressAndName(address, name)) {
-            logger.warn("Establishment " + name + " " + address + " already exists");
-            throw new EstablishmentAlreadyExistsException(name, address);
-        }
+        checkEstablishmentExistence(dto);
 
-        Set<WorkingHoursDto> workingHoursDto = dto.getWorkingHours();
-        Set<PhotoDto> photos = dto.getPhotosInput();
+
         Establishment establishment = establishmentMapper.dtoToModel(dto);
         Set<Tag> tags = tagMapper.tagDtoSetToModelSet(dto.getTags());
         establishment.setTags(tags);
-
         Establishment savedEstablishment = establishmentRepository.save(establishment);
+
+        Set<WorkingHoursDto> workingHoursDto = dto.getWorkingHours();
+        Set<PhotoDto> photos = dto.getPhotosInput();
         workingHoursService.saveWorkingHours(workingHoursDto, savedEstablishment);
         imageService.saveImages(photos, savedEstablishment);
         logger.info("Establishment was saved");
@@ -117,7 +113,6 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     public Set<PhotoDto> getPhotos(Long establishmentId) {
         logger.info("Getting photos");
         Establishment establishment = getEstablishmentById(establishmentId);
-
         return photoMapper.convertModelPhotoSetToDtoSet(establishment.getPhotos());
     }
 
@@ -184,5 +179,14 @@ public class EstablishmentServiceImpl implements EstablishmentService {
                 .findById(establishmentId).orElseThrow(
                         () -> new EstablishmentNotFoundException(establishmentId)
                 );
+    }
+
+    private void checkEstablishmentExistence(EstablishmentDto dto) {
+        String address = dto.getAddress();
+        String name = dto.getName();
+        if (establishmentRepository.existsByAddressAndName(address, name)) {
+            logger.warn("Establishment " + name + " " + address + " already exists");
+            throw new EstablishmentAlreadyExistsException(name, address);
+        }
     }
 }

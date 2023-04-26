@@ -6,6 +6,7 @@ import ru.nsu.fit.pak.budle.dao.Order;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,4 +31,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
      */
 
     List<Order> findAllByEstablishment(Establishment establishment);
+
+    List<Order> findAllByDateAndEstablishment(Date date, Establishment establishment);
+
+
 }
