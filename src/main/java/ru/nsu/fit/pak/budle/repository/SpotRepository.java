@@ -6,6 +6,7 @@ import ru.nsu.fit.pak.budle.dao.Spot;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository, that connects spot models with database.
@@ -21,5 +22,5 @@ public interface SpotRepository extends JpaRepository<Spot, Long> {
      */
     List<Spot> findByEstablishment(Establishment establishment);
 
-    Spot findByEstablishmentAndLocalId(Establishment establishment, Long localId);
+    Optional<Spot> findByEstablishmentAndLocalId(Establishment establishment, Long localId);
 }
