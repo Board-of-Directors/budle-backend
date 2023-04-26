@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.*;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
@@ -102,14 +104,22 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDtoOutput> getOrders(Long id, Boolean byUser, Integer status) {
+    public List<OrderDtoOutput> getOrders(Long userId, Long establishmentId, Integer status) {
         logger.info("Getting orders");
-        logger.debug("byUser " + byUser + "\n"
-                + "id " + id);
+        logger.debug("id " + userId);
+        logger.debug("establishment " + establishmentId);
 
-        List<Order> orders = byUser ?
-                orderRepository.findAllByUser(userRepository.getReferenceById(id)) :
-                orderRepository.findAllByEstablishment(establishmentService.getEstablishmentById(id));
+        User user = userId == null ?
+                null : userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+
+        Establishment establishment = establishmentId == null ?
+                null : establishmentRepository.findById(establishmentId)
+                .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
+
+        ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues();
+        Example<Order> exampleQuery = Example.of(new Order(user, establishment, status), matcher);
+        List<Order> orders = orderRepository.findAll(exampleQuery);
 
         logger.debug("Result: " + orders);
 
@@ -121,7 +131,6 @@ public class OrderServiceImpl implements OrderService {
                     orderDtoOutput.setEstablishment(establishmentMapper.modelToDto(establishmentSource));
                     return orderDtoOutput;
                 })
-                .filter(order -> filterOrdersByStatus(order, status))
                 .toList();
     }
 
@@ -155,12 +164,6 @@ public class OrderServiceImpl implements OrderService {
     private Order getOrderById(Long orderId) {
         return orderRepository.findById(orderId).orElseThrow(() ->
                 new OrderNotFoundException(orderId));
-    }
-
-    private boolean filterOrdersByStatus(OrderDtoOutput order, Integer status) {
-        if (status == null) {
-            return true;
-        } else return order.getStatus().equals(status);
     }
 
 }

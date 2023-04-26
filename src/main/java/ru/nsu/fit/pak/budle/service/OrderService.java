@@ -18,15 +18,13 @@ public interface OrderService {
 
     /**
      * Getting all the orders with provided parameters.
+     * if false - with establishment.
      *
-     * @param id     of provided entity.
-     * @param byUser indicates that function must associate id with user, or,
-     *               if false - with establishment.
      * @param status - with what status we're searching orders.
      * @return list of order dto.
      */
 
-    List<OrderDtoOutput> getOrders(Long id, Boolean byUser, Integer status);
+    List<OrderDtoOutput> getOrders(Long userId, Long establishmentId, Integer status);
 
     /**
      * @param orderId what order we need to delete.

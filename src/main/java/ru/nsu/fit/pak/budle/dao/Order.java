@@ -36,4 +36,10 @@ public class Order {
     @ManyToOne(fetch = FetchType.EAGER)
     private Establishment establishment;
 
+    public Order(User user, Establishment establishment, Integer status) {
+        this.user = user;
+        this.establishment = establishment;
+        this.status = status;
+    }
+
 }
