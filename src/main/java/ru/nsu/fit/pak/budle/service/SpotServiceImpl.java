@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.nsu.fit.pak.budle.dao.DayOfWeek;
 import ru.nsu.fit.pak.budle.dao.Spot;
 import ru.nsu.fit.pak.budle.dao.WorkingHours;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
@@ -84,7 +85,7 @@ public class SpotServiceImpl implements SpotService {
         timelineDto.setStart(todayHours.getStartTime());
         timelineDto.setEnd(todayHours.getEndTime());
         Set<BookingTimesDto> times = establishmentRepository
-                .findWorkingHoursByDay(dateNow.getDayOfWeek().getValue() - 1)
+                .findWorkingHoursByDay(DayOfWeek.getDayByOrdinal(dateNow.getDayOfWeek().getValue()))
                 .stream()
                 .map(x -> new BookingTimesDto(x.getStartTime().toString(), x.getEndTime().toString()))
                 .collect(Collectors.toSet());
