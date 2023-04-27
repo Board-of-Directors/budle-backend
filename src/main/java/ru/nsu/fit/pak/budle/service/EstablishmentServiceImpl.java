@@ -14,14 +14,17 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Tag;
+import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.*;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
+import ru.nsu.fit.pak.budle.exceptions.UserNotFoundException;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
 import ru.nsu.fit.pak.budle.mapper.PhotoMapper;
 import ru.nsu.fit.pak.budle.mapper.TagMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
+import ru.nsu.fit.pak.budle.repository.UserRepository;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -41,6 +44,8 @@ import java.util.Set;
 public class EstablishmentServiceImpl implements EstablishmentService {
     private static final Logger logger = LoggerFactory.getLogger(EstablishmentServiceImpl.class);
     private final EstablishmentRepository establishmentRepository;
+
+    private final UserRepository userRepository;
     private final SpotService spotService;
 
     private final ImageService imageService;
@@ -171,6 +176,16 @@ public class EstablishmentServiceImpl implements EstablishmentService {
             logger.warn("Transform exception");
             logger.warn(e.getMessage());
         }
+    }
+
+    @Override
+    public List<ShortEstablishmentInfo> getEstablishmentsByOwner(Long id) {
+        User owner = userRepository.findById(id).orElseThrow(
+                UserNotFoundException::new);
+
+        return establishmentMapper.toShortInfoList(
+                establishmentRepository.findAllByOwner(owner)
+        );
     }
 
     public Establishment getEstablishmentById(Long establishmentId) {

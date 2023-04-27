@@ -3,15 +3,15 @@ package ru.nsu.fit.pak.budle.controller;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.nsu.fit.pak.budle.dto.ShortEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.UserDto;
+import ru.nsu.fit.pak.budle.service.EstablishmentService;
 import ru.nsu.fit.pak.budle.service.SecurityService;
 import ru.nsu.fit.pak.budle.service.UserServiceImpl;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * Class, that represent user controller.
@@ -22,6 +22,8 @@ import javax.validation.Valid;
 @RequestMapping(value = "user", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
     private final UserServiceImpl userService;
+
+    private final EstablishmentService establishmentService;
 
     private final SecurityService securityService;
 
@@ -49,6 +51,11 @@ public class UserController {
     public Boolean login(@RequestBody UserDto userDto) {
         securityService.autoLogin(userDto.getUsername(), userDto.getPassword());
         return true;
+    }
+
+    @GetMapping(value = "/establishments")
+    public List<ShortEstablishmentInfo> OwnerEstablishments(@RequestParam Long id) {
+        return establishmentService.getEstablishmentsByOwner(id);
     }
 
 }

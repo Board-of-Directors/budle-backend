@@ -36,7 +36,8 @@ public class ArticleController extends ResponseEntityExceptionHandler implements
             UserNotFoundException.class,
             InvalidBookingTime.class,
             SpotNotFoundException.class,
-            VerificationCodeWasFalseException.class
+            VerificationCodeWasFalseException.class,
+            IncorrectPhoneNumberFormatException.class
     })
     public <T extends BaseException> ResponseEntity<BaseResponse<Object>> handleException(T e) {
         BaseResponse<Object> response = new BaseResponse<>(e.getMessage(), e.getType());

@@ -16,4 +16,5 @@ public interface UserService {
     void registerUser(UserDto userDto);
 
     User findByPhoneNumber(String phoneNumber);
+
 }

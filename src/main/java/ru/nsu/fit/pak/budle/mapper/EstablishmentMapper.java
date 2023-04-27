@@ -8,10 +8,7 @@ import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dao.establishment.restaurant.CuisineCountry;
 import ru.nsu.fit.pak.budle.dao.establishment.restaurant.Restaurant;
-import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
-import ru.nsu.fit.pak.budle.dto.RestaurantDto;
-import ru.nsu.fit.pak.budle.dto.TagDto;
-import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
+import ru.nsu.fit.pak.budle.dto.*;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.utils.EstablishmentFactory;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
@@ -129,5 +126,14 @@ public class EstablishmentMapper {
         establishment.setWorkingHours(null);
         establishment.setPhotos(null);
         return establishment;
+    }
+
+    public ShortEstablishmentInfo toShortInfo(Establishment establishment) {
+        return modelMapper.map(establishment, ShortEstablishmentInfo.class);
+    }
+
+
+    public List<ShortEstablishmentInfo> toShortInfoList(List<Establishment> establishmentList) {
+        return establishmentList.stream().map(this::toShortInfo).toList();
     }
 }
