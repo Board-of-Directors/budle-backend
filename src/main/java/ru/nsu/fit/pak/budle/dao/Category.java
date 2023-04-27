@@ -5,14 +5,18 @@ import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 public enum Category {
     restaurant("Рестораны"),
     hotel("Отели"),
-    bank("Банки"),
-    medicine("Медицинские"),
-    government("Государственные"),
-    cars("Автомобильные"),
-    entertainment("Развлекательный"),
-    building("Строительные"),
     game_club("Игровые клубы"),
     barbershop("Парикмахерские");
+
+    /*bank("Банки"),
+medicine("Медицинские"),
+government("Государственные"),
+cars("Автомобильные"),
+entertainment("Развлекательный"),
+building("Строительные"),
+ */
+
+
     public final String value;
 
     Category(String value) {

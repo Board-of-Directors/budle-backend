@@ -21,7 +21,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
 
     private final UserMapper userMapper;
-
     private final PasswordEncoder encoder;
 
     @Override
@@ -40,6 +39,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User findByPhoneNumber(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(UserNotFoundException::new);
     }
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

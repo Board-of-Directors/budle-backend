@@ -85,7 +85,6 @@ public class OrderServiceImpl implements OrderService {
 
     private boolean bookingTimeIsValid(Establishment establishment, OrderDto order) {
         DayOfWeek dayOfWeek = DayOfWeek.getDayFromDayOfWeek(order.getDate().getDayOfWeek());
-        WorkingHours workingHours = establishmentRepository.findWorkingHoursByDay(dayOfWeek);
 
         List<ValidTimeDto> validTimeDtos =
                 workingHoursService.getValidBookingHoursByEstablishment(establishment);
@@ -129,6 +128,7 @@ public class OrderServiceImpl implements OrderService {
                     Establishment establishmentSource = order.getEstablishment();
                     OrderDtoOutput orderDtoOutput = modelMapper.map(order, OrderDtoOutput.class);
                     orderDtoOutput.setEstablishment(establishmentMapper.modelToDto(establishmentSource));
+                    orderDtoOutput.setUserId(order.getUser().getId());
                     return orderDtoOutput;
                 })
                 .toList();
@@ -144,7 +144,7 @@ public class OrderServiceImpl implements OrderService {
 
         if (byUser && order.getUser().getId().equals(id)) {
             orderRepository.delete(order);
-        } else if (order.getEstablishment().getId().equals(id)) {
+        } else if (!byUser && order.getEstablishment().getId().equals(id)) {
             order.setStatus(2);
         } else {
             logger.warn("Not enough right for this operation");

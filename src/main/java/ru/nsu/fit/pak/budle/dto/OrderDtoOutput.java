@@ -14,7 +14,10 @@ public class OrderDtoOutput {
             (shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date date;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
-    private Time time;
+    private Time startTime;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    private Time endTime;
     private Integer status;
     private EstablishmentDto establishment;
     private Long userId;

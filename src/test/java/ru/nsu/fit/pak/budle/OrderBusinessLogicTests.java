@@ -18,13 +18,12 @@ import ru.nsu.fit.pak.budle.exceptions.OrderNotFoundException;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.OrderRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
-import ru.nsu.fit.pak.budle.service.EstablishmentService;
 import ru.nsu.fit.pak.budle.service.OrderService;
 
 import javax.transaction.Transactional;
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 
@@ -32,8 +31,6 @@ import java.util.List;
 @Testcontainers
 class OrderBusinessLogicTests {
 
-    @Autowired
-    private EstablishmentService establishmentService;
     @Autowired
     private EstablishmentRepository establishmentRepository;
     @Autowired
@@ -61,7 +58,7 @@ class OrderBusinessLogicTests {
     public void testOrder_creatingRejectingAcceptingAndDeletingSequential() {
         insertEstablishments();
         long orderCount = orderRepository.findAll().size();
-        OrderDto order = new OrderDto(4, new Date(), new Time(14, 30, 0),
+        OrderDto order = new OrderDto(4, LocalDate.now(), new Time(14, 30, 0),
                 mainEstablishment.getId(), guest.getId(), null);
         orderController.create(order);
         Order createdOrder = orderRepository.findAll().get(0);
