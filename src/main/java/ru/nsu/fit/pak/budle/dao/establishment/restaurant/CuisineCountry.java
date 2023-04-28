@@ -2,6 +2,9 @@ package ru.nsu.fit.pak.budle.dao.establishment.restaurant;
 
 import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum CuisineCountry {
     european("Европейская"),
     georgian("Грузинская"),
@@ -23,6 +26,12 @@ public enum CuisineCountry {
             }
         }
         throw new IncorrectDataException();
+    }
+
+    public static List<String> getVariants() {
+        return Arrays.stream(CuisineCountry.values())
+                .map(CuisineCountry::getValue)
+                .toList();
     }
 
     public String getValue() {

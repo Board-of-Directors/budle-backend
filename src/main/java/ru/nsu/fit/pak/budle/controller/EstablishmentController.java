@@ -157,6 +157,12 @@ public class EstablishmentController {
         return establishmentService.getSpotTags(establishmentId);
     }
 
+    @GetMapping(value = "/variants")
+    public List<String> getCategoryVariants(@RequestParam String category) {
+        return establishmentService.getCategoryVariants(category);
+
+    }
+
     /**
      * Put request, that process map of establishment and put it to database.
      *

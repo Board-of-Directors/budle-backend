@@ -188,6 +188,12 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         );
     }
 
+    @Override
+    public List<String> getCategoryVariants(String category) {
+        Category categoryEnum = Category.getEnumByValue(category);
+        return categoryEnum.variants;
+    }
+
     public Establishment getEstablishmentById(Long establishmentId) {
         return establishmentRepository
                 .findById(establishmentId).orElseThrow(

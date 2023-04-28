@@ -95,4 +95,6 @@ public interface EstablishmentService {
     Establishment getEstablishmentById(Long establishmentId);
 
     List<ShortEstablishmentInfo> getEstablishmentsByOwner(Long id);
+
+    List<String> getCategoryVariants(String category);
 }
