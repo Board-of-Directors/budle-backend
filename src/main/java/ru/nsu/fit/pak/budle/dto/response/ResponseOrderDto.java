@@ -1,13 +1,14 @@
-package ru.nsu.fit.pak.budle.dto;
+package ru.nsu.fit.pak.budle.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 
 import java.sql.Time;
 import java.util.Date;
 
 @Data
-public class OrderDtoOutput {
+public class ResponseOrderDto {
     private Long id;
     private Integer guestCount;
     @JsonFormat

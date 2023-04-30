@@ -11,8 +11,8 @@ import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Order;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
-import ru.nsu.fit.pak.budle.dto.OrderDto;
-import ru.nsu.fit.pak.budle.dto.OrderDtoOutput;
+import ru.nsu.fit.pak.budle.dto.request.RequestOrderDto;
+import ru.nsu.fit.pak.budle.dto.response.ResponseOrderDto;
 import ru.nsu.fit.pak.budle.exceptions.NotEnoughRightsException;
 import ru.nsu.fit.pak.budle.exceptions.OrderNotFoundException;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
@@ -58,7 +58,7 @@ class OrderBusinessLogicTests {
     public void testOrder_creatingRejectingAcceptingAndDeletingSequential() {
         insertEstablishments();
         long orderCount = orderRepository.findAll().size();
-        OrderDto order = new OrderDto(4, LocalDate.now(), new Time(14, 30, 0),
+        RequestOrderDto order = new RequestOrderDto(4, LocalDate.now(), new Time(14, 30, 0),
                 mainEstablishment.getId(), guest.getId(), null);
         orderController.create(order);
         Order createdOrder = orderRepository.findAll().get(0);
@@ -73,8 +73,8 @@ class OrderBusinessLogicTests {
         establishmentController.accept(mainEstablishment.getId(), createdOrder.getId());
         Assertions.assertEquals(createdOrder.getStatus(), 1);
 
-        List<OrderDtoOutput> listFromUser = orderController.get(guest.getId(), 1);
-        List<OrderDtoOutput> listFromEstablishment = establishmentController.orders(mainEstablishment.getId(), 1);
+        List<ResponseOrderDto> listFromUser = orderController.get(guest.getId(), 1);
+        List<ResponseOrderDto> listFromEstablishment = establishmentController.orders(mainEstablishment.getId(), 1);
         Assertions.assertEquals(listFromEstablishment, listFromUser);
 
 

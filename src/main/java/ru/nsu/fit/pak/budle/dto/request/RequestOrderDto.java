@@ -1,4 +1,4 @@
-package ru.nsu.fit.pak.budle.dto;
+package ru.nsu.fit.pak.budle.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-public class OrderDto {
+public class RequestOrderDto {
     private Integer guestCount;
     @JsonFormat
             (shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

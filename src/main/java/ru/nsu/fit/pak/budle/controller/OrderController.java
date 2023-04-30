@@ -3,8 +3,8 @@ package ru.nsu.fit.pak.budle.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.nsu.fit.pak.budle.dto.OrderDto;
-import ru.nsu.fit.pak.budle.dto.OrderDtoOutput;
+import ru.nsu.fit.pak.budle.dto.request.RequestOrderDto;
+import ru.nsu.fit.pak.budle.dto.response.ResponseOrderDto;
 import ru.nsu.fit.pak.budle.service.OrderService;
 
 import javax.validation.Valid;
@@ -27,7 +27,7 @@ public class OrderController {
      */
 
     @PostMapping
-    public void create(@RequestBody @Valid OrderDto dto) {
+    public void create(@RequestBody @Valid RequestOrderDto dto) {
         orderService.createOrder(dto);
 
     }
@@ -53,8 +53,8 @@ public class OrderController {
      * @return list of order dto.
      */
     @GetMapping
-    public List<OrderDtoOutput> get(@RequestParam Long userId,
-                                    @RequestParam(required = false) Integer status) {
+    public List<ResponseOrderDto> get(@RequestParam Long userId,
+                                      @RequestParam(required = false) Integer status) {
 
         return orderService.getOrders(userId, null, status);
     }
