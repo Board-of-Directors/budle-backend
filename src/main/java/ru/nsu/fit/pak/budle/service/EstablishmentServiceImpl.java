@@ -22,6 +22,7 @@ import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
+import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
@@ -32,6 +33,7 @@ import ru.nsu.fit.pak.budle.mapper.TagMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -90,6 +92,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
+    @Transactional
     public void createEstablishment(RequestEstablishmentDto dto) {
         logger.info("Creating new establishment");
         logger.debug("Establishment parameters:" + dto);
@@ -205,6 +208,11 @@ public class EstablishmentServiceImpl implements EstablishmentService {
                 .findById(establishmentId).orElseThrow(
                         () -> new EstablishmentNotFoundException(establishmentId)
                 );
+    }
+
+    @Override
+    public ResponseExtendedEstablishmentInfo getEstablishmentInfoById(Long establishmentId) {
+        return establishmentMapper.toExtended(getEstablishmentById(establishmentId));
     }
 
     private void checkEstablishmentExistence(RequestEstablishmentDto dto) {

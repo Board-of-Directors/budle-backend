@@ -7,6 +7,7 @@ import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
+import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
 
 import java.util.List;
@@ -98,6 +99,8 @@ public interface EstablishmentService {
      */
 
     Establishment getEstablishmentById(Long establishmentId);
+
+    ResponseExtendedEstablishmentInfo getEstablishmentInfoById(Long establishmentId);
 
     List<ResponseShortEstablishmentInfo> getEstablishmentsByOwner(Long id);
 

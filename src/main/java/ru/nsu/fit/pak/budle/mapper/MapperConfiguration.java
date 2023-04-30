@@ -1,15 +1,33 @@
 package ru.nsu.fit.pak.budle.mapper;
 
+import org.modelmapper.AbstractConverter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ru.nsu.fit.pak.budle.dao.Category;
+import ru.nsu.fit.pak.budle.dao.establishment.restaurant.CuisineCountry;
 
 /**
  * Mapper configuration for our system.
  */
 @Configuration
 public class MapperConfiguration {
+
+    private final AbstractConverter<CuisineCountry, String> convertCuisine = new AbstractConverter<>() {
+        @Override
+        protected String convert(CuisineCountry source) {
+            return source.getValue();
+        }
+    };
+    private final AbstractConverter<Category, String> convertCategory = new AbstractConverter<>() {
+        @Override
+        protected String convert(Category source) {
+            return source.value;
+        }
+    };
+
+
     /**
      * Bean that allows dependency injection for model mapper.
      *
@@ -19,6 +37,8 @@ public class MapperConfiguration {
     public ModelMapper modelMapper() {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        mapper.addConverter(convertCuisine);
+        mapper.addConverter(convertCategory);
         return mapper;
     }
 }
