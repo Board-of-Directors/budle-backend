@@ -33,7 +33,7 @@ public class EstablishmentDto {
     @NotNull(message = "Адрес не может быть пустым")
     @Size(max = 200)
     private String address;
-    private UserDto owner;
+    private Long owner;
     @NotNull(message = "Информация о оплате картой не может быть пустой")
     private boolean hasCardPayment;
     @NotNull(message = "Информация о карте заведения не может быть пустой")

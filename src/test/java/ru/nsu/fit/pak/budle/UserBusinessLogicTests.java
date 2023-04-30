@@ -8,14 +8,13 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.nsu.fit.pak.budle.controller.UserController;
 import ru.nsu.fit.pak.budle.dao.Code;
 import ru.nsu.fit.pak.budle.dao.User;
-import ru.nsu.fit.pak.budle.dto.UserDto;
+import ru.nsu.fit.pak.budle.dto.request.RequestUserDto;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectPhoneNumberFormatException;
 import ru.nsu.fit.pak.budle.exceptions.UserAlreadyExistsException;
 import ru.nsu.fit.pak.budle.repository.CodeRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.service.CodeService;
-import ru.nsu.fit.pak.budle.service.SecurityService;
 import ru.nsu.fit.pak.budle.service.UserService;
 
 import javax.transaction.Transactional;
@@ -39,14 +38,11 @@ class UserBusinessLogicTests {
     @Autowired
     private UserController userController;
 
-    @Autowired
-    private SecurityService securityService;
-
     @Test
     @Transactional
     public void testUserService_tryToRegisterUserWithExistingUsername() {
         insertUsers();
-        UserDto dto = new UserDto(4L, "3111", "Oleg", "+79321312213");
+        RequestUserDto dto = new RequestUserDto("3111", "Oleg", "+79321312213");
         Assertions.assertThrows(UserAlreadyExistsException.class, () -> userService.registerUser(dto));
 
     }
@@ -55,7 +51,7 @@ class UserBusinessLogicTests {
     @Transactional
     public void testUserService_tryToRegisterUserWithExistingNumber() {
         insertUsers();
-        UserDto dto = new UserDto(4L, "3111", "Kerkey", "+7932131231");
+        RequestUserDto dto = new RequestUserDto("3111", "Kerkey", "+7932131231");
         Assertions.assertThrows(UserAlreadyExistsException.class, () -> userService.registerUser(dto));
     }
 
@@ -64,7 +60,7 @@ class UserBusinessLogicTests {
     public void testUserService_tryToRegisterUserWithDoesntExistingNumberAndUsername() {
         insertUsers();
         int oldSize = userRepository.findAll().size();
-        UserDto dto = new UserDto(4L, "3111", "Kerkey", "+7932131239");
+        RequestUserDto dto = new RequestUserDto("3111", "Kerkey", "+7932131239");
         userController.register(dto);
         Assertions.assertEquals(userRepository.findAll().size(), oldSize + 1);
 
