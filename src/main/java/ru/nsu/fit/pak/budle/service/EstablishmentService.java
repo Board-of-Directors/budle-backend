@@ -4,9 +4,9 @@ import org.springframework.data.domain.Pageable;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.PhotoDto;
-import ru.nsu.fit.pak.budle.dto.ShortEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
+import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
 
 import java.util.List;
 import java.util.Set;
@@ -98,7 +98,7 @@ public interface EstablishmentService {
 
     Establishment getEstablishmentById(Long establishmentId);
 
-    List<ShortEstablishmentInfo> getEstablishmentsByOwner(Long id);
+    List<ResponseShortEstablishmentInfo> getEstablishmentsByOwner(Long id);
 
     List<String> getCategoryVariants(String category);
 }

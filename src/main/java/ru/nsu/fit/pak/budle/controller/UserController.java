@@ -4,8 +4,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.nsu.fit.pak.budle.dto.ShortEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.request.RequestUserDto;
+import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
 import ru.nsu.fit.pak.budle.service.EstablishmentService;
 import ru.nsu.fit.pak.budle.service.SecurityService;
 import ru.nsu.fit.pak.budle.service.UserServiceImpl;
@@ -54,7 +54,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/establishments")
-    public List<ShortEstablishmentInfo> OwnerEstablishments(@RequestParam Long id) {
+    public List<ResponseShortEstablishmentInfo> OwnerEstablishments(@RequestParam Long id) {
         return establishmentService.getEstablishmentsByOwner(id);
     }
 
