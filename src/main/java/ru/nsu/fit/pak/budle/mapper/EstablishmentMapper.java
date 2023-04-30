@@ -8,7 +8,11 @@ import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dao.establishment.restaurant.CuisineCountry;
 import ru.nsu.fit.pak.budle.dao.establishment.restaurant.Restaurant;
-import ru.nsu.fit.pak.budle.dto.*;
+import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
+import ru.nsu.fit.pak.budle.dto.RestaurantDto;
+import ru.nsu.fit.pak.budle.dto.ShortEstablishmentInfo;
+import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
+import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.utils.EstablishmentFactory;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
@@ -71,7 +75,7 @@ public class EstablishmentMapper {
         establishmentDto.setTags(establishment
                 .getTags()
                 .stream()
-                .map(x -> new TagDto(x.translate, imageWorker.getImageFromResource(x.assets)))
+                .map(x -> new ResponseTagDto(x.translate, imageWorker.getImageFromResource(x.assets)))
                 .collect(Collectors.toSet()));
         try {
             if (establishment.getHasMap()) {

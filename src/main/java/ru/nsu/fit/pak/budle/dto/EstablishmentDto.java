@@ -3,6 +3,7 @@ package ru.nsu.fit.pak.budle.dto;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
+import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 
 import javax.validation.constraints.*;
 import java.util.Set;
@@ -54,7 +55,7 @@ public class EstablishmentDto {
     @Size(min = 1, max = 7, message = "Дней работы не может быть меньше 1 и больше 7")
     private Set<WorkingHoursDto> workingHours;
     @NotNull(message = "Тэги не могут быть пустыми.")
-    private Set<TagDto> tags;
+    private Set<ResponseTagDto> tags;
     private Set<PhotoDto> photosInput;
     private String map;
 

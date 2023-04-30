@@ -17,6 +17,7 @@ import ru.nsu.fit.pak.budle.dao.Tag;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.*;
+import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
 import ru.nsu.fit.pak.budle.exceptions.UserNotFoundException;
@@ -109,7 +110,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public List<TagDto> getTags() {
+    public List<ResponseTagDto> getTags() {
         return tagMapper.modelArrayToTagDtoList(Tag.values());
     }
 
@@ -127,7 +128,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public List<TagDto> getSpotTags(Long establishmentId) {
+    public List<ResponseTagDto> getSpotTags(Long establishmentId) {
         Establishment establishment = getEstablishmentById(establishmentId);
         return tagMapper.modelSetToSpotTagDtoList(establishment.getTags());
 
