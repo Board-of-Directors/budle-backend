@@ -11,7 +11,7 @@ import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Tag;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
-import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
+import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
@@ -42,7 +42,7 @@ class EstablishmentBusinessLogicTests {
     @Transactional
     public void testCreatingEstablishment_creatingExistingEstablishment() {
         insertEstablishments();
-        EstablishmentDto creatingEstablishment = new EstablishmentDto();
+        RequestEstablishmentDto creatingEstablishment = new RequestEstablishmentDto();
         creatingEstablishment.setName(mainEstablishment.getName());
         creatingEstablishment.setAddress(mainEstablishment.getAddress());
         Assertions.assertThrows(EstablishmentAlreadyExistsException.class,
@@ -78,7 +78,7 @@ class EstablishmentBusinessLogicTests {
         Establishment establishment = establishmentRepository.findAll().get(0);
         String addedMap = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" height=\"555\" viewBox=\"0 0 375 555\" width=\"375\"/>";
         establishmentService.addMap(establishment.getId(), addedMap);
-        EstablishmentDto dto = establishmentService.getEstablishmentByParams(null,
+        RequestEstablishmentDto dto = establishmentService.getEstablishmentByParams(null,
                 null, null, "", Pageable.ofSize(10)).get(0);
         Assertions.assertEquals(dto.getMap(), addedMap);
     }

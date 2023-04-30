@@ -16,10 +16,10 @@ import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Tag;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
-import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.PhotoDto;
 import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
 import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
+import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
@@ -63,11 +63,11 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     private final TagMapper tagMapper;
 
     @Override
-    public List<EstablishmentDto> getEstablishmentByParams(String category,
-                                                           Boolean hasMap,
-                                                           Boolean hasCardPayment,
-                                                           String name,
-                                                           Pageable page) {
+    public List<RequestEstablishmentDto> getEstablishmentByParams(String category,
+                                                                  Boolean hasMap,
+                                                                  Boolean hasCardPayment,
+                                                                  String name,
+                                                                  Pageable page) {
         logger.info("Getting establishment by parameters");
 
         logger.debug("Parameters\n" +
@@ -89,7 +89,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public void createEstablishment(EstablishmentDto dto) {
+    public void createEstablishment(RequestEstablishmentDto dto) {
         logger.info("Creating new establishment");
         logger.debug("Establishment parameters:" + dto);
         checkEstablishmentExistence(dto);
@@ -206,7 +206,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
                 );
     }
 
-    private void checkEstablishmentExistence(EstablishmentDto dto) {
+    private void checkEstablishmentExistence(RequestEstablishmentDto dto) {
         String address = dto.getAddress();
         String name = dto.getName();
         if (establishmentRepository.existsByAddressAndName(address, name)) {

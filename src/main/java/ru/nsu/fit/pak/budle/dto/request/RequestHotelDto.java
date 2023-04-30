@@ -1,4 +1,4 @@
-package ru.nsu.fit.pak.budle.dto;
+package ru.nsu.fit.pak.budle.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +8,7 @@ import javax.validation.constraints.Min;
 
 @Getter
 @Setter
-public class HotelDto extends EstablishmentDto {
+public class RequestHotelDto extends RequestEstablishmentDto {
     @Min(value = 1)
     @Max(value = 5)
     private int starsCount;

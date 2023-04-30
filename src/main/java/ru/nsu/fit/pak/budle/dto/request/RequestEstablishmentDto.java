@@ -1,7 +1,9 @@
-package ru.nsu.fit.pak.budle.dto;
+package ru.nsu.fit.pak.budle.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
+import ru.nsu.fit.pak.budle.dto.PhotoDto;
+import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 
 import javax.validation.constraints.*;
@@ -15,7 +17,7 @@ import java.util.Set;
         visible = true
 )
 @Data
-public class EstablishmentDto {
+public class RequestEstablishmentDto {
     @Null
     private Long id;
     @NotNull(message = "Имя не может быть пустым")
