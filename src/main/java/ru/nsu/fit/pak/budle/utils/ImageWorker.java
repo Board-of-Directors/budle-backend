@@ -4,6 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import ru.nsu.fit.pak.budle.exceptions.ImageSavingException;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -44,7 +45,7 @@ public class ImageWorker {
             return databaseFilepath;
         } catch (Exception e) {
             logger.warn(e.getMessage());
-            return null;
+            throw new ImageSavingException();
 
         }
     }
@@ -79,7 +80,8 @@ public class ImageWorker {
             imageOutputStream.close();
             writer.dispose();
         } catch (IOException exception) {
-            System.out.println(exception.getMessage());
+            logger.warn(exception.getMessage());
+            throw new ImageSavingException();
         }
 
     }
@@ -99,6 +101,7 @@ public class ImageWorker {
         } catch (Exception e) {
             logger.warn(e.getMessage());
             return null;
+            //throw new ImageLoadingException();
         }
     }
 

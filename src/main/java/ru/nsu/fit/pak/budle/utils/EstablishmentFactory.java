@@ -9,7 +9,7 @@ import ru.nsu.fit.pak.budle.dao.establishment.restaurant.Restaurant;
 import ru.nsu.fit.pak.budle.dto.response.establishment.basic.*;
 import ru.nsu.fit.pak.budle.dto.response.establishment.extended.*;
 import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
-import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
+import ru.nsu.fit.pak.budle.exceptions.IncorrectEstablishmentType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -73,7 +73,7 @@ public class EstablishmentFactory {
     public Class<? extends Establishment> getEstablishmentEntity(String type) {
         Establishment establishment = entityFactory.get(type);
         if (establishment == null) {
-            throw new IncorrectDataException();
+            throw new IncorrectEstablishmentType();
         }
         return establishment.getClass();
     }
@@ -87,7 +87,7 @@ public class EstablishmentFactory {
     public Class<? extends ResponseShortEstablishmentInfo> getEstablishmentDto(String className, String type) {
         ResponseShortEstablishmentInfo establishmentInfo = factoryOfDtoFactories.get(type).get(className);
         if (establishmentInfo == null) {
-            throw new IncorrectDataException();
+            throw new IncorrectEstablishmentType();
         }
         return establishmentInfo.getClass();
     }

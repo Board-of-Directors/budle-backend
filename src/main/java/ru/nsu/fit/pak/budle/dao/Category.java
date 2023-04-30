@@ -2,8 +2,9 @@ package ru.nsu.fit.pak.budle.dao;
 
 import ru.nsu.fit.pak.budle.dao.establishment.hotel.HotelStars;
 import ru.nsu.fit.pak.budle.dao.establishment.restaurant.CuisineCountry;
-import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
+import ru.nsu.fit.pak.budle.exceptions.IncorrectCategoryException;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,7 +30,15 @@ public enum Category {
                 return e;
             }
         }
-        throw new IncorrectDataException();
+        throw new IncorrectCategoryException();
+    }
+
+    static public String getCategories() {
+        return Arrays.stream(Category.values()).map(x -> x.value).reduce(":", (str, acc) -> acc + "," + str);
+    }
+
+    public String getValue() {
+        return value;
     }
 
 

@@ -1,6 +1,6 @@
 package ru.nsu.fit.pak.budle.dao;
 
-import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
+import ru.nsu.fit.pak.budle.exceptions.IncorrectDayOfWeekException;
 
 import java.time.format.TextStyle;
 import java.util.Locale;
@@ -37,7 +37,7 @@ public enum DayOfWeek {
                 return dayOfWeek;
             }
         }
-        throw new IncorrectDataException();
+        throw new IncorrectDayOfWeekException();
     }
 
     static public DayOfWeek getDayByLittleString(String day) {
@@ -46,16 +46,7 @@ public enum DayOfWeek {
                 return dayOfWeek;
             }
         }
-        throw new IncorrectDataException();
-    }
-
-    static public DayOfWeek getDayByOrdinal(Integer number) {
-        for (DayOfWeek dayOfWeek : DayOfWeek.values()) {
-            if (dayOfWeek.ordinal.equals(number)) {
-                return dayOfWeek;
-            }
-        }
-        throw new IncorrectDataException();
+        throw new IncorrectDayOfWeekException();
     }
 
     public String getTranslate() {

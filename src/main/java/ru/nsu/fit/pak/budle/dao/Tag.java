@@ -1,6 +1,9 @@
 package ru.nsu.fit.pak.budle.dao;
 
-import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
+import ru.nsu.fit.pak.budle.exceptions.IncorrectTagException;
+
+import java.util.Arrays;
+import java.util.Objects;
 
 public enum Tag {
     wifi("WI-FI", "/wifi.svg", "Около Wi-Fi"),
@@ -22,12 +25,16 @@ public enum Tag {
         this.translateForSpot = translateForSpot;
     }
 
+    public static String getTags() {
+        return Arrays.stream(Tag.values()).map(Objects::toString).reduce("", (acc, src) -> acc + " " + src);
+    }
+
     public static Tag parseEnum(String name) {
         for (Tag tag : Tag.values()) {
             if (name.equals(tag.translate)) {
                 return tag;
             }
         }
-        throw new IncorrectDataException();
+        throw new IncorrectTagException();
     }
 }

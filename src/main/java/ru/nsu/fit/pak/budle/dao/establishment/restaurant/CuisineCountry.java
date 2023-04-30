@@ -1,6 +1,6 @@
 package ru.nsu.fit.pak.budle.dao.establishment.restaurant;
 
-import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
+import ru.nsu.fit.pak.budle.exceptions.IncorrectCuisineCountryException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +25,7 @@ public enum CuisineCountry {
                 return e;
             }
         }
-        throw new IncorrectDataException();
+        throw new IncorrectCuisineCountryException();
     }
 
     public static List<String> getVariants() {
