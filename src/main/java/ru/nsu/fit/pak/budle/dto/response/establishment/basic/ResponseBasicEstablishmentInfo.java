@@ -16,5 +16,6 @@ import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEs
 public class ResponseBasicEstablishmentInfo extends ResponseShortEstablishmentInfo {
     private Float rating;
     private String address;
+    private String image;
 
 }
