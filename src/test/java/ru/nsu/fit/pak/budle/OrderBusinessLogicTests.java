@@ -64,11 +64,11 @@ class OrderBusinessLogicTests {
         Order createdOrder = orderRepository.findAll().get(0);
         System.out.println(createdOrder);
         Assertions.assertEquals(orderRepository.findAll().size(), orderCount + 1);
-        establishmentController.deleteOrder(createdOrder.getId(), mainEstablishment.getId());
+        establishmentController.reject(createdOrder.getId(), mainEstablishment.getId());
         Assertions.assertEquals(createdOrder.getStatus(), 2);
 
         Assertions.assertThrows(NotEnoughRightsException.class,
-                () -> orderService.deleteOrder(createdOrder.getId(), mainEstablishment.getId() + 1, Boolean.FALSE));
+                () -> orderService.rejectOrder(createdOrder.getId(), mainEstablishment.getId() + 1));
 
         establishmentController.accept(mainEstablishment.getId(), createdOrder.getId());
         Assertions.assertEquals(createdOrder.getStatus(), 1);

@@ -136,16 +136,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void deleteOrder(Long orderId, Long id, Boolean byUser) {
+    public void deleteOrder(Long orderId, Long userId) {
         logger.info("Deleting order");
-        logger.debug("OrderID " + orderId + "\n" + "id " + id);
+        logger.debug("OrderID " + orderId + "\n" + "id " + userId);
 
         Order order = getOrderById(orderId);
 
-        if (byUser && order.getUser().getId().equals(id)) {
+        if (order.getUser().getId().equals(userId)) {
             orderRepository.delete(order);
-        } else if (!byUser && order.getEstablishment().getId().equals(id)) {
-            order.setStatus(2);
         } else {
             logger.warn("Not enough right for this operation");
             throw new NotEnoughRightsException();
@@ -158,6 +156,14 @@ public class OrderServiceImpl implements OrderService {
         logger.info("Accepting order");
         Order order = getOrderById(orderId);
         order.setStatus(1);
+        orderRepository.save(order);
+    }
+
+    @Override
+    public void rejectOrder(Long orderId, Long establishmentId) {
+        logger.info("Rejecting order");
+        Order order = getOrderById(orderId);
+        order.setStatus(2);
         orderRepository.save(order);
     }
 

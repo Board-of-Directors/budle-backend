@@ -32,11 +32,13 @@ public interface OrderService {
      * @param byUser  indicates that function must associate id with user, or,
      *                if false - with establishment.
      */
-    void deleteOrder(Long orderId, Long id, Boolean byUser);
+    void deleteOrder(Long orderId, Long id);
 
     /**
      * @param orderId         what order we need to accept.
      * @param establishmentId from what establishment was this request.
      */
     void acceptOrder(Long orderId, Long establishmentId);
+
+    void rejectOrder(Long orderId, Long establishmentId);
 }

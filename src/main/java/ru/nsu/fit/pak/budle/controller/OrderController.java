@@ -42,7 +42,7 @@ public class OrderController {
     @DeleteMapping
     public void delete(@RequestParam Long orderId,
                        @RequestParam Long userId) {
-        orderService.deleteOrder(orderId, userId, Boolean.TRUE);
+        orderService.deleteOrder(orderId, userId);
     }
 
     /**

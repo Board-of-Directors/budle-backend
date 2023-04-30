@@ -105,7 +105,7 @@ public class EstablishmentController {
      * @param establishmentId by what establishment we receive request (will be deleted)
      * @param orderId         - what order we need to accept.
      */
-    @PutMapping(value = "/order")
+    @PutMapping(value = "/order/accept")
     public void accept(@RequestParam Long establishmentId, @RequestParam Long orderId) {
         orderService.acceptOrder(orderId, establishmentId);
     }
@@ -116,9 +116,9 @@ public class EstablishmentController {
      * @param orderId         - what order we need to delete.
      * @param establishmentId - by what establishment we receive request (will be deleted)
      */
-    @DeleteMapping
-    public void deleteOrder(@RequestParam Long orderId, @RequestParam Long establishmentId) {
-        orderService.deleteOrder(orderId, establishmentId, Boolean.FALSE);
+    @PutMapping(value = "/order/reject")
+    public void reject(@RequestParam Long orderId, @RequestParam Long establishmentId) {
+        orderService.rejectOrder(orderId, establishmentId);
     }
 
     /**
