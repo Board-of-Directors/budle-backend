@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.pak.budle.dao.Worker;
 import ru.nsu.fit.pak.budle.dto.WorkerDto;
+import ru.nsu.fit.pak.budle.dto.response.ResponseUserDto;
 
 /**
  * Class, that represent mapper for worker class.
@@ -24,6 +25,7 @@ public class WorkerMapper {
     public WorkerDto modelToDto(Worker worker) {
         WorkerDto workerDto = modelMapper.map(worker, WorkerDto.class);
         workerDto.setOnWork(worker.getStatus().value.equals(1));
+        workerDto.setUser(new ResponseUserDto(worker.getUser().getUsername()));
         return workerDto;
     }
 }

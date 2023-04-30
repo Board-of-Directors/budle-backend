@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.nsu.fit.pak.budle.dto.ShortEstablishmentInfo;
-import ru.nsu.fit.pak.budle.dto.UserDto;
+import ru.nsu.fit.pak.budle.dto.request.RequestUserDto;
 import ru.nsu.fit.pak.budle.service.EstablishmentService;
 import ru.nsu.fit.pak.budle.service.SecurityService;
 import ru.nsu.fit.pak.budle.service.UserServiceImpl;
@@ -31,25 +31,25 @@ public class UserController {
     /**
      * Post request, that takes user information and add it to our database.
      *
-     * @param userDto - information about new user.
+     * @param requestUserDto - information about new user.
      * @return true - if operation was success, false - otherwise
      */
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Boolean register(@RequestBody @Valid UserDto userDto) {
-        userService.registerUser(userDto);
-        securityService.autoLogin(userDto.getUsername(), userDto.getPassword());
+    public Boolean register(@RequestBody @Valid RequestUserDto requestUserDto) {
+        userService.registerUser(requestUserDto);
+        securityService.autoLogin(requestUserDto.getUsername(), requestUserDto.getPassword());
         return true;
     }
 
     /**
      * Post request, that authorize user in our system.
      *
-     * @param userDto information about user credentials.
+     * @param requestUserDto information about user credentials.
      * @return true - if operation was success, false - otherwise.
      */
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Boolean login(@RequestBody UserDto userDto) {
-        securityService.autoLogin(userDto.getUsername(), userDto.getPassword());
+    public Boolean login(@RequestBody RequestUserDto requestUserDto) {
+        securityService.autoLogin(requestUserDto.getUsername(), requestUserDto.getPassword());
         return true;
     }
 

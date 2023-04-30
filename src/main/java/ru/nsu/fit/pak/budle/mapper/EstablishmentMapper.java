@@ -51,6 +51,7 @@ public class EstablishmentMapper {
         EstablishmentDto establishmentDto = modelMapper.map(establishment, classOfDto);
 
         establishmentDto.setImage(imageWorker.loadImage(establishment.getImage()));
+        establishmentDto.setOwner(establishment.getOwner().getId());
         establishmentDto.setCategory(establishment.getCategory().value);
         if (establishment instanceof Restaurant restaurant &&
                 establishmentDto instanceof RestaurantDto restaurantDto) {

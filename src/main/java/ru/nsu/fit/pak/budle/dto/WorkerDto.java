@@ -1,6 +1,7 @@
 package ru.nsu.fit.pak.budle.dto;
 
 import lombok.Data;
+import ru.nsu.fit.pak.budle.dto.response.ResponseUserDto;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -12,5 +13,5 @@ public class WorkerDto {
     @NotNull
     private Boolean onWork;
     @NotNull
-    private UserDto user;
+    private ResponseUserDto user;
 }
