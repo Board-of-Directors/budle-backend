@@ -13,6 +13,7 @@ import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseOrderDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
+import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
 import ru.nsu.fit.pak.budle.service.EstablishmentServiceImpl;
 import ru.nsu.fit.pak.budle.service.OrderService;
 
@@ -44,7 +45,7 @@ public class EstablishmentController {
      * @param sortValue      - by this field we can indicate by what field we sort our establishments.
      * @return list of establishment dto, list size included.
      */
-    @GetMapping
+    @GetMapping(value = "all")
     public EstablishmentListDto getEstablishments(@RequestParam(required = false, defaultValue = "") String name,
                                                   @RequestParam(required = false) String category,
                                                   @RequestParam(required = false) Boolean hasMap,
@@ -57,6 +58,11 @@ public class EstablishmentController {
         list.setEstablishments(establishmentService.getEstablishmentByParams(category, hasMap, hasCardPayment, name, PageRequest.of(offset, limit, Sort.by(sortValue))));
         list.setCount(list.getEstablishments().size());
         return list;
+    }
+
+    @GetMapping
+    public ResponseExtendedEstablishmentInfo getEstablishment(@RequestParam Long establishmentId) {
+        return establishmentService.getEstablishmentInfoById(establishmentId);
     }
 
     /**

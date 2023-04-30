@@ -14,7 +14,6 @@ import ru.nsu.fit.pak.budle.dto.request.RequestRestaurantDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
-import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedRestaurantInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.utils.EstablishmentFactory;
@@ -34,6 +33,7 @@ public class EstablishmentMapper {
     private final UserRepository userRepository;
 
     private final EstablishmentFactory establishmentFactory;
+
 
     /**
      * Converts establishment model to establishment dto.
@@ -56,13 +56,6 @@ public class EstablishmentMapper {
         ResponseExtendedEstablishmentInfo requestEstablishmentDto =
                 (ResponseExtendedEstablishmentInfo) modelMapper.map(establishment, classOfDto);
 
-
-        requestEstablishmentDto.setCategory(establishment.getCategory().value);
-        if (establishment instanceof Restaurant restaurant &&
-                requestEstablishmentDto instanceof ResponseExtendedRestaurantInfo requestRestaurantDto) {
-            String name = restaurant.getCuisineCountry().getValue();
-            requestRestaurantDto.setCuisineCountry(name);
-        }
         requestEstablishmentDto.setWorkingHours(establishment
                 .getWorkingHours()
                 .stream()
