@@ -3,6 +3,7 @@ package ru.nsu.fit.pak.budle.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.pak.budle.dao.Tag;
+import ru.nsu.fit.pak.budle.dto.request.RequestTagDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
@@ -40,7 +41,7 @@ public class TagMapper {
                 .toList();
     }
 
-    public Set<Tag> tagDtoSetToModelSet(Set<ResponseTagDto> tagDtoSet) {
+    public Set<Tag> tagDtoSetToModelSet(Set<RequestTagDto> tagDtoSet) {
         return tagDtoSet.stream()
                 .map(x -> Tag.parseEnum(x.getName()))
                 .collect(Collectors.toSet());
