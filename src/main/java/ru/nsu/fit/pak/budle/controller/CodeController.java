@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.nsu.fit.pak.budle.dto.CodeDto;
+import ru.nsu.fit.pak.budle.dto.request.RequestCodeDto;
 import ru.nsu.fit.pak.budle.service.CodeService;
 
 /**
@@ -41,7 +41,7 @@ public class CodeController {
      * @return true - if code was in database, false - if there is no such code
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Boolean checkCode(@RequestBody CodeDto codeDto) {
+    public Boolean checkCode(@RequestBody RequestCodeDto codeDto) {
         return codeService.checkCode(codeDto.getPhoneNumber(), codeDto.getCode());
     }
 }
