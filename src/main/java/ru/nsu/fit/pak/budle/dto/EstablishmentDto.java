@@ -1,6 +1,5 @@
 package ru.nsu.fit.pak.budle.dto;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
@@ -15,12 +14,6 @@ import java.util.Set;
         use = JsonTypeInfo.Id.NAME,
         visible = true
 )
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = RestaurantDto.class, name = "restaurant"),
-        @JsonSubTypes.Type(value = HotelDto.class, name = "hotel"),
-        @JsonSubTypes.Type(value = BarbershopDto.class, name = "barbershop"),
-        @JsonSubTypes.Type(value = GameClubDto.class, name = "game_club")
-})
 @Data
 public class EstablishmentDto {
     @Null
@@ -34,6 +27,7 @@ public class EstablishmentDto {
     @NotNull(message = "Адрес не может быть пустым")
     @Size(max = 200)
     private String address;
+    @Null
     private Long owner;
     @NotNull(message = "Информация о оплате картой не может быть пустой")
     private boolean hasCardPayment;

@@ -16,8 +16,12 @@ import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Tag;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
-import ru.nsu.fit.pak.budle.dto.*;
+import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
+import ru.nsu.fit.pak.budle.dto.PhotoDto;
+import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
+import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
+import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
 import ru.nsu.fit.pak.budle.exceptions.UserNotFoundException;
@@ -180,7 +184,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public List<ShortEstablishmentInfo> getEstablishmentsByOwner(Long id) {
+    public List<ResponseShortEstablishmentInfo> getEstablishmentsByOwner(Long id) {
         User owner = userRepository.findById(id).orElseThrow(
                 UserNotFoundException::new);
 
