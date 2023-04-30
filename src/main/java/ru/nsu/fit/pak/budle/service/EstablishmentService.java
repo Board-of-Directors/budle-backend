@@ -2,7 +2,11 @@ package ru.nsu.fit.pak.budle.service;
 
 import org.springframework.data.domain.Pageable;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
-import ru.nsu.fit.pak.budle.dto.*;
+import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
+import ru.nsu.fit.pak.budle.dto.PhotoDto;
+import ru.nsu.fit.pak.budle.dto.ShortEstablishmentInfo;
+import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
+import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 
 import java.util.List;
 import java.util.Set;
@@ -49,7 +53,7 @@ public interface EstablishmentService {
      * @return all tags of establishment those we have.
      */
 
-    List<TagDto> getTags();
+    List<ResponseTagDto> getTags();
 
     /**
      * Function that add map of establishment to current establishment.
@@ -82,7 +86,7 @@ public interface EstablishmentService {
      * @param establishmentId from what establishment we get spot tags.
      * @return list of tag dto.
      */
-    List<TagDto> getSpotTags(Long establishmentId);
+    List<ResponseTagDto> getSpotTags(Long establishmentId);
 
     /**
      * Function, that returns establishment by provided id.

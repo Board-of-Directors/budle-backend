@@ -1,14 +1,12 @@
-package ru.nsu.fit.pak.budle.dto;
+package ru.nsu.fit.pak.budle.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class TagDto {
+@NoArgsConstructor
+public class RequestTagDto {
     private String name;
-    private String image;
-
 }

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.nsu.fit.pak.budle.dto.*;
+import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.service.EstablishmentServiceImpl;
 import ru.nsu.fit.pak.budle.service.OrderService;
 
@@ -95,7 +96,7 @@ public class EstablishmentController {
      * @return list of tags dto.
      */
     @GetMapping(value = "/tags")
-    public List<TagDto> tags() {
+    public List<ResponseTagDto> tags() {
         return establishmentService.getTags();
     }
 
@@ -153,7 +154,7 @@ public class EstablishmentController {
      * @return list of spot tags.
      */
     @GetMapping(value = "/spotTags")
-    public List<TagDto> getTags(@RequestParam Long establishmentId) {
+    public List<ResponseTagDto> getTags(@RequestParam Long establishmentId) {
         return establishmentService.getSpotTags(establishmentId);
     }
 
