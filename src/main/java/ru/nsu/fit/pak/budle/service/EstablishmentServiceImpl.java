@@ -21,6 +21,7 @@ import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
 import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
+import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
@@ -63,11 +64,11 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     private final TagMapper tagMapper;
 
     @Override
-    public List<RequestEstablishmentDto> getEstablishmentByParams(String category,
-                                                                  Boolean hasMap,
-                                                                  Boolean hasCardPayment,
-                                                                  String name,
-                                                                  Pageable page) {
+    public List<ResponseBasicEstablishmentInfo> getEstablishmentByParams(String category,
+                                                                         Boolean hasMap,
+                                                                         Boolean hasCardPayment,
+                                                                         String name,
+                                                                         Pageable page) {
         logger.info("Getting establishment by parameters");
 
         logger.debug("Parameters\n" +

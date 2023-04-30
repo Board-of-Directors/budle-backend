@@ -12,13 +12,14 @@ import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestRestaurantDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
+import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
+import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
+import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedRestaurantInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.utils.EstablishmentFactory;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,17 +49,17 @@ public class EstablishmentMapper {
      * @return establishmentDto with provided fields.
      */
 
-    public RequestEstablishmentDto modelToDto(Establishment establishment) {
-        Class<? extends RequestEstablishmentDto> classOfDto = establishmentFactory
-                .getEstablishmentDto(establishment.getCategory().toString());
+    public ResponseExtendedEstablishmentInfo toExtended(Establishment establishment) {
+        Class<? extends ResponseShortEstablishmentInfo> classOfDto = establishmentFactory
+                .getEstablishmentDto(establishment.getCategory().toString(), "extended");
 
-        RequestEstablishmentDto requestEstablishmentDto = modelMapper.map(establishment, classOfDto);
+        ResponseExtendedEstablishmentInfo requestEstablishmentDto =
+                (ResponseExtendedEstablishmentInfo) modelMapper.map(establishment, classOfDto);
 
-        requestEstablishmentDto.setImage(imageWorker.loadImage(establishment.getImage()));
-        requestEstablishmentDto.setOwner(establishment.getOwner().getId());
+
         requestEstablishmentDto.setCategory(establishment.getCategory().value);
         if (establishment instanceof Restaurant restaurant &&
-                requestEstablishmentDto instanceof RequestRestaurantDto requestRestaurantDto) {
+                requestEstablishmentDto instanceof ResponseExtendedRestaurantInfo requestRestaurantDto) {
             String name = restaurant.getCuisineCountry().getValue();
             requestRestaurantDto.setCuisineCountry(name);
         }
@@ -77,20 +78,19 @@ public class EstablishmentMapper {
                 .stream()
                 .map(x -> new ResponseTagDto(x.translate, imageWorker.getImageFromResource(x.assets)))
                 .collect(Collectors.toSet()));
-        try {
-            if (establishment.getHasMap()) {
-                BufferedReader mapXml = new BufferedReader(new FileReader(establishment.getMap()));
-                StringBuilder builder = new StringBuilder();
-                while (mapXml.ready()) {
-                    builder.append(mapXml.readLine());
-                }
-                requestEstablishmentDto.setMap(builder.toString());
-            }
-
-        } catch (Exception e) {
-            System.out.println("Parsing map " + establishment.getMap() + " was broken");
-        }
         return requestEstablishmentDto;
+
+    }
+
+    public ResponseBasicEstablishmentInfo toBasic(Establishment establishment) {
+        Class<? extends ResponseShortEstablishmentInfo> classOfDto = establishmentFactory
+                .getEstablishmentDto(establishment.getCategory().toString(), "basic");
+
+        ResponseBasicEstablishmentInfo establishmentDto =
+                (ResponseBasicEstablishmentInfo) modelMapper.map(establishment, classOfDto);
+
+        establishmentDto.setImage(imageWorker.loadImage(establishment.getImage()));
+        return establishmentDto;
     }
 
     /**
@@ -100,10 +100,10 @@ public class EstablishmentMapper {
      * @return list of establishment dto.
      */
 
-    public List<RequestEstablishmentDto> modelListToDtoList(Page<Establishment> establishmentList) {
+    public List<ResponseBasicEstablishmentInfo> modelListToDtoList(Page<Establishment> establishmentList) {
         return establishmentList
                 .stream()
-                .map(this::modelToDto)
+                .map(this::toBasic)
                 .toList();
     }
 

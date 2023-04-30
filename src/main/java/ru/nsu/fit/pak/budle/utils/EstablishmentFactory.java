@@ -6,7 +6,9 @@ import ru.nsu.fit.pak.budle.dao.establishment.beauty.Barbershop;
 import ru.nsu.fit.pak.budle.dao.establishment.entertainment.GameClub;
 import ru.nsu.fit.pak.budle.dao.establishment.hotel.Hotel;
 import ru.nsu.fit.pak.budle.dao.establishment.restaurant.Restaurant;
-import ru.nsu.fit.pak.budle.dto.request.*;
+import ru.nsu.fit.pak.budle.dto.response.establishment.basic.*;
+import ru.nsu.fit.pak.budle.dto.response.establishment.extended.*;
+import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 
 import java.util.HashMap;
@@ -20,14 +22,15 @@ import java.util.Map;
 @Component
 public class EstablishmentFactory {
     private final Map<String, Establishment> entityFactory;
-    private final Map<String, RequestEstablishmentDto> dtoFactory;
+
+    private final Map<String, Map<String, ? extends ResponseShortEstablishmentInfo>> factoryOfDtoFactories;
 
     /**
      * Default constructor of establishment factory.
      */
     public EstablishmentFactory() {
         entityFactory = new HashMap<>();
-        dtoFactory = new HashMap<>();
+        factoryOfDtoFactories = new HashMap<>();
         initEntityFactory();
         initDtoFactory();
     }
@@ -46,10 +49,19 @@ public class EstablishmentFactory {
      * Initial state of dto factory.
      */
     private void initDtoFactory() {
-        dtoFactory.put("hotel", new RequestHotelDto());
-        dtoFactory.put("restaurant", new RequestRestaurantDto());
-        dtoFactory.put("game_club", new RequestGameClubDto());
-        dtoFactory.put("barbershop", new RequestBarbershopDto());
+        Map<String, ResponseBasicEstablishmentInfo> basicFactory = new HashMap<>();
+        basicFactory.put("hotel", new ResponseBasicHotelInfo());
+        basicFactory.put("restaurant", new ResponseBasicRestaurantInfo());
+        basicFactory.put("game_club", new ResponseBasicGameClubInfo());
+        basicFactory.put("barbershop", new ResponseBasicBarbershopInfo());
+        factoryOfDtoFactories.put("basic", basicFactory);
+
+        Map<String, ResponseExtendedEstablishmentInfo> extendedFactory = new HashMap<>();
+        extendedFactory.put("hotel", new ResponseExtendedHotelInfo());
+        extendedFactory.put("restaurant", new ResponseExtendedRestaurantInfo());
+        extendedFactory.put("game_club", new ResponseExtendedGameClubInfo());
+        extendedFactory.put("barbershop", new ResponseExtendedBarbershopInfo());
+        factoryOfDtoFactories.put("extended", extendedFactory);
     }
 
     /**
@@ -72,11 +84,11 @@ public class EstablishmentFactory {
      * @param type of establishment
      * @return class
      */
-    public Class<? extends RequestEstablishmentDto> getEstablishmentDto(String type) {
-        RequestEstablishmentDto requestEstablishmentDto = dtoFactory.get(type);
-        if (requestEstablishmentDto == null) {
+    public Class<? extends ResponseShortEstablishmentInfo> getEstablishmentDto(String className, String type) {
+        ResponseShortEstablishmentInfo establishmentInfo = factoryOfDtoFactories.get(type).get(className);
+        if (establishmentInfo == null) {
             throw new IncorrectDataException();
         }
-        return requestEstablishmentDto.getClass();
+        return establishmentInfo.getClass();
     }
 }

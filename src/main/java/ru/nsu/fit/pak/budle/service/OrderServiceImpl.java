@@ -127,7 +127,7 @@ public class OrderServiceImpl implements OrderService {
                 .map(order -> {
                     Establishment establishmentSource = order.getEstablishment();
                     ResponseOrderDto responseOrderDto = modelMapper.map(order, ResponseOrderDto.class);
-                    responseOrderDto.setEstablishment(establishmentMapper.modelToDto(establishmentSource));
+                    responseOrderDto.setEstablishment(establishmentMapper.toBasic(establishmentSource));
                     responseOrderDto.setUserId(order.getUser().getId());
                     return responseOrderDto;
                 })

@@ -6,6 +6,7 @@ import ru.nsu.fit.pak.budle.dto.PhotoDto;
 import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
+import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
 
 import java.util.List;
@@ -27,11 +28,11 @@ public interface EstablishmentService {
      * @param page           - page that we need.
      * @return pageable list of Establishment dto.
      */
-    List<RequestEstablishmentDto> getEstablishmentByParams(String category,
-                                                           Boolean hasMap,
-                                                           Boolean hasCardPayment,
-                                                           String name,
-                                                           Pageable page);
+    List<ResponseBasicEstablishmentInfo> getEstablishmentByParams(String category,
+                                                                  Boolean hasMap,
+                                                                  Boolean hasCardPayment,
+                                                                  String name,
+                                                                  Pageable page);
 
     /**
      * Function that creates establishment by provided parameters.
