@@ -1,7 +1,7 @@
 package ru.nsu.fit.pak.budle.service;
 
-import ru.nsu.fit.pak.budle.dto.OrderDto;
-import ru.nsu.fit.pak.budle.dto.OrderDtoOutput;
+import ru.nsu.fit.pak.budle.dto.request.RequestOrderDto;
+import ru.nsu.fit.pak.budle.dto.response.ResponseOrderDto;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public interface OrderService {
      *
      * @param dto contains information about new order.
      */
-    void createOrder(OrderDto dto);
+    void createOrder(RequestOrderDto dto);
 
     /**
      * Getting all the orders with provided parameters.
@@ -24,13 +24,11 @@ public interface OrderService {
      * @return list of order dto.
      */
 
-    List<OrderDtoOutput> getOrders(Long userId, Long establishmentId, Integer status);
+    List<ResponseOrderDto> getOrders(Long userId, Long establishmentId, Integer status);
 
     /**
      * @param orderId what order we need to delete.
      * @param id      of provided entity.
-     * @param byUser  indicates that function must associate id with user, or,
-     *                if false - with establishment.
      */
     void deleteOrder(Long orderId, Long id);
 

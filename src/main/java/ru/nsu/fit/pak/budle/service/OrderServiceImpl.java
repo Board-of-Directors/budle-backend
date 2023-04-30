@@ -9,9 +9,9 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.*;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
-import ru.nsu.fit.pak.budle.dto.OrderDto;
-import ru.nsu.fit.pak.budle.dto.OrderDtoOutput;
 import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
+import ru.nsu.fit.pak.budle.dto.request.RequestOrderDto;
+import ru.nsu.fit.pak.budle.dto.response.ResponseOrderDto;
 import ru.nsu.fit.pak.budle.exceptions.*;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
 import ru.nsu.fit.pak.budle.mapper.WorkingHoursMapper;
@@ -52,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public void createOrder(OrderDto dto) {
+    public void createOrder(RequestOrderDto dto) {
         logger.info("Creating order");
         logger.debug(dto.toString());
         Order order;
@@ -83,7 +83,7 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order);
     }
 
-    private boolean bookingTimeIsValid(Establishment establishment, OrderDto order) {
+    private boolean bookingTimeIsValid(Establishment establishment, RequestOrderDto order) {
         DayOfWeek dayOfWeek = DayOfWeek.getDayFromDayOfWeek(order.getDate().getDayOfWeek());
 
         List<ValidTimeDto> validTimeDtos =
@@ -103,7 +103,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDtoOutput> getOrders(Long userId, Long establishmentId, Integer status) {
+    public List<ResponseOrderDto> getOrders(Long userId, Long establishmentId, Integer status) {
         logger.info("Getting orders");
         logger.debug("id " + userId);
         logger.debug("establishment " + establishmentId);
@@ -126,10 +126,10 @@ public class OrderServiceImpl implements OrderService {
                 .stream()
                 .map(order -> {
                     Establishment establishmentSource = order.getEstablishment();
-                    OrderDtoOutput orderDtoOutput = modelMapper.map(order, OrderDtoOutput.class);
-                    orderDtoOutput.setEstablishment(establishmentMapper.modelToDto(establishmentSource));
-                    orderDtoOutput.setUserId(order.getUser().getId());
-                    return orderDtoOutput;
+                    ResponseOrderDto responseOrderDto = modelMapper.map(order, ResponseOrderDto.class);
+                    responseOrderDto.setEstablishment(establishmentMapper.modelToDto(establishmentSource));
+                    responseOrderDto.setUserId(order.getUser().getId());
+                    return responseOrderDto;
                 })
                 .toList();
     }

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.nsu.fit.pak.budle.dto.*;
+import ru.nsu.fit.pak.budle.dto.response.ResponseOrderDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.service.EstablishmentServiceImpl;
 import ru.nsu.fit.pak.budle.service.OrderService;
@@ -85,8 +86,8 @@ public class EstablishmentController {
      */
 
     @GetMapping(value = "/order")
-    public List<OrderDtoOutput> orders(@RequestParam Long establishmentId,
-                                       @RequestParam(required = false) Integer status) {
+    public List<ResponseOrderDto> orders(@RequestParam Long establishmentId,
+                                         @RequestParam(required = false) Integer status) {
         return orderService.getOrders(null, establishmentId, status);
     }
 
