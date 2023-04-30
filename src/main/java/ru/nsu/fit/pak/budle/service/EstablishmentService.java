@@ -2,9 +2,9 @@ package ru.nsu.fit.pak.budle.service;
 
 import org.springframework.data.domain.Pageable;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
-import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.PhotoDto;
 import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
+import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
 
@@ -27,18 +27,18 @@ public interface EstablishmentService {
      * @param page           - page that we need.
      * @return pageable list of Establishment dto.
      */
-    List<EstablishmentDto> getEstablishmentByParams(String category,
-                                                    Boolean hasMap,
-                                                    Boolean hasCardPayment,
-                                                    String name,
-                                                    Pageable page);
+    List<RequestEstablishmentDto> getEstablishmentByParams(String category,
+                                                           Boolean hasMap,
+                                                           Boolean hasCardPayment,
+                                                           String name,
+                                                           Pageable page);
 
     /**
      * Function that creates establishment by provided parameters.
      *
      * @param dto dto with fields of new establishment model.
      */
-    void createEstablishment(EstablishmentDto dto);
+    void createEstablishment(RequestEstablishmentDto dto);
 
     /**
      * Function, that returns all categories from out system.

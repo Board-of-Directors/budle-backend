@@ -6,7 +6,7 @@ import ru.nsu.fit.pak.budle.dao.establishment.beauty.Barbershop;
 import ru.nsu.fit.pak.budle.dao.establishment.entertainment.GameClub;
 import ru.nsu.fit.pak.budle.dao.establishment.hotel.Hotel;
 import ru.nsu.fit.pak.budle.dao.establishment.restaurant.Restaurant;
-import ru.nsu.fit.pak.budle.dto.*;
+import ru.nsu.fit.pak.budle.dto.request.*;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 
 import java.util.HashMap;
@@ -20,7 +20,7 @@ import java.util.Map;
 @Component
 public class EstablishmentFactory {
     private final Map<String, Establishment> entityFactory;
-    private final Map<String, EstablishmentDto> dtoFactory;
+    private final Map<String, RequestEstablishmentDto> dtoFactory;
 
     /**
      * Default constructor of establishment factory.
@@ -46,10 +46,10 @@ public class EstablishmentFactory {
      * Initial state of dto factory.
      */
     private void initDtoFactory() {
-        dtoFactory.put("hotel", new HotelDto());
-        dtoFactory.put("restaurant", new RestaurantDto());
-        dtoFactory.put("game_club", new GameClubDto());
-        dtoFactory.put("barbershop", new BarbershopDto());
+        dtoFactory.put("hotel", new RequestHotelDto());
+        dtoFactory.put("restaurant", new RequestRestaurantDto());
+        dtoFactory.put("game_club", new RequestGameClubDto());
+        dtoFactory.put("barbershop", new RequestBarbershopDto());
     }
 
     /**
@@ -72,11 +72,11 @@ public class EstablishmentFactory {
      * @param type of establishment
      * @return class
      */
-    public Class<? extends EstablishmentDto> getEstablishmentDto(String type) {
-        EstablishmentDto establishmentDto = dtoFactory.get(type);
-        if (establishmentDto == null) {
+    public Class<? extends RequestEstablishmentDto> getEstablishmentDto(String type) {
+        RequestEstablishmentDto requestEstablishmentDto = dtoFactory.get(type);
+        if (requestEstablishmentDto == null) {
             throw new IncorrectDataException();
         }
-        return establishmentDto.getClass();
+        return requestEstablishmentDto.getClass();
     }
 }

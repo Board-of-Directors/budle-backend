@@ -6,7 +6,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.nsu.fit.pak.budle.dto.*;
+import ru.nsu.fit.pak.budle.dto.EstablishmentListDto;
+import ru.nsu.fit.pak.budle.dto.PhotoDto;
+import ru.nsu.fit.pak.budle.dto.PhotoListDto;
+import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
+import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseOrderDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.service.EstablishmentServiceImpl;
@@ -58,13 +62,13 @@ public class EstablishmentController {
     /**
      * Post request, that creating new establishment with provided fields.
      *
-     * @param establishmentDto - representation of created establishment.
-     *                         provides main information of this establishment,
-     *                         such as names, description, etc.
+     * @param requestEstablishmentDto - representation of created establishment.
+     *                                provides main information of this establishment,
+     *                                such as names, description, etc.
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void createEstablishment(@Valid @RequestBody EstablishmentDto establishmentDto) {
-        establishmentService.createEstablishment(establishmentDto);
+    public void createEstablishment(@Valid @RequestBody RequestEstablishmentDto requestEstablishmentDto) {
+        establishmentService.createEstablishment(requestEstablishmentDto);
     }
 
     /**

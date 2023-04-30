@@ -8,9 +8,9 @@ import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dao.establishment.restaurant.CuisineCountry;
 import ru.nsu.fit.pak.budle.dao.establishment.restaurant.Restaurant;
-import ru.nsu.fit.pak.budle.dto.EstablishmentDto;
-import ru.nsu.fit.pak.budle.dto.RestaurantDto;
 import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
+import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
+import ru.nsu.fit.pak.budle.dto.request.RequestRestaurantDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
@@ -48,21 +48,21 @@ public class EstablishmentMapper {
      * @return establishmentDto with provided fields.
      */
 
-    public EstablishmentDto modelToDto(Establishment establishment) {
-        Class<? extends EstablishmentDto> classOfDto = establishmentFactory
+    public RequestEstablishmentDto modelToDto(Establishment establishment) {
+        Class<? extends RequestEstablishmentDto> classOfDto = establishmentFactory
                 .getEstablishmentDto(establishment.getCategory().toString());
 
-        EstablishmentDto establishmentDto = modelMapper.map(establishment, classOfDto);
+        RequestEstablishmentDto requestEstablishmentDto = modelMapper.map(establishment, classOfDto);
 
-        establishmentDto.setImage(imageWorker.loadImage(establishment.getImage()));
-        establishmentDto.setOwner(establishment.getOwner().getId());
-        establishmentDto.setCategory(establishment.getCategory().value);
+        requestEstablishmentDto.setImage(imageWorker.loadImage(establishment.getImage()));
+        requestEstablishmentDto.setOwner(establishment.getOwner().getId());
+        requestEstablishmentDto.setCategory(establishment.getCategory().value);
         if (establishment instanceof Restaurant restaurant &&
-                establishmentDto instanceof RestaurantDto restaurantDto) {
+                requestEstablishmentDto instanceof RequestRestaurantDto requestRestaurantDto) {
             String name = restaurant.getCuisineCountry().getValue();
-            restaurantDto.setCuisineCountry(name);
+            requestRestaurantDto.setCuisineCountry(name);
         }
-        establishmentDto.setWorkingHours(establishment
+        requestEstablishmentDto.setWorkingHours(establishment
                 .getWorkingHours()
                 .stream()
                 .map(x -> {
@@ -72,7 +72,7 @@ public class EstablishmentMapper {
                 })
                 .collect(Collectors.toSet()));
 
-        establishmentDto.setTags(establishment
+        requestEstablishmentDto.setTags(establishment
                 .getTags()
                 .stream()
                 .map(x -> new ResponseTagDto(x.translate, imageWorker.getImageFromResource(x.assets)))
@@ -84,13 +84,13 @@ public class EstablishmentMapper {
                 while (mapXml.ready()) {
                     builder.append(mapXml.readLine());
                 }
-                establishmentDto.setMap(builder.toString());
+                requestEstablishmentDto.setMap(builder.toString());
             }
 
         } catch (Exception e) {
             System.out.println("Parsing map " + establishment.getMap() + " was broken");
         }
-        return establishmentDto;
+        return requestEstablishmentDto;
     }
 
     /**
@@ -100,7 +100,7 @@ public class EstablishmentMapper {
      * @return list of establishment dto.
      */
 
-    public List<EstablishmentDto> modelListToDtoList(Page<Establishment> establishmentList) {
+    public List<RequestEstablishmentDto> modelListToDtoList(Page<Establishment> establishmentList) {
         return establishmentList
                 .stream()
                 .map(this::modelToDto)
@@ -116,13 +116,13 @@ public class EstablishmentMapper {
      * @return establishment model object.
      */
 
-    public Establishment dtoToModel(EstablishmentDto dto) {
+    public Establishment dtoToModel(RequestEstablishmentDto dto) {
         Establishment establishment = modelMapper.map(dto,
                 establishmentFactory.getEstablishmentEntity(dto.getCategory()));
 
-        if (dto instanceof RestaurantDto restaurantDto &&
+        if (dto instanceof RequestRestaurantDto requestRestaurantDto &&
                 establishment instanceof Restaurant restaurant) {
-            String name = restaurantDto.getCuisineCountry();
+            String name = requestRestaurantDto.getCuisineCountry();
             restaurant.setCuisineCountry(CuisineCountry.getEnumByValue(name));
         }
         establishment.setImage(imageWorker.saveImage(establishment.getImage()));
