@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 import ru.nsu.fit.pak.budle.dto.PhotoDto;
 import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
-import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 
 import javax.validation.constraints.*;
 import java.util.Set;
@@ -18,8 +17,6 @@ import java.util.Set;
 )
 @Data
 public class RequestEstablishmentDto {
-    @Null
-    private Long id;
     @NotNull(message = "Имя не может быть пустым")
     @Size(max = 200)
     private String name;
@@ -51,7 +48,7 @@ public class RequestEstablishmentDto {
     @Size(min = 1, max = 7, message = "Дней работы не может быть меньше 1 и больше 7")
     private Set<WorkingHoursDto> workingHours;
     @NotNull(message = "Тэги не могут быть пустыми.")
-    private Set<ResponseTagDto> tags;
+    private Set<RequestTagDto> tags;
     private Set<PhotoDto> photosInput;
     private String map;
 
