@@ -1,11 +1,11 @@
-package ru.nsu.fit.pak.budle.dto;
+package ru.nsu.fit.pak.budle.dto.response;
 
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class CodeDto {
+public class ResponseCodeDto {
     private Long id;
     private String phoneNumber;
     private String code;
