@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.sql.Time;
-import java.util.Date;
 
 
 @Entity

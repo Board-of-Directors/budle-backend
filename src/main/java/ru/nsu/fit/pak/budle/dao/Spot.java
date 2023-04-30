@@ -21,7 +21,7 @@ public class Spot {
     private Long localId;
     @OneToOne
     private Establishment establishment;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "spot")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "spot")
     private Set<OrderWithSpot> orders;
 
     public Spot(Long localId, Establishment establishment) {
