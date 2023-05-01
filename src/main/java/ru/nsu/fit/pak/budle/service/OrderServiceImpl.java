@@ -7,23 +7,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
-import ru.nsu.fit.pak.budle.dao.*;
+import ru.nsu.fit.pak.budle.dao.DayOfWeek;
+import ru.nsu.fit.pak.budle.dao.Order;
+import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestOrderDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseOrderDto;
 import ru.nsu.fit.pak.budle.exceptions.*;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
+import ru.nsu.fit.pak.budle.mapper.OrderMapper;
 import ru.nsu.fit.pak.budle.mapper.WorkingHoursMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.OrderRepository;
 import ru.nsu.fit.pak.budle.repository.SpotRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
+import ru.nsu.fit.pak.budle.utils.OrderFactory;
 
 import javax.transaction.Transactional;
-import java.sql.Date;
-import java.sql.Time;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,9 +45,13 @@ public class OrderServiceImpl implements OrderService {
 
     private final SpotRepository spotRepository;
 
+    private final OrderFactory orderFactory;
+
     private final WorkingHoursService workingHoursService;
 
     private final WorkingHoursMapper workingHoursMapper;
+
+    private final OrderMapper orderMapper;
 
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -55,26 +60,15 @@ public class OrderServiceImpl implements OrderService {
     public void createOrder(RequestOrderDto dto) {
         logger.info("Creating order");
         logger.debug(dto.toString());
-        Order order;
-        if (dto.getSpotId() != null) {
-            order = new OrderWithSpot();
-            Spot spot = spotRepository
-                    .findById(dto.getSpotId())
-                    .orElseThrow(() -> new SpotNotFoundException(dto.getSpotId()));
-            ((OrderWithSpot) order).setSpot(spot);
-        } else {
-            order = new Order();
-        }
-
         Establishment establishment = establishmentService
                 .getEstablishmentById(dto.getEstablishmentId());
         if (!bookingTimeIsValid(establishment, dto)) {
             throw new InvalidBookingTime();
         }
-        order.setStartTime(dto.getTime());
-        order.setEndTime(Time.valueOf(dto.getTime().toLocalTime().plus(order.getDuration(), ChronoUnit.MINUTES)));
-        order.setGuestCount(dto.getGuestCount());
-        order.setDate(Date.valueOf(dto.getDate()));
+
+        Class<? extends Order> mappingClass = orderFactory.getEntity(dto);
+        Order order = orderMapper.toEntity(dto, mappingClass);
+
         User user = userRepository
                 .findById(dto.getUserId())
                 .orElseThrow(UserNotFoundException::new);
