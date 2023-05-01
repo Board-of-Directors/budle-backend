@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
+import ru.nsu.fit.pak.budle.dto.PhotoDto;
 import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
@@ -67,6 +68,13 @@ public class EstablishmentMapper {
                 .stream()
                 .map(x -> new ResponseTagDto(x.translate, imageWorker.getImageFromResource(x.assets)))
                 .collect(Collectors.toSet()));
+
+        requestEstablishmentDto.setPhotos(establishment
+                .getPhotos()
+                .stream()
+                .map(x -> new PhotoDto(imageWorker.loadImage(x.getFilepath())))
+                .collect(Collectors.toSet()));
+
         return requestEstablishmentDto;
 
     }
