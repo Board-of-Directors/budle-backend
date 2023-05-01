@@ -1,11 +1,15 @@
 package ru.nsu.fit.pak.budle.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 import ru.nsu.fit.pak.budle.dto.PhotoDto;
 import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 
@@ -15,6 +19,12 @@ import java.util.Set;
         use = JsonTypeInfo.Id.NAME,
         visible = true
 )
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = RequestRestaurantDto.class, name = "Рестораны"),
+        @JsonSubTypes.Type(value = RequestHotelDto.class, name = "Отели"),
+        @JsonSubTypes.Type(value = RequestBarbershopDto.class, name = "Парикмахерские"),
+        @JsonSubTypes.Type(value = RequestGameClubDto.class, name = "Игровые клубы")
+})
 @Data
 public class RequestEstablishmentDto {
     @NotNull(message = "Имя не может быть пустым")
@@ -26,7 +36,6 @@ public class RequestEstablishmentDto {
     @NotNull(message = "Адрес не может быть пустым")
     @Size(max = 200)
     private String address;
-    @Null
     private Long owner;
     @NotNull(message = "Информация о оплате картой не может быть пустой")
     private boolean hasCardPayment;
