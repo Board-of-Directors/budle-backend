@@ -26,18 +26,25 @@ import java.util.LinkedHashMap;
 public class ArticleController extends ResponseEntityExceptionHandler implements ResponseBodyAdvice<Object> {
 
 
-    @ExceptionHandler({UserAlreadyExistsException.class,
-            IncorrectDataException.class,
-            WorkerNotFoundException.class,
+    @ExceptionHandler({
             EstablishmentAlreadyExistsException.class,
+            EstablishmentNotFoundException.class,
+            ImageLoadingException.class,
+            ImageSavingException.class,
+            IncorrectCategoryException.class,
+            IncorrectCuisineCountryException.class,
+            IncorrectDayOfWeekException.class,
+            IncorrectEstablishmentType.class,
+            IncorrectPhoneNumberFormatException.class,
+            IncorrectTagException.class,
+            InvalidBookingTime.class,
             NotEnoughRightsException.class,
             OrderNotFoundException.class,
-            EstablishmentNotFoundException.class,
-            UserNotFoundException.class,
-            InvalidBookingTime.class,
             SpotNotFoundException.class,
+            UserAlreadyExistsException.class,
+            UserNotFoundException.class,
             VerificationCodeWasFalseException.class,
-            IncorrectPhoneNumberFormatException.class
+            WorkerNotFoundException.class
     })
     public <T extends BaseException> ResponseEntity<BaseResponse<Object>> handleException(T e) {
         BaseResponse<Object> response = new BaseResponse<>(e.getMessage(), e.getType());
