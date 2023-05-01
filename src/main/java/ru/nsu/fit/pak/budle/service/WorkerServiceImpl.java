@@ -14,6 +14,7 @@ import ru.nsu.fit.pak.budle.mapper.WorkerMapper;
 import ru.nsu.fit.pak.budle.repository.WorkerRepository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -45,13 +46,12 @@ public class WorkerServiceImpl implements WorkerService {
     public void deleteWorker(Long workerId, Long establishmentId) {
         logger.info("Deleting worker");
         logger.debug("Worker with ID: " + workerId);
-        Worker worker = getWorkerById(workerId);
-        Establishment establishment = worker.getEstablishments()
-                .stream()
-                .filter(est -> est.getId().equals(establishmentId))
-                .findFirst()
+        Establishment establishment = establishmentService.getEstablishmentById(establishmentId);
+        Worker worker = workerRepository
+                .findByEstablishmentAndWorkerId(establishment, workerId)
                 .orElseThrow(() -> new WorkerNotFoundException(workerId));
-        worker.getEstablishments().remove(establishment);
+        worker.getEstablishments()
+                .removeIf((x) -> Objects.equals(x.getId(), establishment.getId()));
         workerRepository.save(worker);
     }
 

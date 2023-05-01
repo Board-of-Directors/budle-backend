@@ -1,5 +1,6 @@
 package ru.nsu.fit.pak.budle.repository;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import ru.nsu.fit.pak.budle.dao.User;
@@ -30,6 +31,12 @@ public interface WorkerRepository extends CrudRepository<Worker, Long> {
      */
 
     List<Worker> findByEstablishments(Establishment establishment);
+
+    @Query("select w from Worker w " +
+            "where w.id = :workerId and " +
+            ":establishment in elements(w.establishments)"
+    )
+    Optional<Worker> findByEstablishmentAndWorkerId(Establishment establishment, Long workerId);
 
     Optional<Worker> findByUser(User user);
 
