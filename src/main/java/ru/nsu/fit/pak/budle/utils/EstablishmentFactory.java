@@ -39,10 +39,10 @@ public class EstablishmentFactory {
      * Initial state of entity factory.
      */
     private void initEntityFactory() {
-        entityFactory.put("hotel", new Hotel());
-        entityFactory.put("restaurant", new Restaurant());
-        entityFactory.put("game_club", new GameClub());
-        entityFactory.put("barbershop", new Barbershop());
+        entityFactory.put("Отели", new Hotel());
+        entityFactory.put("Рестораны", new Restaurant());
+        entityFactory.put("Игровые клубы", new GameClub());
+        entityFactory.put("Парикмахерские", new Barbershop());
     }
 
     /**
