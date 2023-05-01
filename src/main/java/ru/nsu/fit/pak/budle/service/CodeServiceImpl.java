@@ -14,6 +14,7 @@ import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.utils.RequestSender;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,9 +28,11 @@ public class CodeServiceImpl implements CodeService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     @Override
-    public boolean checkCode(String phoneNumber, String code) {
+    public boolean checkCode(String phoneNumber, String codeString) {
         logger.info("Checking code");
-        if (codeRepository.existsByPhoneNumberAndCode(phoneNumber, code)) {
+        Optional<Code> code = codeRepository.findByPhoneNumberAndCode(phoneNumber, codeString);
+        if (code.isPresent()) {
+            codeRepository.delete(code.get());
             logger.debug("Checking code was true");
             return true;
         } else {
