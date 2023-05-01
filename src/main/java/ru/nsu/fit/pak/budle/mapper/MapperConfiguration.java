@@ -20,10 +20,25 @@ public class MapperConfiguration {
             return source.getValue();
         }
     };
+
+    private final AbstractConverter<String, CuisineCountry> convertToCuisine = new AbstractConverter<>() {
+
+        @Override
+        protected CuisineCountry convert(String source) {
+            return CuisineCountry.getEnumByValue(source);
+        }
+    };
     private final AbstractConverter<Category, String> convertCategory = new AbstractConverter<>() {
         @Override
         protected String convert(Category source) {
             return source.value;
+        }
+    };
+    private final AbstractConverter<String, Category> convertToCategory = new AbstractConverter<>() {
+
+        @Override
+        protected Category convert(String source) {
+            return Category.getEnumByValue(source);
         }
     };
 
@@ -39,6 +54,8 @@ public class MapperConfiguration {
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         mapper.addConverter(convertCuisine);
         mapper.addConverter(convertCategory);
+        mapper.addConverter(convertToCuisine);
+        mapper.addConverter(convertToCategory);
         return mapper;
     }
 }
