@@ -4,13 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
-import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
-import ru.nsu.fit.pak.budle.dao.establishment.restaurant.CuisineCountry;
-import ru.nsu.fit.pak.budle.dao.establishment.restaurant.Restaurant;
 import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
-import ru.nsu.fit.pak.budle.dto.request.RequestRestaurantDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
@@ -112,15 +108,8 @@ public class EstablishmentMapper {
     public Establishment dtoToModel(RequestEstablishmentDto dto) {
         Establishment establishment = modelMapper.map(dto,
                 establishmentFactory.getEstablishmentEntity(dto.getCategory()));
-
-        if (dto instanceof RequestRestaurantDto requestRestaurantDto &&
-                establishment instanceof Restaurant restaurant) {
-            String name = requestRestaurantDto.getCuisineCountry();
-            restaurant.setCuisineCountry(CuisineCountry.getEnumByValue(name));
-        }
         establishment.setImage(imageWorker.saveImage(establishment.getImage()));
         establishment.setOwner(userRepository.findAll().get(0));
-        establishment.setCategory(Category.valueOf(dto.getCategory()));
         establishment.setWorkingHours(null);
         establishment.setPhotos(null);
         return establishment;
