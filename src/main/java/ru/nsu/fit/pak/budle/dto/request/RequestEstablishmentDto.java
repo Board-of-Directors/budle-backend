@@ -58,6 +58,7 @@ public class RequestEstablishmentDto {
     private Set<WorkingHoursDto> workingHours;
     @NotNull(message = "Информация о тэгах заведения не может быть не задана.")
     private Set<RequestTagDto> tags;
+    @NotNull(message = "Информация о фотографиях заведения не может быть пустой.")
     private Set<PhotoDto> photosInput;
     private String map;
 
