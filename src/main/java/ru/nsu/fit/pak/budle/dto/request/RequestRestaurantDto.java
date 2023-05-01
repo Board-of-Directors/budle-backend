@@ -8,6 +8,6 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 public class RequestRestaurantDto extends RequestEstablishmentDto {
-    @NotNull
+    @NotNull(message = "Информация о кухне ресторана не может быть не задана.")
     private String cuisineCountry;
 }

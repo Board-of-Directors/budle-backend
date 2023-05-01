@@ -95,20 +95,24 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     @Transactional
     public void createEstablishment(RequestEstablishmentDto dto) {
         logger.info("Creating new establishment");
-        logger.debug("Establishment parameters:" + dto);
+        logger.info("Establishment parameters:" + dto);
         checkEstablishmentExistence(dto);
-
+        logger.info("Establishment with name and address does not exist");
 
         Establishment establishment = establishmentMapper.dtoToModel(dto);
+        logger.info("Establishment was converted");
         Set<Tag> tags = tagMapper.tagDtoSetToModelSet(dto.getTags());
+        logger.info("Tags were converted");
         establishment.setTags(tags);
         Establishment savedEstablishment = establishmentRepository.save(establishment);
-
+        logger.info("Establishment was saved in db");
         Set<WorkingHoursDto> workingHoursDto = dto.getWorkingHours();
         Set<PhotoDto> photos = dto.getPhotosInput();
         workingHoursService.saveWorkingHours(workingHoursDto, savedEstablishment);
+        logger.info("Working hours was saved");
         imageService.saveImages(photos, savedEstablishment);
-        logger.info("Establishment was saved");
+        logger.info("Images was saved.");
+        logger.info("Establishment save successfully");
     }
 
     @Override

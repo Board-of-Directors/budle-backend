@@ -65,13 +65,13 @@ public class ArticleController extends ResponseEntityExceptionHandler implements
                 .toList()
                 .get(0);
         BaseResponse<Object> response = new BaseResponse<>(message, "notValidException");
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String message = ex.getMessage();
         BaseResponse<Object> response = new BaseResponse<>(message, "notValidException");
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

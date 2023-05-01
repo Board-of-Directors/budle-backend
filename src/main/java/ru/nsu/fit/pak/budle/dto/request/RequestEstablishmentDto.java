@@ -27,36 +27,36 @@ import java.util.Set;
 })
 @Data
 public class RequestEstablishmentDto {
-    @NotNull(message = "Имя не может быть пустым")
-    @Size(max = 200)
+    @NotNull(message = "Имя не может быть не задано.")
+    @Size(max = 200, message = "Название заведения не может превышать 200 символов.")
     private String name;
-    @NotNull(message = "Описание не может быть пустым")
-    @Size(max = 1000)
+    @NotNull(message = "Описание не может быть не задано.")
+    @Size(max = 1000, message = "Описание не может быть длиннее 1000 символов.")
     private String description;
-    @NotNull(message = "Адрес не может быть пустым")
-    @Size(max = 200)
+    @NotNull(message = "Информация об адресе не может быть не задана.")
+    @Size(max = 200, message = "Адрес не может быть длиннее 200 символов.")
     private String address;
     private Long owner;
-    @NotNull(message = "Информация о оплате картой не может быть пустой")
+    @NotNull(message = "Информация об оплате картой не может быть не задано.")
     private boolean hasCardPayment;
-    @NotNull(message = "Информация о карте заведения не может быть пустой")
+    @NotNull(message = "Информация о карте заведения не может быть не задана.")
     private boolean hasMap;
-    @NotNull(message = "Категория не может быть пустой")
+    @NotNull(message = "Категория не может быть не задана.")
     private String category;
-    @NotNull(message = "Картинка заведения не может быть пустой")
+    @NotNull(message = "Основное изображение не может быть не задано.")
     private String image;
-    @Min(value = 1, message = "Рейтинг не может быть меньше 1")
-    @Max(value = 5, message = "Рейтинг не может быть больше 5")
-    @NotNull(message = "Рейтинг не может быть пустым")
+    @Min(value = 1, message = "Рейтинг не может быть меньше 1.")
+    @Max(value = 5, message = "Рейтинг не может быть больше 5.")
+    @NotNull(message = "Рейтинг не может быть не задан.")
     private Float rating;
     @Max(value = 10000, message = "Средний чек не может быть больше 10000")
     @Min(value = 500, message = "Средний чек не может быть меньше 500")
-    @NotNull(message = "Средний чек не может быть пустым")
+    @NotNull(message = "Информация о среднем чеке не может быть не задана.")
     private Integer price;
-    @NotNull(message = "Рабочие часы не могут быть пустыми.")
+    @NotNull(message = "Информация о рабочих часах заведения не может быть не задано.")
     @Size(min = 1, max = 7, message = "Дней работы не может быть меньше 1 и больше 7")
     private Set<WorkingHoursDto> workingHours;
-    @NotNull(message = "Тэги не могут быть пустыми.")
+    @NotNull(message = "Информация о тэгах заведения не может быть не задана.")
     private Set<RequestTagDto> tags;
     private Set<PhotoDto> photosInput;
     private String map;
