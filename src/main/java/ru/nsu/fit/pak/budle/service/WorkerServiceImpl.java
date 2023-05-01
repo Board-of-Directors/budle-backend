@@ -37,11 +37,8 @@ public class WorkerServiceImpl implements WorkerService {
         logger.info("Getting workers list");
         logger.debug("Establishment ID: " + establishmentId);
         Establishment establishment = establishmentService.getEstablishmentById(establishmentId);
-        return workerRepository
-                .findByEstablishments(establishment)
-                .stream()
-                .map(workerMapper::modelToDto)
-                .toList();
+        List<Worker> workerList = workerRepository.findByEstablishments(establishment);
+        return workerMapper.toDtoList(workerList);
     }
 
     @Override

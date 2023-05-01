@@ -7,6 +7,8 @@ import ru.nsu.fit.pak.budle.dao.Worker;
 import ru.nsu.fit.pak.budle.dto.WorkerDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseUserDto;
 
+import java.util.List;
+
 /**
  * Class, that represent mapper for worker class.
  */
@@ -27,5 +29,9 @@ public class WorkerMapper {
         workerDto.setOnWork(worker.getStatus().value.equals(1));
         workerDto.setUser(new ResponseUserDto(worker.getUser().getUsername()));
         return workerDto;
+    }
+
+    public List<WorkerDto> toDtoList(List<Worker> entityList) {
+        return entityList.stream().map(this::modelToDto).toList();
     }
 }
