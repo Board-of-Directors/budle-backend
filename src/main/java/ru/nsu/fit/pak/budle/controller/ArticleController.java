@@ -44,7 +44,8 @@ public class ArticleController extends ResponseEntityExceptionHandler implements
             UserAlreadyExistsException.class,
             UserNotFoundException.class,
             VerificationCodeWasFalseException.class,
-            WorkerNotFoundException.class
+            WorkerNotFoundException.class,
+            IncorrectOrderStatusException.class
     })
     public <T extends BaseException> ResponseEntity<BaseResponse<Object>> handleException(T e) {
         BaseResponse<Object> response = new BaseResponse<>(e.getMessage(), e.getType());

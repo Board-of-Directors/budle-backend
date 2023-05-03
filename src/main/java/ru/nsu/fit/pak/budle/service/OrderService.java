@@ -36,7 +36,5 @@ public interface OrderService {
      * @param orderId         what order we need to accept.
      * @param establishmentId from what establishment was this request.
      */
-    void acceptOrder(Long orderId, Long establishmentId);
-
-    void rejectOrder(Long orderId, Long establishmentId);
+    void setStatus(Long orderId, Long establishmentId, Integer status);
 }

@@ -117,21 +117,13 @@ public class EstablishmentController {
      * @param establishmentId by what establishment we receive request (will be deleted)
      * @param orderId         - what order we need to accept.
      */
-    @PutMapping(value = "/order/accept")
-    public void accept(@RequestParam Long establishmentId, @RequestParam Long orderId) {
-        orderService.acceptOrder(orderId, establishmentId);
+    @PutMapping(value = "/order/status")
+    public void accept(@RequestParam Long establishmentId,
+                       @RequestParam Long orderId,
+                       @RequestParam Integer status) {
+        orderService.setStatus(orderId, establishmentId, status);
     }
 
-    /**
-     * Delete order from current establishment orders list.
-     *
-     * @param orderId         - what order we need to delete.
-     * @param establishmentId - by what establishment we receive request (will be deleted)
-     */
-    @PutMapping(value = "/order/reject")
-    public void reject(@RequestParam Long orderId, @RequestParam Long establishmentId) {
-        orderService.rejectOrder(orderId, establishmentId);
-    }
 
     /**
      * Get request, that searching for additional photos of establishment.

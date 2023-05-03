@@ -12,6 +12,7 @@ import ru.nsu.fit.pak.budle.dao.Tag;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
+import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
@@ -78,8 +79,7 @@ class EstablishmentBusinessLogicTests {
         Establishment establishment = establishmentRepository.findAll().get(0);
         String addedMap = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" height=\"555\" viewBox=\"0 0 375 555\" width=\"375\"/>";
         establishmentService.addMap(establishment.getId(), addedMap);
-        RequestEstablishmentDto dto = establishmentService.getEstablishmentByParams(null,
-                null, null, "", Pageable.ofSize(10)).get(0);
+        ResponseExtendedEstablishmentInfo dto = establishmentController.getEstablishment(establishment.getId());
         Assertions.assertEquals(dto.getMap(), addedMap);
     }
 

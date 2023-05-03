@@ -9,6 +9,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.DayOfWeek;
 import ru.nsu.fit.pak.budle.dao.Order;
+import ru.nsu.fit.pak.budle.dao.OrderStatus;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
@@ -110,8 +111,9 @@ public class OrderServiceImpl implements OrderService {
                 null : establishmentRepository.findById(establishmentId)
                 .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
 
+        OrderStatus orderStatus = status == null ? null : OrderStatus.getStatusByInteger(status);
         ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues();
-        Example<Order> exampleQuery = Example.of(new Order(user, establishment, status), matcher);
+        Example<Order> exampleQuery = Example.of(new Order(user, establishment, orderStatus), matcher);
         List<Order> orders = orderRepository.findAll(exampleQuery);
 
         logger.debug("Result: " + orders);
@@ -146,20 +148,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void acceptOrder(Long orderId, Long establishmentId) {
-        logger.info("Accepting order");
+    public void setStatus(Long orderId, Long establishmentId, Integer status) {
+        logger.info("Setting order status");
         Order order = getOrderById(orderId);
-        order.setStatus(1);
+        order.setStatus(OrderStatus.getStatusByInteger(status));
         orderRepository.save(order);
     }
 
-    @Override
-    public void rejectOrder(Long orderId, Long establishmentId) {
-        logger.info("Rejecting order");
-        Order order = getOrderById(orderId);
-        order.setStatus(2);
-        orderRepository.save(order);
-    }
 
     private Order getOrderById(Long orderId) {
         return orderRepository.findById(orderId).orElseThrow(() ->

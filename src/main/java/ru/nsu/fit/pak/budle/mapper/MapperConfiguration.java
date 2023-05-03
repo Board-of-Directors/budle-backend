@@ -6,6 +6,7 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.nsu.fit.pak.budle.dao.Category;
+import ru.nsu.fit.pak.budle.dao.OrderStatus;
 import ru.nsu.fit.pak.budle.dao.establishment.restaurant.CuisineCountry;
 
 /**
@@ -42,6 +43,14 @@ public class MapperConfiguration {
         }
     };
 
+    private final AbstractConverter<OrderStatus, Integer> convertOrderStatus =
+            new AbstractConverter<>() {
+                @Override
+                protected Integer convert(OrderStatus source) {
+                    return source.getStatus();
+                }
+            };
+
 
     /**
      * Bean that allows dependency injection for model mapper.
@@ -56,6 +65,7 @@ public class MapperConfiguration {
         mapper.addConverter(convertCategory);
         mapper.addConverter(convertToCuisine);
         mapper.addConverter(convertToCategory);
+        mapper.addConverter(convertOrderStatus);
         return mapper;
     }
 }

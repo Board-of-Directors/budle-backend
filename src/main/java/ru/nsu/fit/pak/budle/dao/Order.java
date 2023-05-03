@@ -29,14 +29,15 @@ public class Order {
     @Transient
     private int duration = 240;
 
-    private Integer status = 0;
+    @Enumerated(EnumType.ORDINAL)
+    private OrderStatus status = OrderStatus.WAITING;
     @OneToOne
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Establishment establishment;
 
-    public Order(User user, Establishment establishment, Integer status) {
+    public Order(User user, Establishment establishment, OrderStatus status) {
         this.user = user;
         this.establishment = establishment;
         this.status = status;
