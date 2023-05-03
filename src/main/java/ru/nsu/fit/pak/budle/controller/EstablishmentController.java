@@ -125,6 +125,12 @@ public class EstablishmentController {
     }
 
 
+    @GetMapping(produces = MediaType.APPLICATION_XML_VALUE, value = "map")
+    public String getMap(@RequestParam Long establishmentId) {
+        return establishmentService.getMap(establishmentId);
+    }
+
+
     /**
      * Get request, that searching for additional photos of establishment.
      *

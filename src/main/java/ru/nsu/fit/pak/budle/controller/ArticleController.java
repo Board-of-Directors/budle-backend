@@ -45,7 +45,9 @@ public class ArticleController extends ResponseEntityExceptionHandler implements
             UserNotFoundException.class,
             VerificationCodeWasFalseException.class,
             WorkerNotFoundException.class,
-            IncorrectOrderStatusException.class
+            IncorrectOrderStatusException.class,
+            ErrorWhileParsingEstablishmentMapException.class,
+            EstablishmentMapDoesntExistException.class
     })
     public <T extends BaseException> ResponseEntity<BaseResponse<Object>> handleException(T e) {
         BaseResponse<Object> response = new BaseResponse<>(e.getMessage(), e.getType());
@@ -60,6 +62,8 @@ public class ArticleController extends ResponseEntityExceptionHandler implements
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         if (body instanceof BaseResponse<?> || body instanceof LinkedHashMap<?, ?>) {
+            return body;
+        } else if (selectedContentType.toString().equals(MediaType.APPLICATION_XML_VALUE)) {
             return body;
         }
         return new BaseResponse<>(body);

@@ -105,4 +105,6 @@ public interface EstablishmentService {
     List<ResponseShortEstablishmentInfo> getEstablishmentsByOwner(Long id);
 
     List<String> getCategoryVariants(String category);
+
+    String getMap(Long establishmentId);
 }

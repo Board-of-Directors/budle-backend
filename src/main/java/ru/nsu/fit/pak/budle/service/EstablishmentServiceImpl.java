@@ -24,9 +24,7 @@ import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
-import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
-import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
-import ru.nsu.fit.pak.budle.exceptions.UserNotFoundException;
+import ru.nsu.fit.pak.budle.exceptions.*;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
 import ru.nsu.fit.pak.budle.mapper.PhotoMapper;
 import ru.nsu.fit.pak.budle.mapper.TagMapper;
@@ -41,7 +39,9 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;
@@ -205,6 +205,25 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     public List<String> getCategoryVariants(String category) {
         Category categoryEnum = Category.getEnumByValue(category);
         return categoryEnum.variants;
+    }
+
+    @Override
+    public String getMap(Long establishmentId) {
+        Establishment establishment = getEstablishmentById(establishmentId);
+        if (!establishment.getHasMap()) {
+            throw new EstablishmentMapDoesntExistException();
+        }
+        try {
+            BufferedReader mapXml = new BufferedReader(new FileReader(establishment.getMap()));
+            StringBuilder builder = new StringBuilder();
+            while (mapXml.ready()) {
+                builder.append(mapXml.readLine());
+            }
+            return builder.toString();
+        } catch (Exception e) {
+            logger.warn(e.getMessage());
+            throw new ErrorWhileParsingEstablishmentMapException();
+        }
     }
 
     public Establishment getEstablishmentById(Long establishmentId) {
