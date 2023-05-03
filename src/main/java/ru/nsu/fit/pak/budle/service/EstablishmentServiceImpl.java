@@ -170,7 +170,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         } catch (Exception e) {
             logger.warn("Map parsing was exited with exception");
             logger.warn(e.getMessage());
-            return;
+            throw new ErrorWhileParsingEstablishmentMapException();
         }
 
         String mapPath = "./maps" + establishmentId + ".svg";
