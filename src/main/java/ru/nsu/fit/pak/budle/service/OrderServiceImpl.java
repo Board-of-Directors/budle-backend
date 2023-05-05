@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
-import ru.nsu.fit.pak.budle.dao.DayOfWeek;
 import ru.nsu.fit.pak.budle.dao.Order;
 import ru.nsu.fit.pak.budle.dao.OrderStatus;
 import ru.nsu.fit.pak.budle.dao.User;
@@ -21,7 +20,6 @@ import ru.nsu.fit.pak.budle.mapper.OrderMapper;
 import ru.nsu.fit.pak.budle.mapper.WorkingHoursMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.OrderRepository;
-import ru.nsu.fit.pak.budle.repository.SpotRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.utils.OrderFactory;
 
@@ -44,7 +42,6 @@ public class OrderServiceImpl implements OrderService {
 
     private final EstablishmentRepository establishmentRepository;
 
-    private final SpotRepository spotRepository;
 
     private final OrderFactory orderFactory;
 
@@ -79,12 +76,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private boolean bookingTimeIsValid(Establishment establishment, RequestOrderDto order) {
-        DayOfWeek dayOfWeek = DayOfWeek.getDayFromDayOfWeek(order.getDate().getDayOfWeek());
-
         List<ValidTimeDto> validTimeDtos =
                 workingHoursService.getValidBookingHoursByEstablishment(establishment);
         ValidTimeDto orderTime = workingHoursMapper.convertFromDateAndTimeToValidTimeDto(order.getDate());
-        String bookingTime = order.getTime().toString().substring(0, order.getTime().toString().length() - 3);
+        String bookingTime = order.getTime().toString();
         for (ValidTimeDto time : validTimeDtos) {
             if (Objects.equals(time.getDayName(), orderTime.getDayName()) &&
                     Objects.equals(time.getMonthName(), orderTime.getMonthName()) &&
