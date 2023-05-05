@@ -15,6 +15,7 @@ import ru.nsu.fit.pak.budle.repository.SpotRepository;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
 @Component
@@ -23,13 +24,14 @@ public class OrderMapper {
 
     @Autowired
     public OrderMapper(ModelMapper mapper, SpotRepository spotRepository) {
+        final int bookingDurationMinutes = 240;
         final Converter<Long, Spot> converterToSpot = (src) ->
                 (spotRepository.findById(src.getSource())
                         .orElseThrow(() -> new SpotNotFoundException(src.getSource())));
         final Converter<LocalDate, Date> converterDate = (src) -> Date.valueOf(src.getSource());
 
-        final Converter<Time, Time> converterTime = (src) ->
-                Time.valueOf(src.getSource().toLocalTime().plus(240, ChronoUnit.MINUTES));
+        final Converter<LocalTime, Time> converterTime = (src) ->
+                Time.valueOf(src.getSource().plus(bookingDurationMinutes, ChronoUnit.MINUTES));
 
         Condition<Long, Spot> notNull = ctx -> ctx.getSource() != null;
 
