@@ -12,6 +12,7 @@ import ru.nsu.fit.pak.budle.dto.PhotoListDto;
 import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseOrderDto;
+import ru.nsu.fit.pak.budle.dto.response.ResponseSubcategoryDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
 import ru.nsu.fit.pak.budle.service.EstablishmentServiceImpl;
@@ -168,7 +169,7 @@ public class EstablishmentController {
     }
 
     @GetMapping(value = "/variants")
-    public List<String> getCategoryVariants(@RequestParam String category) {
+    public ResponseSubcategoryDto getCategoryVariants(@RequestParam String category) {
         return establishmentService.getCategoryVariants(category);
 
     }

@@ -2,24 +2,23 @@ package ru.nsu.fit.pak.budle.dao;
 
 import ru.nsu.fit.pak.budle.dao.establishment.hotel.HotelStars;
 import ru.nsu.fit.pak.budle.dao.establishment.restaurant.CuisineCountry;
+import ru.nsu.fit.pak.budle.dto.response.ResponseSubcategoryDto;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectCategoryException;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public enum Category {
-    restaurant("Рестораны", CuisineCountry.getVariants()),
-    hotel("Отели", HotelStars.getVariants()),
-    game_club("Игровые клубы", Collections.emptyList()),
-    barbershop("Парикмахерские", Collections.emptyList());
+    restaurant("Рестораны", new ResponseSubcategoryDto(CuisineCountry.getVariants(), "тип кухни", "cuisineCountry")),
+    hotel("Отели", new ResponseSubcategoryDto(HotelStars.getVariants(), "количество звезд", "starsCount")),
+    game_club("Игровые клубы", new ResponseSubcategoryDto()),
+    barbershop("Парикмахерские", new ResponseSubcategoryDto());
 
 
     public final String value;
 
-    public final List<String> variants;
+    public final ResponseSubcategoryDto variants;
 
-    Category(String value, List<String> variants) {
+    Category(String value, ResponseSubcategoryDto variants) {
         this.value = value;
         this.variants = variants;
     }

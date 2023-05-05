@@ -5,6 +5,7 @@ import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.PhotoDto;
 import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
+import ru.nsu.fit.pak.budle.dto.response.ResponseSubcategoryDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
@@ -104,7 +105,7 @@ public interface EstablishmentService {
 
     List<ResponseShortEstablishmentInfo> getEstablishmentsByOwner(Long id);
 
-    List<String> getCategoryVariants(String category);
+    ResponseSubcategoryDto getCategoryVariants(String category);
 
     String getMap(Long establishmentId);
 }
