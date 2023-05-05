@@ -6,9 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.PhotoDto;
-import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
+import ru.nsu.fit.pak.budle.dto.response.ResponseWorkingHoursDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
@@ -57,7 +57,7 @@ public class EstablishmentMapper {
                 .getWorkingHours()
                 .stream()
                 .map(x -> {
-                    WorkingHoursDto dto = modelMapper.map(x, WorkingHoursDto.class);
+                    ResponseWorkingHoursDto dto = modelMapper.map(x, ResponseWorkingHoursDto.class);
                     dto.setDayOfWeek(x.getDayOfWeek().getTranslate());
                     return dto;
                 })

@@ -9,7 +9,7 @@ import ru.nsu.fit.pak.budle.dao.DayOfWeek;
 import ru.nsu.fit.pak.budle.dao.WorkingHours;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
-import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
+import ru.nsu.fit.pak.budle.dto.request.RequestWorkingHoursDto;
 import ru.nsu.fit.pak.budle.mapper.WorkingHoursMapper;
 import ru.nsu.fit.pak.budle.repository.WorkingHoursRepository;
 
@@ -27,14 +27,16 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public void saveWorkingHours(Set<WorkingHoursDto> workingHoursDto, Establishment establishment) {
+    public void saveWorkingHours(Set<RequestWorkingHoursDto> responseWorkingHoursDto, Establishment establishment) {
         logger.info("Saving working hours");
-        for (WorkingHoursDto dto : workingHoursDto) {
+        for (RequestWorkingHoursDto dto : responseWorkingHoursDto) {
             logger.debug("Saving " + dto);
-            WorkingHours workingHours = mapper.map(dto, WorkingHours.class);
-            workingHours.setDayOfWeek(DayOfWeek.getDayByString(dto.getDayOfWeek()));
-            workingHours.setEstablishment(establishment);
-            workingHoursRepository.save(workingHours);
+            for (String day : dto.getDays()) {
+                WorkingHours workingHours = mapper.map(dto, WorkingHours.class);
+                workingHours.setDayOfWeek(DayOfWeek.getDayByString(day));
+                workingHours.setEstablishment(establishment);
+                workingHoursRepository.save(workingHours);
+            }
         }
     }
 

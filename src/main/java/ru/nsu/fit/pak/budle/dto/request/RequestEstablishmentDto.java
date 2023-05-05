@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 import ru.nsu.fit.pak.budle.dto.PhotoDto;
-import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -55,7 +54,7 @@ public class RequestEstablishmentDto {
     private Integer price;
     @NotNull(message = "Информация о рабочих часах заведения не может быть не задано.")
     @Size(min = 1, max = 7, message = "Дней работы не может быть меньше 1 и больше 7")
-    private Set<WorkingHoursDto> workingHours;
+    private Set<RequestWorkingHoursDto> workingHours;
     @NotNull(message = "Информация о тэгах заведения не может быть не задана.")
     private Set<RequestTagDto> tags;
     @NotNull(message = "Информация о фотографиях заведения не может быть пустой.")

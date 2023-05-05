@@ -2,7 +2,7 @@ package ru.nsu.fit.pak.budle.service;
 
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
-import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
+import ru.nsu.fit.pak.budle.dto.request.RequestWorkingHoursDto;
 
 import java.util.List;
 import java.util.Set;
@@ -14,10 +14,10 @@ public interface WorkingHoursService {
     /**
      * Save provided working hours dto associated with current establishment.
      *
-     * @param workingHoursDto what we need to save.
-     * @param establishment   with what working hours will be associated.
+     * @param requestWorkingHoursDtos what we need to save.
+     * @param establishment           with what working hours will be associated.
      */
-    void saveWorkingHours(Set<WorkingHoursDto> workingHoursDto, Establishment establishment);
+    void saveWorkingHours(Set<RequestWorkingHoursDto> requestWorkingHoursDtos, Establishment establishment);
 
     /**
      * Function that computes and return valid booking time for establishment.

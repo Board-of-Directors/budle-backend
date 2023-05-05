@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import ru.nsu.fit.pak.budle.dto.PhotoDto;
-import ru.nsu.fit.pak.budle.dto.WorkingHoursDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
+import ru.nsu.fit.pak.budle.dto.response.ResponseWorkingHoursDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
 
 import java.util.Set;
@@ -22,6 +22,6 @@ public class ResponseExtendedEstablishmentInfo extends ResponseBasicEstablishmen
     private Set<ResponseTagDto> tags;
     private String description;
     private Set<PhotoDto> photos;
-    private Set<WorkingHoursDto> workingHours;
+    private Set<ResponseWorkingHoursDto> workingHours;
     private String address;
 }
