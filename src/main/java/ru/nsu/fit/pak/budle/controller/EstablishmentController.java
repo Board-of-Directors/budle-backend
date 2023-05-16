@@ -5,12 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.nsu.fit.pak.budle.dto.EstablishmentListDto;
 import ru.nsu.fit.pak.budle.dto.PhotoDto;
 import ru.nsu.fit.pak.budle.dto.PhotoListDto;
 import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
+import ru.nsu.fit.pak.budle.dto.request.RequestGetEstablishmentParameters;
 import ru.nsu.fit.pak.budle.dto.response.ResponseOrderDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseSubcategoryDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
@@ -26,6 +28,7 @@ import java.util.Set;
  * Class, that represents controller of requests, those connected with the establishment part.
  */
 @RestController
+@Validated
 @RequestMapping(value = "establishment", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class EstablishmentController {
@@ -37,26 +40,22 @@ public class EstablishmentController {
      * Get requests for establishments.
      * Can filter establishments by fields, also implemented sorting and pagination.
      *
-     * @param name           - it can be part of the establishment name or full establishment name
-     * @param category       - filter field, in what category we're searching establishments.
-     * @param hasMap         - boolean filter field, indicates that establishment must/must not have map.
-     * @param hasCardPayment - boolean filter field, indicates that establishment must/must not have card payment.
-     * @param offset         - indicates the page of request.
-     * @param limit          - indicates number of establishments on the current page.
-     * @param sortValue      - by this field we can indicate by what field we sort our establishments.
+     * @param parameters - list of get parameters for establishments
      * @return list of establishment dto, list size included.
      */
     @GetMapping(value = "all")
-    public EstablishmentListDto getEstablishments(@RequestParam(required = false, defaultValue = "") String name,
-                                                  @RequestParam(required = false) String category,
-                                                  @RequestParam(required = false) Boolean hasMap,
-                                                  @RequestParam(required = false) Boolean hasCardPayment,
-                                                  @RequestParam(required = false, defaultValue = "0") Integer offset,
-                                                  @RequestParam(required = false, defaultValue = "100") Integer limit,
-                                                  @RequestParam(required = false, defaultValue = "name") String sortValue) {
+    public EstablishmentListDto getEstablishments(@Valid RequestGetEstablishmentParameters parameters) {
 
         EstablishmentListDto list = new EstablishmentListDto();
-        list.setEstablishments(establishmentService.getEstablishmentByParams(category, hasMap, hasCardPayment, name, PageRequest.of(offset, limit, Sort.by(sortValue))));
+        list.setEstablishments(
+                establishmentService.getEstablishmentByParams(
+                        parameters.category(),
+                        parameters.hasMap(),
+                        parameters.hasCardPayment(),
+                        parameters.name(),
+                        PageRequest.of(parameters.offset(), parameters.limit(),
+                                Sort.by(parameters.sortValue())
+                        )));
         list.setCount(list.getEstablishments().size());
         return list;
     }
