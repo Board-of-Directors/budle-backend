@@ -63,7 +63,6 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     private final EstablishmentMapper establishmentMapper;
 
     private final WorkingHoursService workingHoursService;
-
     private final PhotoMapper photoMapper;
 
     private final TagMapper tagMapper;
@@ -104,18 +103,8 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
         Establishment establishment = establishmentMapper.dtoToModel(dto);
         logger.info("Establishment was converted");
-        Set<Tag> tags = tagMapper.tagDtoSetToModelSet(dto.getTags());
-        logger.info("Tags were converted");
-        establishment.setTags(tags);
-        Establishment savedEstablishment = establishmentRepository.save(establishment);
-        logger.info("Establishment was saved in db");
-        Set<RequestWorkingHoursDto> responseWorkingHoursDto = dto.getWorkingHours();
-        Set<PhotoDto> photos = dto.getPhotosInput();
-        workingHoursService.saveWorkingHours(responseWorkingHoursDto, savedEstablishment);
-        logger.info("Working hours was saved");
-        imageService.saveImages(photos, savedEstablishment);
-        logger.info("Images was saved.");
-        logger.info("Establishment save successfully");
+
+        saveEstablishmentData(establishment, dto);
     }
 
     @Override
@@ -230,19 +219,29 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
+    @Transactional
     public void updateEstablishment(Long establishmentId, RequestEstablishmentDto establishmentDto) {
-        deleteEstablishment(establishmentId);
-        createEstablishment(establishmentDto);
+        Establishment originalEstablishment = getEstablishmentById(establishmentId);
+        Establishment establishment = establishmentMapper.dtoToModel(establishmentDto);
+        establishment.setId(establishmentId);
+        deleteEstablishmentPhotos(originalEstablishment);
+        saveEstablishmentData(establishment, establishmentDto);
     }
 
     @Override
     public void deleteEstablishment(Long establishmentId) {
         Establishment establishment = getEstablishmentById(establishmentId);
-        Stream<String> paths = establishment.getPhotos().stream()
-                .map(Photo::getFilepath);
+        deleteEstablishmentPhotos(establishment);
+        establishmentRepository.delete(establishment);
+    }
+
+    private void deleteEstablishmentPhotos(Establishment establishment) {
+        Stream<String> paths = Stream.empty();
+        if (!establishment.getPhotos().isEmpty()) {
+            paths = Stream.concat(paths, establishment.getPhotos().stream().map(Photo::getFilepath));
+        }
         paths = Stream.concat(paths, Stream.of(establishment.getImage()));
         imageService.deleteImages(paths.toList());
-        establishmentRepository.delete(establishment);
     }
 
     public Establishment getEstablishmentById(Long establishmentId) {
@@ -264,5 +263,20 @@ public class EstablishmentServiceImpl implements EstablishmentService {
             logger.warn("Establishment " + name + " " + address + " already exists");
             throw new EstablishmentAlreadyExistsException(name, address);
         }
+    }
+
+    private void saveEstablishmentData(Establishment establishment, RequestEstablishmentDto dto) {
+        Set<Tag> tags = tagMapper.tagDtoSetToModelSet(dto.getTags());
+        logger.info("Tags were converted");
+        establishment.setTags(tags);
+        Establishment savedEstablishment = establishmentRepository.save(establishment);
+        logger.info("Establishment was saved in db");
+        Set<RequestWorkingHoursDto> responseWorkingHoursDto = dto.getWorkingHours();
+        Set<PhotoDto> photos = dto.getPhotosInput();
+        workingHoursService.saveWorkingHours(responseWorkingHoursDto, savedEstablishment);
+        logger.info("Working hours was saved");
+        imageService.saveImages(photos, savedEstablishment);
+        logger.info("Images was saved.");
+        logger.info("Establishment save successfully");
     }
 }
