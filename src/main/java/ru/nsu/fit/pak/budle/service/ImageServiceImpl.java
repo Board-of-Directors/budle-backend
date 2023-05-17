@@ -44,7 +44,7 @@ public class ImageServiceImpl implements ImageService {
     public void deleteImages(List<String> imagesPath) {
         logger.info("Deleting images");
         for (String path : imagesPath) {
-            File file = new File(path);
+            File file = new File("./images/" + path);
             if (!file.delete()) {
                 logger.warn("Deleting image was false");
             }
