@@ -13,6 +13,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import ru.nsu.fit.pak.budle.dao.Category;
+import ru.nsu.fit.pak.budle.dao.Photo;
 import ru.nsu.fit.pak.budle.dao.Tag;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
@@ -47,6 +48,7 @@ import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -225,6 +227,22 @@ public class EstablishmentServiceImpl implements EstablishmentService {
             logger.warn(e.getMessage());
             throw new ErrorWhileParsingEstablishmentMapException();
         }
+    }
+
+    @Override
+    public void updateEstablishment(Long establishmentId, RequestEstablishmentDto establishmentDto) {
+        deleteEstablishment(establishmentId);
+        createEstablishment(establishmentDto);
+    }
+
+    @Override
+    public void deleteEstablishment(Long establishmentId) {
+        Establishment establishment = getEstablishmentById(establishmentId);
+        Stream<String> paths = establishment.getPhotos().stream()
+                .map(Photo::getFilepath);
+        paths = Stream.concat(paths, Stream.of(establishment.getImage()));
+        imageService.deleteImages(paths.toList());
+        establishmentRepository.delete(establishment);
     }
 
     public Establishment getEstablishmentById(Long establishmentId) {

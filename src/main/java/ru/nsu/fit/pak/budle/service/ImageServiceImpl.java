@@ -10,6 +10,8 @@ import ru.nsu.fit.pak.budle.dto.PhotoDto;
 import ru.nsu.fit.pak.budle.mapper.PhotoMapper;
 import ru.nsu.fit.pak.budle.repository.ImageRepository;
 
+import java.io.File;
+import java.util.List;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -26,6 +28,17 @@ public class ImageServiceImpl implements ImageService {
         Set<Photo> photos = photoMapper.convertSetPhotoDtoToModelSet(photosDto, establishment);
         imageRepository.saveAll(photos);
         logger.info("Images saved successfully");
+    }
+
+    @Override
+    public void deleteImages(List<String> imagesPath) {
+        logger.info("Deleting images");
+        for (String path : imagesPath) {
+            File file = new File(path);
+            if (!file.delete()) {
+                logger.warn("Deleting image was false");
+            }
+        }
     }
 
 

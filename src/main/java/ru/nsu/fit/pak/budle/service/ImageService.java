@@ -3,6 +3,7 @@ package ru.nsu.fit.pak.budle.service;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.PhotoDto;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -18,4 +19,6 @@ public interface ImageService {
      * @param establishment which will be associated with those photos.
      */
     void saveImages(Set<PhotoDto> photos, Establishment establishment);
+
+    void deleteImages(List<String> images);
 }
