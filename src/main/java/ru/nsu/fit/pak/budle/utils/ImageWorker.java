@@ -112,7 +112,7 @@ public class ImageWorker {
      * @return Base64 encoded content of the image.
      */
     public String getImageFromResource(String imageName) {
-        try (InputStream stream = this.getClass().getClassLoader().getResourceAsStream("images" + imageName)) {
+        try (InputStream stream = this.getClass().getClassLoader().getResourceAsStream("images/" + imageName)) {
             if (stream != null) {
                 return Base64.getEncoder().encodeToString(stream.readAllBytes());
             }
