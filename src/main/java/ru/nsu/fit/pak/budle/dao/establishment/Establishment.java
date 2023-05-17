@@ -40,7 +40,7 @@ public class Establishment {
             inverseJoinColumns = @JoinColumn(name = "worker_id"))
     private Set<Worker> workers;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "establishment")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "establishment", cascade = CascadeType.ALL)
     private Set<Order> orders;
 
     @OneToMany(fetch = FetchType.EAGER,
