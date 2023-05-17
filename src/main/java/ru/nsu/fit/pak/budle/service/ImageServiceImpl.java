@@ -40,5 +40,16 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
+    @Override
+    public void deleteImages(List<String> imagesPath) {
+        logger.info("Deleting images");
+        for (String path : imagesPath) {
+            File file = new File(path);
+            if (!file.delete()) {
+                logger.warn("Deleting image was false");
+            }
+        }
+    }
+
 
 }
