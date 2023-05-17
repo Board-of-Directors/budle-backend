@@ -50,10 +50,10 @@ public class EstablishmentMapper {
         Class<? extends ResponseShortEstablishmentInfo> classOfDto = establishmentFactory
                 .getEstablishmentDto(establishment.getCategory().toString(), "extended");
 
-        ResponseExtendedEstablishmentInfo requestEstablishmentDto =
+        ResponseExtendedEstablishmentInfo responseEstablishmentInfo =
                 (ResponseExtendedEstablishmentInfo) modelMapper.map(establishment, classOfDto);
 
-        requestEstablishmentDto.setWorkingHours(establishment
+        responseEstablishmentInfo.setWorkingHours(establishment
                 .getWorkingHours()
                 .stream()
                 .map(x -> {
@@ -63,19 +63,21 @@ public class EstablishmentMapper {
                 })
                 .collect(Collectors.toSet()));
 
-        requestEstablishmentDto.setTags(establishment
+        responseEstablishmentInfo.setTags(establishment
                 .getTags()
                 .stream()
                 .map(x -> new ResponseTagDto(x.translate, imageWorker.getImageFromResource(x.assets)))
                 .collect(Collectors.toSet()));
 
-        requestEstablishmentDto.setPhotos(establishment
+        responseEstablishmentInfo.setPhotos(establishment
                 .getPhotos()
                 .stream()
                 .map(x -> new PhotoDto(imageWorker.loadImage(x.getFilepath())))
                 .collect(Collectors.toSet()));
 
-        return requestEstablishmentDto;
+        responseEstablishmentInfo.setImage(imageWorker.loadImage(establishment.getImage()));
+
+        return responseEstablishmentInfo;
 
     }
 
