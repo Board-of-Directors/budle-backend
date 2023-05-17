@@ -184,5 +184,15 @@ public class EstablishmentController {
         establishmentService.addMap(establishmentId, map);
     }
 
+    @PutMapping
+    public void update(@RequestParam Long establishmentId, @RequestBody @Valid RequestEstablishmentDto establishmentDto) {
+        establishmentService.updateEstablishment(establishmentId, establishmentDto);
+    }
+
+    @DeleteMapping
+    public void delete(@RequestParam Long establishmentId) {
+        establishmentService.deleteEstablishment(establishmentId);
+    }
+
 
 }

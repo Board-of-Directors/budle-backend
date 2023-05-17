@@ -108,4 +108,8 @@ public interface EstablishmentService {
     ResponseSubcategoryDto getCategoryVariants(String category);
 
     String getMap(Long establishmentId);
+
+    void updateEstablishment(Long establishmentId, RequestEstablishmentDto establishmentDto);
+
+    void deleteEstablishment(Long establishmentId);
 }
