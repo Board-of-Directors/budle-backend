@@ -69,4 +69,10 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
         }
         return times;
     }
+
+    @Override
+    public void deleteHours(Set<WorkingHours> workingHours) {
+        workingHoursRepository.deleteAll(workingHours);
+
+    }
 }

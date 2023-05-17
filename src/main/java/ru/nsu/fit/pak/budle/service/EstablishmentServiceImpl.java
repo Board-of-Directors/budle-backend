@@ -225,7 +225,12 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         Establishment establishment = establishmentMapper.dtoToModel(establishmentDto);
         establishment.setId(establishmentId);
         deleteEstablishmentPhotos(originalEstablishment);
+        deleteEstablishmentHours(originalEstablishment);
         saveEstablishmentData(establishment, establishmentDto);
+    }
+
+    private void deleteEstablishmentHours(Establishment originalEstablishment) {
+        workingHoursService.deleteHours(originalEstablishment.getWorkingHours());
     }
 
     @Override

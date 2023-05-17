@@ -1,5 +1,6 @@
 package ru.nsu.fit.pak.budle.service;
 
+import ru.nsu.fit.pak.budle.dao.WorkingHours;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestWorkingHoursDto;
@@ -26,4 +27,6 @@ public interface WorkingHoursService {
      * @return list of valid times dto.
      */
     List<ValidTimeDto> getValidBookingHoursByEstablishment(Establishment establishment);
+
+    void deleteHours(Set<WorkingHours> workingHours);
 }
