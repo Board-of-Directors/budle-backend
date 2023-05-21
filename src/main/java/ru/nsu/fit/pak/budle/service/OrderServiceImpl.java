@@ -13,13 +13,15 @@ import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestOrderDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseOrderDto;
-import ru.nsu.fit.pak.budle.exceptions.*;
+import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
+import ru.nsu.fit.pak.budle.exceptions.InvalidBookingTime;
+import ru.nsu.fit.pak.budle.exceptions.NotEnoughRightsException;
+import ru.nsu.fit.pak.budle.exceptions.OrderNotFoundException;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
 import ru.nsu.fit.pak.budle.mapper.OrderMapper;
 import ru.nsu.fit.pak.budle.mapper.WorkingHoursMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.OrderRepository;
-import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.utils.OrderFactory;
 
 import javax.transaction.Transactional;
@@ -34,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final ModelMapper modelMapper;
 
-    private final UserRepository userRepository;
+    private final SecurityService securityService;
 
     private final EstablishmentService establishmentService;
 
@@ -66,9 +68,7 @@ public class OrderServiceImpl implements OrderService {
         Class<? extends Order> mappingClass = orderFactory.getEntity(dto);
         Order order = orderMapper.toEntity(dto, mappingClass);
 
-        User user = userRepository
-                .findById(dto.getUserId())
-                .orElseThrow(UserNotFoundException::new);
+        User user = securityService.getLoggedInUser();
         order.setUser(user);
         order.setEstablishment(establishment);
         orderRepository.save(order);
@@ -97,9 +97,7 @@ public class OrderServiceImpl implements OrderService {
         log.info("id " + userId);
         log.info("establishment " + establishmentId);
 
-        User user = userId == null ?
-                null : userRepository.findById(userId)
-                .orElseThrow(UserNotFoundException::new);
+        User user = securityService.getLoggedInUser();
 
         Establishment establishment = establishmentId == null ?
                 null : establishmentRepository.findById(establishmentId)

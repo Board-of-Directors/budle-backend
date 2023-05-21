@@ -49,7 +49,8 @@ public class ArticleController extends ResponseEntityExceptionHandler implements
             WorkerNotFoundException.class,
             IncorrectOrderStatusException.class,
             ErrorWhileParsingEstablishmentMapException.class,
-            EstablishmentMapDoesntExistException.class
+            EstablishmentMapDoesntExistException.class,
+            UserNotLoggedInException.class
     })
     public <T extends BaseException> ResponseEntity<BaseResponse<Object>> handleException(T e) {
         BaseResponse<Object> response = new BaseResponse<>(e.getMessage(), e.getType());
