@@ -13,9 +13,9 @@ public record RequestGetEstablishmentParameters(@Nullable String name,
                                                 String sortValue) {
 
     public RequestGetEstablishmentParameters {
-        if (name == null) name = "";
-        if (offset == null) offset = 0;
-        if (limit == null) limit = 100;
-        if (sortValue == null) sortValue = "name";
+        name = name == null ? "" : name;
+        offset = offset == null ? 0 : offset;
+        limit = limit == null ? 100 : limit;
+        sortValue = sortValue == null ? "name" : sortValue;
     }
 }

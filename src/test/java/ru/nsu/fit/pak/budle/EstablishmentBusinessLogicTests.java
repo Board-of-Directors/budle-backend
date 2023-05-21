@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Pageable;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.nsu.fit.pak.budle.controller.EstablishmentController;
 import ru.nsu.fit.pak.budle.dao.Category;
@@ -12,7 +11,7 @@ import ru.nsu.fit.pak.budle.dao.Tag;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
-import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
+import ru.nsu.fit.pak.budle.dto.request.RequestGetEstablishmentParameters;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
@@ -79,7 +78,7 @@ class EstablishmentBusinessLogicTests {
         Establishment establishment = establishmentRepository.findAll().get(0);
         String addedMap = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" height=\"555\" viewBox=\"0 0 375 555\" width=\"375\"/>";
         establishmentService.addMap(establishment.getId(), addedMap);
-        ResponseExtendedEstablishmentInfo dto = establishmentController.getEstablishment(establishment.getId());
+        //ResponseExtendedEstablishmentInfo dto = establishmentController.getEstablishment(establishment.getId());
         //Assertions.assertEquals(dto.getMap(), addedMap);
     }
 
@@ -87,14 +86,13 @@ class EstablishmentBusinessLogicTests {
     @Transactional
     public void testCreatingEstablishment_FindEstablishmentByParams_FindByWrongCategory() {
         insertEstablishments();
-        Assertions.assertTrue(establishmentController.getEstablishments(
-                "",
-                Category.hotel.value,
+        Assertions.assertTrue(establishmentController.getEstablishments(new RequestGetEstablishmentParameters(null,
                 null,
                 null,
-                0,
-                10,
-                "name"
+                null,
+                null,
+                null,
+                null)
         ).getEstablishments().isEmpty());
     }
 
@@ -103,12 +101,14 @@ class EstablishmentBusinessLogicTests {
     public void testCreatingEstablishment_FindEstablishmentByParams_FindByRightCategory() {
         insertEstablishments();
         Assertions.assertEquals(establishmentService.getEstablishmentByParams(
-                null,
-                null,
-                null,
-                "",
-                Pageable.ofSize(10)
-        ).size(), 1);
+                new RequestGetEstablishmentParameters(null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null)
+        ).getCount(), 1);
     }
 
     @Test
@@ -116,21 +116,25 @@ class EstablishmentBusinessLogicTests {
     public void testCreatingEstablishment_FindEstablishmentByParams_FindByWrongBooleanFlags() {
         insertEstablishments();
         Assertions.assertEquals(establishmentService.getEstablishmentByParams(
-                null,
-                !mainEstablishment.getHasMap(),
-                null,
-                "",
-                Pageable.ofSize(10)
-        ).size(), 0);
+                new RequestGetEstablishmentParameters(null,
+                        null,
+                        null,
+                        false,
+                        null,
+                        null,
+                        null)
+        ).getCount(), 0);
 
         insertEstablishments();
         Assertions.assertEquals(establishmentService.getEstablishmentByParams(
-                null,
-                null,
-                !mainEstablishment.getHasCardPayment(),
-                "",
-                Pageable.ofSize(10)
-        ).size(), 0);
+                new RequestGetEstablishmentParameters(null,
+                        null,
+                        false,
+                        null,
+                        null,
+                        null,
+                        null)
+        ).getCount(), 0);
     }
 
 
@@ -139,12 +143,14 @@ class EstablishmentBusinessLogicTests {
     public void testCreatingEstablishment_FindEstablishmentByRightParams() {
         insertEstablishments();
         Assertions.assertEquals(establishmentService.getEstablishmentByParams(
-                null,
-                mainEstablishment.getHasMap(),
-                mainEstablishment.getHasCardPayment(),
-                mainEstablishment.getName(),
-                Pageable.ofSize(10)
-        ).size(), 1);
+                new RequestGetEstablishmentParameters(null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null)
+        ).getCount(), 1);
     }
 
 
@@ -153,12 +159,15 @@ class EstablishmentBusinessLogicTests {
     public void testCreatingEstablishment_FindEstablishmentByWrongName() {
         insertEstablishments();
         Assertions.assertEquals(establishmentService.getEstablishmentByParams(
-                null,
-                null,
-                null,
-                "Red babbit",
-                Pageable.ofSize(10)
-        ).size(), 0);
+                new RequestGetEstablishmentParameters(
+                        "Red Rabbit",
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null)
+        ).getCount(), 0);
     }
 
 

@@ -3,10 +3,7 @@ package ru.nsu.fit.pak.budle.service;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -17,9 +14,11 @@ import ru.nsu.fit.pak.budle.dao.Photo;
 import ru.nsu.fit.pak.budle.dao.Tag;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
+import ru.nsu.fit.pak.budle.dto.EstablishmentListDto;
 import ru.nsu.fit.pak.budle.dto.PhotoDto;
 import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
+import ru.nsu.fit.pak.budle.dto.request.RequestGetEstablishmentParameters;
 import ru.nsu.fit.pak.budle.dto.request.RequestWorkingHoursDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseSubcategoryDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
@@ -68,29 +67,35 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     private final TagMapper tagMapper;
 
     @Override
-    public List<ResponseBasicEstablishmentInfo> getEstablishmentByParams(String category,
-                                                                         Boolean hasMap,
-                                                                         Boolean hasCardPayment,
-                                                                         String name,
-                                                                         Pageable page) {
+    public EstablishmentListDto getEstablishmentByParams(
+            RequestGetEstablishmentParameters parameters
+    ) {
         logger.info("Getting establishment by parameters");
 
-        logger.debug("Parameters\n" +
-                "Category: " + category + "\n" +
-                "HasMap: " + hasMap + "\n" +
-                "HasCardPayment " + hasCardPayment + "\n" +
-                "Name: " + name + "\n" +
-                "Page: " + page + "\n");
+        logger.debug("Parameters" + parameters);
+
+        PageRequest page = PageRequest.of(parameters.offset(), parameters.limit(),
+                Sort.by(parameters.sortValue()));
 
         ExampleMatcher matcher = ExampleMatcher
                 .matching()
                 .withIgnoreNullValues()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
-        Category categoryEnum = category == null ? null : Category.getEnumByValue(category);
-        Example<Establishment> exampleQuery = Example.of(new Establishment(categoryEnum, hasMap, hasCardPayment, name), matcher);
+
+        Category categoryEnum = parameters.category() == null ? null : Category.getEnumByValue(parameters.category());
+
+        Example<Establishment> exampleQuery =
+                Example.of(new Establishment(
+                        categoryEnum,
+                        parameters.hasMap(),
+                        parameters.hasCardPayment(),
+                        parameters.name()
+                ), matcher);
+
         Page<Establishment> results = establishmentRepository.findAll(exampleQuery, page);
         logger.debug("Results was " + results);
-        return establishmentMapper.modelListToDtoList(results);
+        List<ResponseBasicEstablishmentInfo> establishments = establishmentMapper.modelListToDtoList(results);
+        return new EstablishmentListDto(establishments, establishments.size());
     }
 
     @Override
