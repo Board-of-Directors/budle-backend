@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ru.nsu.fit.pak.budle.dao.User;
+import ru.nsu.fit.pak.budle.exceptions.UserNotLoggedInException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -35,6 +37,17 @@ public class SecurityServiceImpl implements SecurityService {
         }
         log.warn("User details not instance of user details");
         return null;
+    }
+
+    @Override
+    public User getLoggedInUser() {
+        Object info = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (info instanceof User user) {
+            log.info(user.getUsername());
+            return user;
+        }
+        log.warn("Info is not instance of user details");
+        throw new UserNotLoggedInException();
     }
 
     @Override

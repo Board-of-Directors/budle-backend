@@ -12,7 +12,6 @@ import ru.nsu.fit.pak.budle.dto.response.ResponseWorkingHoursDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
-import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.utils.EstablishmentFactory;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
@@ -27,7 +26,6 @@ import java.util.stream.Collectors;
 public class EstablishmentMapper {
     private final ModelMapper modelMapper;
     private final ImageWorker imageWorker;
-    private final UserRepository userRepository;
 
     private final EstablishmentFactory establishmentFactory;
 
@@ -119,7 +117,6 @@ public class EstablishmentMapper {
         Establishment establishment = modelMapper.map(dto,
                 establishmentFactory.getEstablishmentEntity(dto.getCategory()));
         establishment.setImage(imageWorker.saveImage(establishment.getImage()));
-        establishment.setOwner(userRepository.findAll().get(0));
         establishment.setWorkingHours(null);
         establishment.setPhotos(null);
         return establishment;

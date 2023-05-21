@@ -24,12 +24,14 @@ import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
-import ru.nsu.fit.pak.budle.exceptions.*;
+import ru.nsu.fit.pak.budle.exceptions.ErrorWhileParsingEstablishmentMapException;
+import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
+import ru.nsu.fit.pak.budle.exceptions.EstablishmentMapDoesntExistException;
+import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
 import ru.nsu.fit.pak.budle.mapper.PhotoMapper;
 import ru.nsu.fit.pak.budle.mapper.TagMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
-import ru.nsu.fit.pak.budle.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import javax.xml.parsers.DocumentBuilder;
@@ -53,8 +55,6 @@ import java.util.stream.Stream;
 @Slf4j
 public class EstablishmentServiceImpl implements EstablishmentService {
     private final EstablishmentRepository establishmentRepository;
-
-    private final UserRepository userRepository;
     private final SpotService spotService;
 
     private final ImageService imageService;
@@ -109,6 +109,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         Establishment establishment = establishmentMapper.dtoToModel(dto);
         log.info("Establishment was converted");
 
+        establishment.setOwner(securityService.getLoggedInUser());
         saveEstablishmentData(establishment, dto);
     }
 
@@ -190,8 +191,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     public List<ResponseShortEstablishmentInfo> getEstablishmentsByOwner(Long id) {
-        User owner = userRepository.findById(id).orElseThrow(
-                UserNotFoundException::new);
+        User owner = securityService.getLoggedInUser();
 
         return establishmentMapper.toShortInfoList(
                 establishmentRepository.findAllByOwner(owner)
