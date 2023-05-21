@@ -1,6 +1,7 @@
 package ru.nsu.fit.pak.budle.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +16,7 @@ import ru.nsu.fit.pak.budle.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService, UserDetailsService {
 
 
@@ -25,13 +27,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public void registerUser(RequestUserDto requestUserDto) {
-
-        if (userRepository.existsByPhoneNumber(requestUserDto.getPhoneNumber()) || userRepository.existsByUsername(requestUserDto.getUsername())) {
+        log.info("Registering user");
+        if (userRepository.existsByPhoneNumber(
+                requestUserDto.getPhoneNumber()) ||
+                userRepository.existsByUsername(requestUserDto.getUsername())
+        ) {
+            log.warn("User already exists");
             throw new UserAlreadyExistsException();
         } else {
             User user = userMapper.dtoToModel(requestUserDto);
             user.setPassword(encoder.encode(user.getPassword()));
             userRepository.save(user);
+            log.info("Registered user");
         }
     }
 

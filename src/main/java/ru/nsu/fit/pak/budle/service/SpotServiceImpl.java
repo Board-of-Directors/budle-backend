@@ -1,8 +1,7 @@
 package ru.nsu.fit.pak.budle.service;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.DayOfWeek;
 import ru.nsu.fit.pak.budle.dao.Spot;
@@ -28,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SpotServiceImpl implements SpotService {
     private final SpotRepository spotRepository;
 
@@ -37,30 +37,27 @@ public class SpotServiceImpl implements SpotService {
 
     private final OrderRepository orderRepository;
 
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     @Override
     public List<SpotDto> getSpotsByEstablishment(Long establishmentId) {
-        logger.info("Getting spots by establishment");
-        logger.debug("EstablishmentID: " + establishmentId);
+        log.info("Getting spots by establishment");
+        log.info("EstablishmentID: " + establishmentId);
         Establishment establishment = establishmentRepository.getEstablishmentById(establishmentId);
         return spotMapper.ListModelToListDto(spotRepository.findByEstablishment(establishment));
     }
 
     @Override
     public SpotDto getSpotById(Long spotId) {
-        logger.info("Getting spot by id");
-        logger.debug("SpotID: " + spotId);
+        log.info("Getting spot by id");
+        log.info("SpotID: " + spotId);
         return spotMapper.modelToDto(spotRepository.findById(spotId)
                 .orElseThrow(() -> new SpotNotFoundException(spotId)));
     }
 
     @Override
     public void createSpot(Long localId, Long establishmentId) {
-        logger.info("Saving new spot");
-        logger.debug("LocalID: " + localId);
-        logger.debug("EstablishmentID: " + establishmentId);
+        log.info("Saving new spot");
+        log.info("LocalID: " + localId);
+        log.info("EstablishmentID: " + establishmentId);
         spotRepository.save(
                 new Spot(localId, establishmentRepository.getReferenceById(establishmentId))
         );
@@ -68,7 +65,7 @@ public class SpotServiceImpl implements SpotService {
 
     @Override
     public TimelineDto getSpotTimeline(Long localId, Long establishmentId) {
-        logger.info("Getting spot timeline");
+        log.info("Getting spot timeline");
         Establishment establishment = establishmentRepository.findById(establishmentId)
                 .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
 

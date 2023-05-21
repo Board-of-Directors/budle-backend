@@ -1,8 +1,7 @@
 package ru.nsu.fit.pak.budle.service;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -51,8 +50,8 @@ import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EstablishmentServiceImpl implements EstablishmentService {
-    private static final Logger logger = LoggerFactory.getLogger(EstablishmentServiceImpl.class);
     private final EstablishmentRepository establishmentRepository;
 
     private final UserRepository userRepository;
@@ -70,9 +69,9 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     public EstablishmentListDto getEstablishmentByParams(
             RequestGetEstablishmentParameters parameters
     ) {
-        logger.info("Getting establishment by parameters");
+        log.info("Getting establishment by parameters");
 
-        logger.debug("Parameters" + parameters);
+        log.info("Parameters" + parameters);
 
         PageRequest page = PageRequest.of(parameters.offset(), parameters.limit(),
                 Sort.by(parameters.sortValue()));
@@ -93,7 +92,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
                 ), matcher);
 
         Page<Establishment> results = establishmentRepository.findAll(exampleQuery, page);
-        logger.debug("Results was " + results);
+        log.info("Results was " + results);
         List<ResponseBasicEstablishmentInfo> establishments = establishmentMapper.modelListToDtoList(results);
         return new EstablishmentListDto(establishments, establishments.size());
     }
@@ -101,20 +100,20 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     @Override
     @Transactional
     public void createEstablishment(RequestEstablishmentDto dto) {
-        logger.info("Creating new establishment");
-        logger.info("Establishment parameters:" + dto);
+        log.info("Creating new establishment");
+        log.info("Establishment parameters:" + dto);
         checkEstablishmentExistence(dto);
-        logger.info("Establishment with name and address does not exist");
+        log.info("Establishment with name and address does not exist");
 
         Establishment establishment = establishmentMapper.dtoToModel(dto);
-        logger.info("Establishment was converted");
+        log.info("Establishment was converted");
 
         saveEstablishmentData(establishment, dto);
     }
 
     @Override
     public List<String> getCategories() {
-        logger.info("Getting categories");
+        log.info("Getting categories");
         return Arrays.stream(Category.values()).map(x -> x.value).toList();
     }
 
@@ -125,7 +124,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     public Set<PhotoDto> getPhotos(Long establishmentId) {
-        logger.info("Getting photos");
+        log.info("Getting photos");
         Establishment establishment = getEstablishmentById(establishmentId);
         return photoMapper.convertModelPhotoSetToDtoSet(establishment.getPhotos());
     }
@@ -145,7 +144,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     public void addMap(Long establishmentId, String map) {
-        logger.info("Creating map of establishment  " + establishmentId);
+        log.info("Creating map of establishment  " + establishmentId);
         Establishment establishment = getEstablishmentById(establishmentId);
         Transformer transformer;
         DOMSource source;
@@ -165,26 +164,26 @@ public class EstablishmentServiceImpl implements EstablishmentService {
             transformer.setOutputProperty(OutputKeys.METHOD, "xml");
             source = new DOMSource(document);
         } catch (Exception e) {
-            logger.warn("Map parsing was exited with exception");
-            logger.warn(e.getMessage());
+            log.warn("Map parsing was exited with exception");
+            log.warn(e.getMessage());
             throw new ErrorWhileParsingEstablishmentMapException();
         }
 
         String mapPath = "./maps" + establishmentId + ".svg";
-        logger.debug("Map path was " + mapPath);
+        log.info("Map path was " + mapPath);
 
         establishment.setMap(mapPath);
         establishment.setHasMap(true);
         establishmentRepository.save(establishment);
 
-        logger.info("Map was saved");
+        log.info("Map was saved");
 
         StreamResult result = new StreamResult(new File(mapPath));
         try {
             transformer.transform(source, result);
         } catch (Exception e) {
-            logger.warn("Transform exception");
-            logger.warn(e.getMessage());
+            log.info("Transform exception");
+            log.info(e.getMessage());
         }
     }
 
@@ -218,7 +217,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
             }
             return builder.toString();
         } catch (Exception e) {
-            logger.warn(e.getMessage());
+            log.warn(e.getMessage());
             throw new ErrorWhileParsingEstablishmentMapException();
         }
     }
@@ -270,23 +269,23 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         String address = dto.getAddress();
         String name = dto.getName();
         if (establishmentRepository.existsByAddressAndName(address, name)) {
-            logger.warn("Establishment " + name + " " + address + " already exists");
+            log.warn("Establishment " + name + " " + address + " already exists");
             throw new EstablishmentAlreadyExistsException(name, address);
         }
     }
 
     private void saveEstablishmentData(Establishment establishment, RequestEstablishmentDto dto) {
         Set<Tag> tags = tagMapper.tagDtoSetToModelSet(dto.getTags());
-        logger.info("Tags were converted");
+        log.info("Tags were converted");
         establishment.setTags(tags);
         Establishment savedEstablishment = establishmentRepository.save(establishment);
-        logger.info("Establishment was saved in db");
+        log.info("Establishment was saved in db");
         Set<RequestWorkingHoursDto> responseWorkingHoursDto = dto.getWorkingHours();
         Set<PhotoDto> photos = dto.getPhotosInput();
         workingHoursService.saveWorkingHours(responseWorkingHoursDto, savedEstablishment);
-        logger.info("Working hours was saved");
+        log.info("Working hours was saved");
         imageService.saveImages(photos, savedEstablishment);
-        logger.info("Images was saved.");
-        logger.info("Establishment save successfully");
+        log.info("Images was saved.");
+        log.info("Establishment save successfully");
     }
 }

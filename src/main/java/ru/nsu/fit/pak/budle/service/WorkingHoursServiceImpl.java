@@ -1,9 +1,8 @@
 package ru.nsu.fit.pak.budle.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.DayOfWeek;
 import ru.nsu.fit.pak.budle.dao.WorkingHours;
@@ -18,19 +17,18 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class WorkingHoursServiceImpl implements WorkingHoursService {
     private final ModelMapper mapper;
     private final WorkingHoursRepository workingHoursRepository;
 
     private final WorkingHoursMapper workingHoursMapper;
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     @Override
     public void saveWorkingHours(Set<RequestWorkingHoursDto> responseWorkingHoursDto, Establishment establishment) {
-        logger.info("Saving working hours");
+        log.info("Saving working hours");
         for (RequestWorkingHoursDto dto : responseWorkingHoursDto) {
-            logger.debug("Saving " + dto);
+            log.info("Saving " + dto);
             for (String day : dto.getDays()) {
                 WorkingHours workingHours = mapper.map(dto, WorkingHours.class);
                 workingHours.setDayOfWeek(DayOfWeek.getDayByString(day));
