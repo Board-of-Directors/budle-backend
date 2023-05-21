@@ -1,8 +1,7 @@
 package ru.nsu.fit.pak.budle.service;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.Photo;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
@@ -16,27 +15,27 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class ImageServiceImpl implements ImageService {
     private final ImageRepository imageRepository;
     private final PhotoMapper photoMapper;
-    Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     public void saveImages(Set<PhotoDto> photosDto, Establishment establishment) {
-        logger.info("Saving image");
-        logger.debug(photosDto.toString());
-        logger.debug(establishment.toString());
+        log.info("Saving image");
+        log.info(photosDto.toString());
+        log.info(establishment.toString());
         Set<Photo> photos = photoMapper.convertSetPhotoDtoToModelSet(photosDto, establishment);
         imageRepository.saveAll(photos);
-        logger.info("Images saved successfully");
+        log.info("Images saved successfully");
     }
 
     @Override
     public void deleteImages(List<String> imagesPath) {
-        logger.info("Deleting images");
+        log.info("Deleting images");
         for (String path : imagesPath) {
             File file = new File("./images/" + path);
             if (!file.delete()) {
-                logger.warn("Deleting image was false");
+                log.warn("Deleting image was false");
             }
         }
     }

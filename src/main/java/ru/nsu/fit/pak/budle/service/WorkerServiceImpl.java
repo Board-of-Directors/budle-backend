@@ -1,8 +1,7 @@
 package ru.nsu.fit.pak.budle.service;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.Worker;
@@ -22,6 +21,7 @@ import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class WorkerServiceImpl implements WorkerService {
     private final WorkerRepository workerRepository;
     private final EstablishmentService establishmentService;
@@ -30,13 +30,12 @@ public class WorkerServiceImpl implements WorkerService {
 
     private final WorkerMapper workerMapper;
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
     @Override
     public List<WorkerDto> getWorkers(Long establishmentId) {
-        logger.info("Getting workers list");
-        logger.debug("Establishment ID: " + establishmentId);
+        log.info("Getting workers list");
+        log.info("Establishment ID: " + establishmentId);
         Establishment establishment = establishmentService.getEstablishmentById(establishmentId);
         List<Worker> workerList = workerRepository.findByEstablishments(establishment);
         return workerMapper.toDtoList(workerList);
@@ -44,8 +43,8 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     public void deleteWorker(Long workerId, Long establishmentId) {
-        logger.info("Deleting worker");
-        logger.debug("Worker with ID: " + workerId);
+        log.info("Deleting worker");
+        log.info("Worker with ID: " + workerId);
         Establishment establishment = establishmentService.getEstablishmentById(establishmentId);
         Worker worker = workerRepository
                 .findByEstablishmentAndWorkerId(establishment, workerId)
@@ -71,11 +70,6 @@ public class WorkerServiceImpl implements WorkerService {
             worker.setUser(user);
         }
         workerRepository.save(worker);
-    }
-
-    private Worker getWorkerById(Long workerId) {
-        return workerRepository.findWorkerById(workerId)
-                .orElseThrow(() -> new WorkerNotFoundException(workerId));
     }
 
 

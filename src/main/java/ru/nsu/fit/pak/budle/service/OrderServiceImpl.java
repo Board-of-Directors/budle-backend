@@ -1,9 +1,8 @@
 package ru.nsu.fit.pak.budle.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
@@ -29,6 +28,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
 
@@ -52,15 +52,14 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
 
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     @Override
     public void createOrder(RequestOrderDto dto) {
-        logger.info("Creating order");
-        logger.debug(dto.toString());
+        log.info("Creating order");
+        log.info(dto.toString());
         Establishment establishment = establishmentService
                 .getEstablishmentById(dto.getEstablishmentId());
         if (!bookingTimeIsValid(establishment, dto)) {
+            log.warn("Booking time is not valid");
             throw new InvalidBookingTime();
         }
 
@@ -94,9 +93,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<ResponseOrderDto> getOrders(Long userId, Long establishmentId, Integer status) {
-        logger.info("Getting orders");
-        logger.debug("id " + userId);
-        logger.debug("establishment " + establishmentId);
+        log.info("Getting orders");
+        log.info("id " + userId);
+        log.info("establishment " + establishmentId);
 
         User user = userId == null ?
                 null : userRepository.findById(userId)
@@ -111,7 +110,7 @@ public class OrderServiceImpl implements OrderService {
         Example<Order> exampleQuery = Example.of(new Order(user, establishment, orderStatus), matcher);
         List<Order> orders = orderRepository.findAll(exampleQuery);
 
-        logger.debug("Result: " + orders);
+        log.info("Result: " + orders);
 
         return orders
                 .stream()
@@ -128,15 +127,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public void deleteOrder(Long orderId, Long userId) {
-        logger.info("Deleting order");
-        logger.debug("OrderID " + orderId + "\n" + "id " + userId);
+        log.info("Deleting order");
+        log.info("OrderID " + orderId + "\n" + "id " + userId);
 
         Order order = getOrderById(orderId);
 
         if (order.getUser().getId().equals(userId)) {
             orderRepository.delete(order);
         } else {
-            logger.warn("Not enough right for this operation");
+            log.warn("Not enough right for this operation");
             throw new NotEnoughRightsException();
         }
     }
@@ -144,7 +143,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public void setStatus(Long orderId, Long establishmentId, Integer status) {
-        logger.info("Setting order status");
+        log.info("Setting order status");
         Order order = getOrderById(orderId);
         order.setStatus(OrderStatus.getStatusByInteger(status));
         orderRepository.save(order);

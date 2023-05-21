@@ -1,6 +1,7 @@
 package ru.nsu.fit.pak.budle.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityServiceImpl implements SecurityService {
 
 
@@ -20,19 +22,27 @@ public class SecurityServiceImpl implements SecurityService {
     @Override
     public String findLoggedInUsername() {
         Object userDetails = SecurityContextHolder.getContext().getAuthentication().getDetails();
-        if (userDetails instanceof UserDetails) {
-            return ((UserDetails) userDetails).getUsername();
+        log.info(userDetails.toString());
+        if (userDetails instanceof UserDetails userDetailsWithUsername) {
+            log.info(userDetailsWithUsername.getUsername());
+            return userDetailsWithUsername.getUsername();
         }
-
+        log.warn("User details not instance of user details");
         return null;
     }
 
     @Override
     public void autoLogin(String username, String password) {
+        log.info("Auto login");
+        log.info(username);
+        log.info(password);
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         if (userDetails == null) {
+            log.warn("User details was null");
             throw new UsernameNotFoundException("User with this username does not exist");
         }
+        log.info(userDetails.toString());
+        log.info("Auto login success");
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(userDetails,
                         password,
