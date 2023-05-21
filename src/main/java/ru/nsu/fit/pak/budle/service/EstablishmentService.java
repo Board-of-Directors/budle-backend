@@ -1,13 +1,13 @@
 package ru.nsu.fit.pak.budle.service;
 
-import org.springframework.data.domain.Pageable;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
+import ru.nsu.fit.pak.budle.dto.EstablishmentListDto;
 import ru.nsu.fit.pak.budle.dto.PhotoDto;
 import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
+import ru.nsu.fit.pak.budle.dto.request.RequestGetEstablishmentParameters;
 import ru.nsu.fit.pak.budle.dto.response.ResponseSubcategoryDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
-import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
 
@@ -23,18 +23,12 @@ public interface EstablishmentService {
     /**
      * Function, that getting establishment by provided parameters.
      *
-     * @param category       - in which category we search establishment.
-     * @param hasMap         - does this establishment has a map.
-     * @param hasCardPayment - does this establishment has a card payment.
-     * @param name           - name/part of name os this establishment.
-     * @param page           - page that we need.
+     * @param parameters - request parameters (pagination, sorting, additional)
      * @return pageable list of Establishment dto.
      */
-    List<ResponseBasicEstablishmentInfo> getEstablishmentByParams(String category,
-                                                                  Boolean hasMap,
-                                                                  Boolean hasCardPayment,
-                                                                  String name,
-                                                                  Pageable page);
+    EstablishmentListDto getEstablishmentByParams(
+            RequestGetEstablishmentParameters parameters
+    );
 
     /**
      * Function that creates establishment by provided parameters.

@@ -2,8 +2,6 @@ package ru.nsu.fit.pak.budle.controller;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -45,19 +43,7 @@ public class EstablishmentController {
      */
     @GetMapping(value = "all")
     public EstablishmentListDto getEstablishments(@Valid RequestGetEstablishmentParameters parameters) {
-
-        EstablishmentListDto list = new EstablishmentListDto();
-        list.setEstablishments(
-                establishmentService.getEstablishmentByParams(
-                        parameters.category(),
-                        parameters.hasMap(),
-                        parameters.hasCardPayment(),
-                        parameters.name(),
-                        PageRequest.of(parameters.offset(), parameters.limit(),
-                                Sort.by(parameters.sortValue())
-                        )));
-        list.setCount(list.getEstablishments().size());
-        return list;
+        return establishmentService.getEstablishmentByParams(parameters);
     }
 
     @GetMapping
