@@ -4,11 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Service
 @RequiredArgsConstructor
@@ -21,9 +26,14 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public String findLoggedInUsername() {
-        Object userDetails = SecurityContextHolder.getContext().getAuthentication().getDetails();
-        log.info(userDetails.toString());
-        if (userDetails instanceof UserDetails userDetailsWithUsername) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info(authentication.toString());
+        Object info = authentication.getDetails();
+        if (info instanceof UserDetails userDetailsWithUsername) {
+            log.info(userDetailsWithUsername.getUsername());
+            return userDetailsWithUsername.getUsername();
+        }
+        if (authentication.getPrincipal() instanceof UserDetails userDetailsWithUsername) {
             log.info(userDetailsWithUsername.getUsername());
             return userDetailsWithUsername.getUsername();
         }
@@ -32,7 +42,7 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     @Override
-    public void autoLogin(String username, String password) {
+    public void autoLogin(String username, String password, HttpServletRequest request) {
         log.info("Auto login");
         log.info(username);
         log.info(password);
@@ -49,10 +59,14 @@ public class SecurityServiceImpl implements SecurityService {
                         userDetails.getAuthorities());
 
 
-        authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+        Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
         if (usernamePasswordAuthenticationToken.isAuthenticated()) {
+            SecurityContext securityContext = SecurityContextHolder.getContext();
+            securityContext.setAuthentication(authentication);
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            HttpSession session = request.getSession(true);
+            session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
         }
     }
 }

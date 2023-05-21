@@ -10,6 +10,7 @@ import ru.nsu.fit.pak.budle.service.EstablishmentService;
 import ru.nsu.fit.pak.budle.service.SecurityService;
 import ru.nsu.fit.pak.budle.service.UserServiceImpl;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -27,6 +28,8 @@ public class UserController {
 
     private final SecurityService securityService;
 
+    private final HttpServletRequest httpServletRequest;
+
 
     /**
      * Post request, that takes user information and add it to our database.
@@ -37,7 +40,10 @@ public class UserController {
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Boolean register(@RequestBody @Valid RequestUserDto requestUserDto) {
         userService.registerUser(requestUserDto);
-        securityService.autoLogin(requestUserDto.getUsername(), requestUserDto.getPassword());
+        securityService.autoLogin(
+                requestUserDto.getUsername(),
+                requestUserDto.getPassword(),
+                httpServletRequest);
         return true;
     }
 
@@ -49,7 +55,10 @@ public class UserController {
      */
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Boolean login(@RequestBody RequestUserDto requestUserDto) {
-        securityService.autoLogin(requestUserDto.getUsername(), requestUserDto.getPassword());
+        securityService.autoLogin(
+                requestUserDto.getUsername(),
+                requestUserDto.getPassword(),
+                httpServletRequest);
         return true;
     }
 
