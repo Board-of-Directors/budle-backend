@@ -59,6 +59,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     private final ImageService imageService;
     private final EstablishmentMapper establishmentMapper;
+    private final SecurityService securityService;
 
     private final WorkingHoursService workingHoursService;
     private final PhotoMapper photoMapper;
@@ -70,7 +71,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
             RequestGetEstablishmentParameters parameters
     ) {
         log.info("Getting establishment by parameters");
-
+        log.info(securityService.findLoggedInUsername());
         log.info("Parameters" + parameters);
 
         PageRequest page = PageRequest.of(parameters.offset(), parameters.limit(),
