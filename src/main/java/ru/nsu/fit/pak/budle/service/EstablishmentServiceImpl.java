@@ -71,7 +71,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
             RequestGetEstablishmentParameters parameters
     ) {
         log.info("Getting establishment by parameters");
-        log.info(securityService.findLoggedInUsername());
+        securityService.findLoggedInUsername();
         log.info("Parameters" + parameters);
 
         PageRequest page = PageRequest.of(parameters.offset(), parameters.limit(),

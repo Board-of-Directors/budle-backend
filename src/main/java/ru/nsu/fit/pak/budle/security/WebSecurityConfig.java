@@ -3,7 +3,6 @@ package ru.nsu.fit.pak.budle.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,18 +21,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
+/*
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/resources/**", "/registration").permitAll()
                 .antMatchers(HttpMethod.POST, "/user/**").permitAll()
                 .anyRequest().authenticated();
-         /*
+         */
         http.csrf().disable()
                 .authorizeRequests()
                 .anyRequest().permitAll();
 
-         */
     }
 
     @Bean

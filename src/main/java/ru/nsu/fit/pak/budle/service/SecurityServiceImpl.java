@@ -28,12 +28,8 @@ public class SecurityServiceImpl implements SecurityService {
     public String findLoggedInUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info(authentication.toString());
-        Object info = authentication.getDetails();
+        Object info = authentication.getPrincipal();
         if (info instanceof UserDetails userDetailsWithUsername) {
-            log.info(userDetailsWithUsername.getUsername());
-            return userDetailsWithUsername.getUsername();
-        }
-        if (authentication.getPrincipal() instanceof UserDetails userDetailsWithUsername) {
             log.info(userDetailsWithUsername.getUsername());
             return userDetailsWithUsername.getUsername();
         }
