@@ -17,5 +17,7 @@ public class ResponseBasicEstablishmentInfo extends ResponseShortEstablishmentIn
     private Float rating;
     private String address;
     private String image;
+    private Boolean hasMap;
+    private Boolean hasCardPayment;
 
 }
