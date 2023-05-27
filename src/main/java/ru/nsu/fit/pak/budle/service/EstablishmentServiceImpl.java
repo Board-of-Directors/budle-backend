@@ -102,7 +102,6 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     @Transactional
     public void createEstablishment(RequestEstablishmentDto dto) {
         log.info("Creating new establishment");
-        log.info("Establishment parameters:" + dto);
         checkEstablishmentExistence(dto);
         log.info("Establishment with name and address does not exist");
 
@@ -288,5 +287,8 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         imageService.saveImages(photos, savedEstablishment);
         log.info("Images was saved.");
         log.info("Establishment save successfully");
+        if (dto.getMap() != null) {
+            addMap(establishment.getId(), dto.getMap());
+        }
     }
 }
