@@ -158,7 +158,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
             for (int i = 0; i < elems.getLength(); i++) {
                 spotService.createSpot((long) i, establishmentId);
                 Element elem = (Element) elems.item(i);
-                elem.setAttribute("id", i + "");
+                elem.setAttribute("id", String.valueOf(i));
             }
 
             transformer = TransformerFactory.newInstance().newTransformer();
