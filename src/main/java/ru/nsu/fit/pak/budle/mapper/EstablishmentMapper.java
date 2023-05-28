@@ -14,7 +14,6 @@ import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstabl
 import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
 import ru.nsu.fit.pak.budle.exceptions.ErrorWhileParsingEstablishmentMapException;
-import ru.nsu.fit.pak.budle.exceptions.EstablishmentMapDoesntExistException;
 import ru.nsu.fit.pak.budle.utils.EstablishmentFactory;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
@@ -141,7 +140,7 @@ public class EstablishmentMapper {
 
     private String getMap(Establishment establishment) {
         if (!establishment.getHasMap()) {
-            throw new EstablishmentMapDoesntExistException();
+            return null;
         }
         try {
             BufferedReader mapXml = new BufferedReader(new FileReader(establishment.getMap()));
