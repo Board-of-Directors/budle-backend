@@ -2,7 +2,6 @@ package ru.nsu.fit.pak.budle.service;
 
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.EstablishmentListDto;
-import ru.nsu.fit.pak.budle.dto.PhotoDto;
 import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestGetEstablishmentParameters;
@@ -12,7 +11,6 @@ import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtended
 import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Service, that responsible for establishments.
@@ -62,14 +60,6 @@ public interface EstablishmentService {
     void addMap(Long establishmentId, String map);
 
     /**
-     * Function, that getting all the photos of the provided establishment.
-     *
-     * @param establishmentId from what establishment we need to get photos.
-     * @return set of all photos of the current establishment.
-     */
-    Set<PhotoDto> getPhotos(Long establishmentId);
-
-    /**
      * Function, that compute and return all valid time for booking process.
      *
      * @param establishmentId for what establishment we need to compute valid booking time.
@@ -100,8 +90,6 @@ public interface EstablishmentService {
     List<ResponseShortEstablishmentInfo> getEstablishmentsByOwner(Long id);
 
     ResponseSubcategoryDto getCategoryVariants(String category);
-
-    String getMap(Long establishmentId);
 
     void updateEstablishment(Long establishmentId, RequestEstablishmentDto establishmentDto);
 

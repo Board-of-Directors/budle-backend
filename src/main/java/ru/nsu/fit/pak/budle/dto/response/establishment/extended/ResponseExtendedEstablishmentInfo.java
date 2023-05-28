@@ -22,6 +22,7 @@ public class ResponseExtendedEstablishmentInfo extends ResponseBasicEstablishmen
     private Set<ResponseTagDto> tags;
     private String description;
     private Set<PhotoDto> photos;
+    private String map;
     private Set<ResponseWorkingHoursDto> workingHours;
     private String address;
 }

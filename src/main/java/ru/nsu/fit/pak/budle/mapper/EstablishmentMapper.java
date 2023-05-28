@@ -1,6 +1,7 @@
 package ru.nsu.fit.pak.budle.mapper;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -12,9 +13,13 @@ import ru.nsu.fit.pak.budle.dto.response.ResponseWorkingHoursDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
+import ru.nsu.fit.pak.budle.exceptions.ErrorWhileParsingEstablishmentMapException;
+import ru.nsu.fit.pak.budle.exceptions.EstablishmentMapDoesntExistException;
 import ru.nsu.fit.pak.budle.utils.EstablishmentFactory;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +27,7 @@ import java.util.stream.Collectors;
  * Class, that provide mapping operations for establishments.
  */
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class EstablishmentMapper {
     private final ModelMapper modelMapper;
@@ -74,6 +80,8 @@ public class EstablishmentMapper {
                 .collect(Collectors.toSet()));
 
         responseEstablishmentInfo.setImage(imageWorker.loadImage(establishment.getImage()));
+        String map = getMap(establishment);
+        responseEstablishmentInfo.setMap(map);
 
         return responseEstablishmentInfo;
 
@@ -129,5 +137,22 @@ public class EstablishmentMapper {
 
     public List<ResponseShortEstablishmentInfo> toShortInfoList(List<Establishment> establishmentList) {
         return establishmentList.stream().map(this::toShortInfo).toList();
+    }
+
+    private String getMap(Establishment establishment) {
+        if (!establishment.getHasMap()) {
+            throw new EstablishmentMapDoesntExistException();
+        }
+        try {
+            BufferedReader mapXml = new BufferedReader(new FileReader(establishment.getMap()));
+            StringBuilder builder = new StringBuilder();
+            while (mapXml.ready()) {
+                builder.append(mapXml.readLine());
+            }
+            return builder.toString();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw new ErrorWhileParsingEstablishmentMapException();
+        }
     }
 }

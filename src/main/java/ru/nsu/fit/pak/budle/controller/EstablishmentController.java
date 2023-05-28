@@ -6,8 +6,6 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.nsu.fit.pak.budle.dto.EstablishmentListDto;
-import ru.nsu.fit.pak.budle.dto.PhotoDto;
-import ru.nsu.fit.pak.budle.dto.PhotoListDto;
 import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestGetEstablishmentParameters;
@@ -20,7 +18,6 @@ import ru.nsu.fit.pak.budle.service.OrderService;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Class, that represents controller of requests, those connected with the establishment part.
@@ -108,26 +105,6 @@ public class EstablishmentController {
                        @RequestParam Long orderId,
                        @RequestParam Integer status) {
         orderService.setStatus(orderId, establishmentId, status);
-    }
-
-
-    @GetMapping(produces = MediaType.APPLICATION_XML_VALUE, value = "map")
-    public String getMap(@RequestParam Long establishmentId) {
-        return establishmentService.getMap(establishmentId);
-    }
-
-
-    /**
-     * Get request, that searching for additional photos of establishment.
-     *
-     * @param establishmentId - from what establishment we get photos.
-     * @return list of photos dto, included count of photos.
-     */
-
-    @GetMapping(value = "/images")
-    public PhotoListDto getImages(@RequestParam Long establishmentId) {
-        Set<PhotoDto> set = establishmentService.getPhotos(establishmentId);
-        return new PhotoListDto(set, set.size());
     }
 
     /**
