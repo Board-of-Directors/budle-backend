@@ -22,8 +22,6 @@ public class ImageServiceImpl implements ImageService {
 
     public void saveImages(Set<PhotoDto> photosDto, Establishment establishment) {
         log.info("Saving image");
-        log.info(photosDto.toString());
-        log.info(establishment.toString());
         Set<Photo> photos = photoMapper.convertSetPhotoDtoToModelSet(photosDto, establishment);
         imageRepository.saveAll(photos);
         log.info("Images saved successfully");
