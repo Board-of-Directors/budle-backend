@@ -3,7 +3,6 @@ package ru.nsu.fit.pak.budle.mapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.PhotoDto;
@@ -104,7 +103,7 @@ public class EstablishmentMapper {
      * @return list of establishment dto.
      */
 
-    public List<ResponseBasicEstablishmentInfo> modelListToDtoList(Page<Establishment> establishmentList) {
+    public List<ResponseBasicEstablishmentInfo> modelListToDtoList(List<Establishment> establishmentList) {
         return establishmentList
                 .stream()
                 .map(this::toBasic)

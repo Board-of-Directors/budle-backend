@@ -107,6 +107,7 @@ class EstablishmentBusinessLogicTests {
                 null,
                 null,
                 null,
+                null,
                 null)
         ).getEstablishments().isEmpty());
     }
@@ -117,6 +118,7 @@ class EstablishmentBusinessLogicTests {
         insertEstablishments();
         Assertions.assertEquals(establishmentService.getEstablishmentByParams(
                 new RequestGetEstablishmentParameters(null,
+                        null,
                         null,
                         null,
                         null,
@@ -137,6 +139,7 @@ class EstablishmentBusinessLogicTests {
                         null,
                         null,
                         null,
+                        null,
                         null)
         ).getCount(), 1);
     }
@@ -148,6 +151,7 @@ class EstablishmentBusinessLogicTests {
         insertEstablishments();
         Assertions.assertEquals(establishmentService.getEstablishmentByParams(
                 new RequestGetEstablishmentParameters(null,
+                        null,
                         null,
                         null,
                         null,
@@ -165,6 +169,7 @@ class EstablishmentBusinessLogicTests {
         Assertions.assertEquals(establishmentService.getEstablishmentByParams(
                 new RequestGetEstablishmentParameters(
                         "Red Rabbit",
+                        null,
                         null,
                         null,
                         null,

@@ -89,7 +89,10 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
         Page<Establishment> results = establishmentRepository.findAll(exampleQuery, page);
         log.info("Results was " + results);
-        List<ResponseBasicEstablishmentInfo> establishments = establishmentMapper.modelListToDtoList(results);
+        List<Establishment> processing = results.getContent().stream().filter(
+                est -> est.getWorkingHours().size() <= parameters.workingDayCount()
+        ).toList();
+        List<ResponseBasicEstablishmentInfo> establishments = establishmentMapper.modelListToDtoList(processing);
         return new EstablishmentListDto(establishments, establishments.size());
     }
 
