@@ -13,6 +13,7 @@ import ru.nsu.fit.pak.budle.mapper.WorkingHoursMapper;
 import ru.nsu.fit.pak.budle.repository.WorkingHoursRepository;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 @Service
@@ -43,7 +44,7 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
         List<ValidTimeDto> times = new ArrayList<>();
         Set<WorkingHours> workingHours = establishment.getWorkingHours();
 
-        final int DAY_COUNT = 7;
+        final int DAY_COUNT = 14;
         for (int i = 0; i < DAY_COUNT; i++) {
             LocalDate today = LocalDate.now().plusDays(i);
             ValidTimeDto currentDto = workingHoursMapper.convertFromDateAndTimeToValidTimeDto(today);
@@ -53,11 +54,22 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
                     .findFirst();
             if (currentHours.isPresent()) {
                 final int DURATION = 30;
-                List<String> currentDayTimes = workingHoursMapper.generateTimes(
-                                currentHours.get().getStartTime(),
-                                currentHours.get().getEndTime(),
-                                DURATION
-                        )
+                List<LocalTime> generatedTimes;
+                if (i == 0) {
+                    LocalTime now = LocalTime.now();
+                    generatedTimes = workingHoursMapper.generateTimes(
+                            now.plusMinutes(30 - (now.getMinute() % 30)),
+                            currentHours.get().getEndTime(),
+                            DURATION
+                    );
+                } else {
+                    generatedTimes = workingHoursMapper.generateTimes(
+                            currentHours.get().getStartTime(),
+                            currentHours.get().getEndTime(),
+                            DURATION
+                    );
+                }
+                List<String> currentDayTimes = generatedTimes
                         .stream()
                         .map(Objects::toString)
                         .toList();

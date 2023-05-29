@@ -18,7 +18,7 @@ public class WorkingHoursMapper {
         ValidTimeDto validTimeDto = new ValidTimeDto();
         validTimeDto.setMonthName(date.getMonth().getDisplayName(style, locale));
         validTimeDto.setDayName(date.getDayOfWeek().getDisplayName(style, locale));
-        validTimeDto.setDayNumber(date.getDayOfMonth() + "");
+        validTimeDto.setDayNumber(String.valueOf(date.getDayOfMonth()));
         return validTimeDto;
     }
 
