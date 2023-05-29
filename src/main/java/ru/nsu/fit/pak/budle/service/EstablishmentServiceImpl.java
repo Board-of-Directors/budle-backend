@@ -158,7 +158,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
             throw new ErrorWhileParsingEstablishmentMapException();
         }
 
-        String mapPath = "./maps" + establishmentId + ".svg";
+        String mapPath = "./images/" + establishmentId + ".svg";
         log.info("Map path was " + mapPath);
 
         establishment.setMap(mapPath);
