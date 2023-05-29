@@ -26,6 +26,7 @@ import java.util.Iterator;
  */
 @Component
 public class ImageWorker {
+    private final static String IMAGE_PATH_PREFIX = "./images/";
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     /**
@@ -36,7 +37,7 @@ public class ImageWorker {
      */
     public String saveImage(String imageContent) {
         String databaseFilepath = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + ".jpg";
-        String saveFilepath = "./images/" + databaseFilepath;
+        String saveFilepath = IMAGE_PATH_PREFIX + databaseFilepath;
         try {
             File file = new File(saveFilepath);
             byte[] imageBytes = Base64.getDecoder().decode(imageContent);
@@ -95,7 +96,7 @@ public class ImageWorker {
 
     public String loadImage(String imageName) {
         try {
-            File inputFile = new File("./images/" + imageName);
+            File inputFile = new File(IMAGE_PATH_PREFIX + imageName);
             byte[] fileContent = FileUtils.readFileToByteArray(inputFile);
             return Base64.getEncoder().encodeToString(fileContent);
         } catch (Exception e) {
@@ -112,9 +113,14 @@ public class ImageWorker {
      * @return Base64 encoded content of the image.
      */
     public String getImageFromResource(String imageName) {
-        try (InputStream stream = this.getClass().getClassLoader().getResourceAsStream("images/" + imageName)) {
+        try (InputStream stream = this.getClass().getClassLoader().getResourceAsStream(IMAGE_PATH_PREFIX + imageName)) {
             if (stream != null) {
-                return Base64.getEncoder().encodeToString(stream.readAllBytes());
+                StringBuilder builder = new StringBuilder();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+                while (reader.ready()) {
+                    builder.append(reader.readLine());
+                }
+                return builder.toString();
             }
         } catch (IOException e) {
             logger.warn(e.getMessage());

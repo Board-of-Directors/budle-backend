@@ -94,6 +94,11 @@ public class EstablishmentController {
         return establishmentService.getTags();
     }
 
+    @GetMapping(value = "/  tagImage", produces = MediaType.APPLICATION_XML_VALUE)
+    public String tagImage(@RequestParam String tagName) {
+        return establishmentService.getTagByName(tagName);
+    }
+
     /**
      * Put request, that accepted order by worker of establishment.
      *

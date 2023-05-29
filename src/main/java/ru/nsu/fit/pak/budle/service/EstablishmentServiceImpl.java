@@ -216,6 +216,11 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         establishmentRepository.delete(establishment);
     }
 
+    @Override
+    public String getTagByName(String tagName) {
+        return tagMapper.modelToTagDto(Tag.parseEnum(tagName)).getImage();
+    }
+
     private void deleteEstablishmentPhotos(Establishment establishment) {
         Stream<String> paths = Stream.empty();
         if (!establishment.getPhotos().isEmpty()) {

@@ -94,4 +94,6 @@ public interface EstablishmentService {
     void updateEstablishment(Long establishmentId, RequestEstablishmentDto establishmentDto);
 
     void deleteEstablishment(Long establishmentId);
+
+    String getTagByName(String tagName);
 }
