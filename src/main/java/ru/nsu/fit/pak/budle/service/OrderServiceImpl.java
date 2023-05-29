@@ -122,26 +122,18 @@ public class OrderServiceImpl implements OrderService {
         User user = securityService.getLoggedInUser();
         Establishment establishment = establishmentRepository.findById(establishmentId)
                 .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
+        userIsStuff(user, establishment);
 
-        if (establishment.getWorkers().stream()
-                .map(Worker::getUser)
-                .map(User::getId)
-                .toList().contains(user.getId())) {
-
-            return establishment
-                    .getOrders()
-                    .stream()
-                    .map(order -> {
-                                ResponseOrderDto responseOrderDto = modelMapper.map(order, ResponseOrderDto.class);
-                                responseOrderDto.setUsername(order.getUser().getUsername());
-                                return responseOrderDto;
-                            }
-                    )
-                    .toList();
-
-        } else {
-            throw new NotEnoughRightsException();
-        }
+        return establishment
+                .getOrders()
+                .stream()
+                .map(order -> {
+                            ResponseOrderDto responseOrderDto = modelMapper.map(order, ResponseOrderDto.class);
+                            responseOrderDto.setUsername(order.getUser().getUsername());
+                            return responseOrderDto;
+                        }
+                )
+                .toList();
 
 
     }
@@ -166,6 +158,10 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void setStatus(Long orderId, Long establishmentId, Integer status) {
         log.info("Setting order status");
+        Establishment establishment = establishmentRepository.findById(establishmentId)
+                .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
+        User user = securityService.getLoggedInUser();
+        userIsStuff(user, establishment);
         Order order = getOrderById(orderId);
         order.setStatus(OrderStatus.getStatusByInteger(status));
         orderRepository.save(order);
@@ -175,6 +171,20 @@ public class OrderServiceImpl implements OrderService {
     private Order getOrderById(Long orderId) {
         return orderRepository.findById(orderId).orElseThrow(() ->
                 new OrderNotFoundException(orderId));
+    }
+
+    private void userIsStuff(User user, Establishment establishment) {
+        if (establishment.getWorkers()
+                .stream()
+                .map(Worker::getUser)
+                .map(User::getId)
+                .toList()
+                .contains(user.getId()) ||
+                Objects.equals(establishment.getOwner().getId(), user.getId())) {
+        } else {
+            throw new NotEnoughRightsException();
+        }
+
     }
 
 }
