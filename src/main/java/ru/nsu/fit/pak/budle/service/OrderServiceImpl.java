@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.Order;
 import ru.nsu.fit.pak.budle.dao.OrderStatus;
 import ru.nsu.fit.pak.budle.dao.User;
+import ru.nsu.fit.pak.budle.dao.Worker;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestOrderDto;
@@ -92,20 +93,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<ResponseOrderDto> getOrders(Long userId, Long establishmentId, Integer status) {
-        log.info("Getting orders");
-        log.info("id " + userId);
-        log.info("establishment " + establishmentId);
-
+    public List<ResponseOrderDto> getUserOrders(Integer status) {
+        log.info("Getting user orders");
         User user = securityService.getLoggedInUser();
-
-        Establishment establishment = establishmentId == null ?
-                null : establishmentRepository.findById(establishmentId)
-                .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
 
         OrderStatus orderStatus = status == null ? null : OrderStatus.getStatusByInteger(status);
         ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues();
-        Example<Order> exampleQuery = Example.of(new Order(user, establishment, orderStatus), matcher);
+        Example<Order> exampleQuery = Example.of(new Order(user, orderStatus), matcher);
         List<Order> orders = orderRepository.findAll(exampleQuery);
 
         log.info("Result: " + orders);
@@ -116,10 +110,40 @@ public class OrderServiceImpl implements OrderService {
                     Establishment establishmentSource = order.getEstablishment();
                     ResponseOrderDto responseOrderDto = modelMapper.map(order, ResponseOrderDto.class);
                     responseOrderDto.setEstablishment(establishmentMapper.toBasic(establishmentSource));
-                    responseOrderDto.setUserId(order.getUser().getId());
+                    responseOrderDto.setUsername(order.getUser().getUsername());
                     return responseOrderDto;
                 })
                 .toList();
+    }
+
+    @Override
+    public List<ResponseOrderDto> getEstablishmentOrders(Long establishmentId, Integer status) {
+        log.info("Get establishment orders");
+        User user = securityService.getLoggedInUser();
+        Establishment establishment = establishmentRepository.findById(establishmentId)
+                .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
+
+        if (establishment.getWorkers().stream()
+                .map(Worker::getUser)
+                .map(User::getId)
+                .toList().contains(user.getId())) {
+
+            return establishment
+                    .getOrders()
+                    .stream()
+                    .map(order -> {
+                                ResponseOrderDto responseOrderDto = modelMapper.map(order, ResponseOrderDto.class);
+                                responseOrderDto.setUsername(order.getUser().getUsername());
+                                return responseOrderDto;
+                            }
+                    )
+                    .toList();
+
+        } else {
+            throw new NotEnoughRightsException();
+        }
+
+
     }
 
     @Override

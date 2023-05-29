@@ -21,5 +21,5 @@ public class ResponseOrderDto {
     private Time endTime;
     private Integer status;
     private ResponseBasicEstablishmentInfo establishment;
-    private Long userId;
+    private String username;
 }

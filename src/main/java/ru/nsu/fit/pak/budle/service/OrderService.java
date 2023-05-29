@@ -24,7 +24,9 @@ public interface OrderService {
      * @return list of order dto.
      */
 
-    List<ResponseOrderDto> getOrders(Long userId, Long establishmentId, Integer status);
+    List<ResponseOrderDto> getUserOrders(Integer status);
+
+    List<ResponseOrderDto> getEstablishmentOrders(Long establishmentId, Integer status);
 
     /**
      * @param orderId what order we need to delete.

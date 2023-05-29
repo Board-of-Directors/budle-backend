@@ -43,4 +43,9 @@ public class Order {
         this.status = status;
     }
 
+    public Order(User user, OrderStatus status) {
+        this.user = user;
+        this.status = status;
+    }
+
 }

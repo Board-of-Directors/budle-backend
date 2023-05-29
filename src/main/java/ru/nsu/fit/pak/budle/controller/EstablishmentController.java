@@ -81,7 +81,7 @@ public class EstablishmentController {
     @GetMapping(value = "/order")
     public List<ResponseOrderDto> orders(@RequestParam Long establishmentId,
                                          @RequestParam(required = false) Integer status) {
-        return orderService.getOrders(null, establishmentId, status);
+        return orderService.getEstablishmentOrders(establishmentId, status);
     }
 
     /**
