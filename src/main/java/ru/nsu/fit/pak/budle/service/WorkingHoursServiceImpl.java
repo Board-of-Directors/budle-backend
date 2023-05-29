@@ -28,15 +28,20 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
     @Override
     public void saveWorkingHours(Set<RequestWorkingHoursDto> responseWorkingHoursDto, Establishment establishment) {
         log.info("Saving working hours");
+        Map<String, WorkingHours> workingHoursMap = new HashMap<>();
         for (RequestWorkingHoursDto dto : responseWorkingHoursDto) {
             log.info("Saving " + dto);
             for (String day : dto.getDays()) {
                 WorkingHours workingHours = mapper.map(dto, WorkingHours.class);
                 workingHours.setDayOfWeek(DayOfWeek.getDayByString(day));
                 workingHours.setEstablishment(establishment);
-                workingHoursRepository.save(workingHours);
+                workingHoursMap.put(
+                        workingHours.getDayOfWeek().getTranslate(),
+                        workingHours
+                );
             }
         }
+        workingHoursRepository.saveAll(workingHoursMap.values());
     }
 
 
