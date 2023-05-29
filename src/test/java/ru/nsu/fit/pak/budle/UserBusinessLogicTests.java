@@ -9,9 +9,9 @@ import ru.nsu.fit.pak.budle.controller.UserController;
 import ru.nsu.fit.pak.budle.dao.Code;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dto.request.RequestUserDto;
-import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectPhoneNumberFormatException;
 import ru.nsu.fit.pak.budle.exceptions.UserAlreadyExistsException;
+import ru.nsu.fit.pak.budle.exceptions.VerificationCodeWasFalseException;
 import ru.nsu.fit.pak.budle.repository.CodeRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.service.CodeService;
@@ -81,7 +81,7 @@ class UserBusinessLogicTests {
     @Test
     @Transactional
     public void checkingNonExistedCode_MustThrownException() {
-        Assertions.assertThrows(IncorrectDataException.class,
+        Assertions.assertThrows(VerificationCodeWasFalseException.class,
                 () -> codeService.checkCode("+79833211199", "1234"));
     }
 

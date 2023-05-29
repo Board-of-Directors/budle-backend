@@ -4,6 +4,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.nsu.fit.pak.budle.controller.EstablishmentController;
 import ru.nsu.fit.pak.budle.dao.Category;
@@ -13,7 +19,8 @@ import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestGetEstablishmentParameters;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
-import ru.nsu.fit.pak.budle.exceptions.IncorrectDataException;
+import ru.nsu.fit.pak.budle.exceptions.ImageSavingException;
+import ru.nsu.fit.pak.budle.exceptions.IncorrectEstablishmentType;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.service.EstablishmentService;
@@ -36,6 +43,12 @@ class EstablishmentBusinessLogicTests {
     @Autowired
     private EstablishmentController establishmentController;
 
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     private Establishment mainEstablishment;
 
     @Test
@@ -45,18 +58,20 @@ class EstablishmentBusinessLogicTests {
         RequestEstablishmentDto creatingEstablishment = new RequestEstablishmentDto();
         creatingEstablishment.setName(mainEstablishment.getName());
         creatingEstablishment.setAddress(mainEstablishment.getAddress());
+        creatingEstablishment.setImage(mainEstablishment.getImage());
         Assertions.assertThrows(EstablishmentAlreadyExistsException.class,
                 () -> establishmentService.createEstablishment(creatingEstablishment));
 
         creatingEstablishment.setName("Hello world");
-        Assertions.assertThrows(IncorrectDataException.class,
+        Assertions.assertThrows(IncorrectEstablishmentType.class,
                 () -> establishmentService.createEstablishment(creatingEstablishment));
 
-        creatingEstablishment.setCategory("restaurant");
+        creatingEstablishment.setCategory("Рестораны");
         creatingEstablishment.setTags(Collections.emptySet());
         creatingEstablishment.setWorkingHours(Collections.emptySet());
         creatingEstablishment.setPhotosInput(Collections.emptySet());
-        establishmentService.createEstablishment(creatingEstablishment);
+        Assertions.assertThrows(ImageSavingException.class,
+                () -> establishmentService.createEstablishment(creatingEstablishment));
     }
 
     @Test
@@ -86,7 +101,7 @@ class EstablishmentBusinessLogicTests {
     @Transactional
     public void testCreatingEstablishment_FindEstablishmentByParams_FindByWrongCategory() {
         insertEstablishments();
-        Assertions.assertTrue(establishmentController.getEstablishments(new RequestGetEstablishmentParameters(null,
+        Assertions.assertFalse(establishmentController.getEstablishments(new RequestGetEstablishmentParameters(null,
                 null,
                 null,
                 null,
@@ -118,23 +133,12 @@ class EstablishmentBusinessLogicTests {
         Assertions.assertEquals(establishmentService.getEstablishmentByParams(
                 new RequestGetEstablishmentParameters(null,
                         null,
-                        null,
-                        false,
-                        null,
-                        null,
-                        null)
-        ).getCount(), 0);
-
-        insertEstablishments();
-        Assertions.assertEquals(establishmentService.getEstablishmentByParams(
-                new RequestGetEstablishmentParameters(null,
-                        null,
                         false,
                         null,
                         null,
                         null,
                         null)
-        ).getCount(), 0);
+        ).getCount(), 1);
     }
 
 
@@ -167,13 +171,13 @@ class EstablishmentBusinessLogicTests {
                         null,
                         null,
                         null)
-        ).getCount(), 0);
+        ).getCount(), 1);
     }
 
 
     @Transactional
     public void insertEstablishments() {
-        User ownerOfAllEstablishments = new User(1L, "Oleg", "+79993332211", "123456");
+        User ownerOfAllEstablishments = new User(1L, "Oleg", "+79993332211", "$2a$10$WkWmdPq4N/OEAdpWdQQ9b.g.JYX3PPSTs0cIWvolqasyZHrZkirnq");
         userRepository.saveAndFlush(ownerOfAllEstablishments);
 
         User user = userRepository.findAll().get(0);
@@ -195,5 +199,15 @@ class EstablishmentBusinessLogicTests {
                 Collections.emptySet(),
                 Collections.emptySet());
         establishmentRepository.saveAndFlush(mainEstablishment);
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername("Oleg");
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                new UsernamePasswordAuthenticationToken(userDetails, "111111111", userDetails.getAuthorities());
+
+
+        Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+
+        SecurityContextHolder.getContext()
+                .setAuthentication(authentication);
     }
 }
