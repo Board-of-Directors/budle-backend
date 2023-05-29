@@ -73,8 +73,11 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
                         .stream()
                         .map(Objects::toString)
                         .toList();
-                currentDto.setTimes(currentDayTimes);
-                times.add(currentDto);
+
+                if (!currentDayTimes.isEmpty()) {
+                    currentDto.setTimes(currentDayTimes);
+                    times.add(currentDto);
+                }
             }
         }
         return times;
