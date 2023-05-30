@@ -8,6 +8,7 @@ import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseWorkingHoursDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
 
+import java.util.List;
 import java.util.Set;
 
 @JsonSubTypes({
@@ -23,6 +24,6 @@ public class ResponseExtendedEstablishmentInfo extends ResponseBasicEstablishmen
     private String description;
     private Set<PhotoDto> photos;
     private String map;
-    private Set<ResponseWorkingHoursDto> workingHours;
+    private List<ResponseWorkingHoursDto> workingHours;
     private String address;
 }

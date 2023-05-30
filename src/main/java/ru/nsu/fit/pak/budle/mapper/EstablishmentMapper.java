@@ -18,6 +18,7 @@ import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,12 +59,13 @@ public class EstablishmentMapper {
         responseEstablishmentInfo.setWorkingHours(establishment
                 .getWorkingHours()
                 .stream()
+                .sorted(Comparator.comparing(o -> o.getDayOfWeek().getOrdinal()))
                 .map(x -> {
                     ResponseWorkingHoursDto dto = modelMapper.map(x, ResponseWorkingHoursDto.class);
                     dto.setDayOfWeek(x.getDayOfWeek().getTranslate());
                     return dto;
                 })
-                .collect(Collectors.toSet()));
+                .collect(Collectors.toList()));
 
         responseEstablishmentInfo.setTags(establishment
                 .getTags()

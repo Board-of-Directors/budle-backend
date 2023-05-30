@@ -49,6 +49,10 @@ public enum DayOfWeek {
         throw new IncorrectDayOfWeekException();
     }
 
+    public Integer getOrdinal() {
+        return ordinal;
+    }
+
     public String getTranslate() {
         return translate;
     }
