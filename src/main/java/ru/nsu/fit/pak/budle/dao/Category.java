@@ -8,8 +8,8 @@ import ru.nsu.fit.pak.budle.exceptions.IncorrectCategoryException;
 import java.util.Arrays;
 
 public enum Category {
-    restaurant("Рестораны", new ResponseSubcategoryDto(CuisineCountry.getVariants(), "тип кухни", "cuisineCountry")),
-    hotel("Отели", new ResponseSubcategoryDto(HotelStars.getVariants(), "количество звезд", "starsCount")),
+    restaurant("Рестораны", new ResponseSubcategoryDto(CuisineCountry.getVariants(), "Тип кухни", "cuisineCountry")),
+    hotel("Отели", new ResponseSubcategoryDto(HotelStars.getVariants(), "Количество звезд", "starsCount")),
     game_club("Игровые клубы", new ResponseSubcategoryDto()),
     barbershop("Парикмахерские", new ResponseSubcategoryDto());
 

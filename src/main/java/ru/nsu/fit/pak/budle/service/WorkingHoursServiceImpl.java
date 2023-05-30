@@ -62,11 +62,11 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
             if (currentHours.isPresent()) {
                 final int DURATION = 30;
                 List<LocalTime> generatedTimes;
-                if (i == 0) {
-                    ZoneId zone = ZoneId.of("Asia/Novosibirsk");
-                    LocalTime now = LocalTime.from(ZonedDateTime.now(zone));
-                    now = now.minusSeconds(now.getSecond());
-                    now = now.minusNanos(now.getNano());
+                ZoneId zone = ZoneId.of("Asia/Novosibirsk");
+                LocalTime now = LocalTime.from(ZonedDateTime.now(zone));
+                now = now.minusSeconds(now.getSecond());
+                now = now.minusNanos(now.getNano());
+                if (i == 0 && now.isAfter(currentHours.get().getStartTime())) {
                     generatedTimes = workingHoursMapper.generateTimes(
                             now.plusMinutes(30 - (now.getMinute() % 30)),
                             currentHours.get().getEndTime(),
