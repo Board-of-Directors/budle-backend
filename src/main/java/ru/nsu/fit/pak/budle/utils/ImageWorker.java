@@ -26,7 +26,9 @@ import java.util.Iterator;
  */
 @Component
 public class ImageWorker {
-    private final static String IMAGE_PATH_PREFIX = "./images/";
+    private final static String SERVER_PATH = "./images";
+
+    private final static String IMAGE_PATH_PREFIX = SERVER_PATH + '/';
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     /**
@@ -113,7 +115,7 @@ public class ImageWorker {
      * @return Base64 encoded content of the image.
      */
     public String getImageFromResource(String imageName) {
-        try (InputStream stream = this.getClass().getClassLoader().getResourceAsStream(IMAGE_PATH_PREFIX + imageName)) {
+        try (InputStream stream = this.getClass().getClassLoader().getResourceAsStream(SERVER_PATH + imageName)) {
             if (stream != null) {
                 StringBuilder builder = new StringBuilder();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
