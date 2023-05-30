@@ -14,6 +14,8 @@ import ru.nsu.fit.pak.budle.repository.WorkingHoursRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @Service
@@ -61,7 +63,10 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
                 final int DURATION = 30;
                 List<LocalTime> generatedTimes;
                 if (i == 0) {
-                    LocalTime now = LocalTime.now();
+                    ZoneId zone = ZoneId.of("Asia/Novosibirsk");
+                    LocalTime now = LocalTime.from(ZonedDateTime.now(zone));
+                    now = now.minusSeconds(now.getSecond());
+                    now = now.minusNanos(now.getNano());
                     generatedTimes = workingHoursMapper.generateTimes(
                             now.plusMinutes(30 - (now.getMinute() % 30)),
                             currentHours.get().getEndTime(),
