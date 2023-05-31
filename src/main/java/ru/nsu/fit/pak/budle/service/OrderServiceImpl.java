@@ -129,7 +129,13 @@ public class OrderServiceImpl implements OrderService {
         return establishment
                 .getOrders()
                 .stream()
-                .filter(order -> order.getStatus().getStatus() == status)
+                .filter(order -> {
+                    if (status == null) {
+                        return true;
+                    } else {
+                        return Objects.equals(order.getStatus().getStatus(), status);
+                    }
+                })
                 .map(order -> {
                             ResponseOrderDto responseOrderDto = modelMapper.map(order, ResponseOrderDto.class);
                             responseOrderDto.setUsername(order.getUser().getUsername());
