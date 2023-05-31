@@ -26,7 +26,7 @@ public class RequestSender {
 
         String requestString = "https://api.ucaller.ru/v1.0/initCall?" +
                 "phone=" + phoneNumber +
-                "&voice=" + "true" +
+                "&voice=" + "false" +
                 "&key=1vvjxSFMby9xJx783gk31AT7UDPEHBdI" +
                 "&service_id=317622";
 
