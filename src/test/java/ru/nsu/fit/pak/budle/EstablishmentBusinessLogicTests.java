@@ -1,16 +1,15 @@
 package ru.nsu.fit.pak.budle;
 
+import com.github.springtestdbunit.annotation.DatabaseSetup;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.nsu.fit.pak.budle.controller.EstablishmentController;
 import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Tag;
@@ -29,9 +28,8 @@ import javax.transaction.Transactional;
 import java.util.Collections;
 
 
-@SpringBootTest(classes = BudleApplication.class)
-@Testcontainers
-class EstablishmentBusinessLogicTests {
+@DatabaseSetup(value = "/establishment/before/establishment.xml")
+class EstablishmentBusinessLogicTests extends AbstractContextualTest{
 
     @Autowired
     private EstablishmentService establishmentService;
@@ -52,9 +50,7 @@ class EstablishmentBusinessLogicTests {
     private Establishment mainEstablishment;
 
     @Test
-    @Transactional
     public void testCreatingEstablishment_creatingExistingEstablishment() {
-        insertEstablishments();
         RequestEstablishmentDto creatingEstablishment = new RequestEstablishmentDto();
         creatingEstablishment.setName(mainEstablishment.getName());
         creatingEstablishment.setAddress(mainEstablishment.getAddress());

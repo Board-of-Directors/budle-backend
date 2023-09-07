@@ -13,6 +13,7 @@ import java.sql.Time;
 @Entity
 @Data
 @Table(name = "orders")
+@DiscriminatorValue(value = "order")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Order {
