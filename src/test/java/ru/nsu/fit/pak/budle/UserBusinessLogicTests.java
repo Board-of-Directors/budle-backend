@@ -1,15 +1,10 @@
 package ru.nsu.fit.pak.budle;
 
-import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import ru.nsu.fit.pak.budle.controller.UserController;
 import ru.nsu.fit.pak.budle.dao.Code;
 import ru.nsu.fit.pak.budle.dto.request.RequestUserDto;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectPhoneNumberFormatException;
@@ -21,7 +16,8 @@ import ru.nsu.fit.pak.budle.service.CodeService;
 import ru.nsu.fit.pak.budle.service.UserService;
 
 @DatabaseSetup(value = "/user/before/users.xml")
-class UserBusinessLogicTests extends AbstractContextualTest{
+@DisplayName("Тесты на пользовательскую бизнес-логику")
+class UserBusinessLogicTests extends AbstractContextualTest {
 
     @Autowired
     private UserService userService;
@@ -34,10 +30,8 @@ class UserBusinessLogicTests extends AbstractContextualTest{
     @Autowired
     private CodeRepository codeRepository;
 
-    @Autowired
-    private UserController userController;
-
     @Test
+    @DisplayName("Создание пользователя с существующим именем")
     public void testUserService_tryToRegisterUserWithExistingUsername() {
         RequestUserDto dto = new RequestUserDto("3111", "Oleg", "+79321312213");
         Assertions.assertThrows(UserAlreadyExistsException.class, () -> userService.registerUser(dto));
@@ -45,29 +39,14 @@ class UserBusinessLogicTests extends AbstractContextualTest{
     }
 
     @Test
+    @DisplayName("Создание пользователя с существующим номером телефона")
     public void testUserService_tryToRegisterUserWithExistingNumber() {
         RequestUserDto dto = new RequestUserDto("3111", "Kerkey", "+7932131231");
         Assertions.assertThrows(UserAlreadyExistsException.class, () -> userService.registerUser(dto));
     }
 
-  /*  @Test
-    public void testUserService_tryToRegisterUserWithDoesntExistingNumberAndUsername() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setParameter("firstName", "Spring");
-        request.setParameter("lastName", "Test");
-        int oldSize = userRepository.findAll().size();
-        RequestUserDto dto = new RequestUserDto("3111", "Kerkey", "+7932131239");
-        userController.register(dto);
-        Assertions.assertEquals(userRepository.findAll().size(), oldSize + 1);
-
-        Assertions.assertTrue(userController.login(dto));
-
-        // Assertions.assertEquals(securityService.findLoggedInUsername(),  dto.getUsername());
-    }
-
-   */
-
     @Test
+    @DisplayName("Успешное создание и проверка кода доступа")
     public void testCreatingCodeForUser_AfterThatCheckingThisCode_MustBeTrue() {
         codeService.generateCode("+79833219999");
         Code code = codeRepository.findAll().get(0);
@@ -75,6 +54,7 @@ class UserBusinessLogicTests extends AbstractContextualTest{
     }
 
     @Test
+    @DisplayName("Попытка проверить несуществующий код доступа")
     public void checkingNonExistedCode_MustThrownException() {
         Assertions.assertThrows(
             VerificationCodeWasFalseException.class,
@@ -83,6 +63,7 @@ class UserBusinessLogicTests extends AbstractContextualTest{
     }
 
     @Test
+    @DisplayName("Попытка сгенерировать код с неверным номером телефона")
     public void tryToRequestWithIncorrectNumberFormat_MustBeAnException() {
         Assertions.assertThrows(
             IncorrectPhoneNumberFormatException.class,
@@ -91,6 +72,7 @@ class UserBusinessLogicTests extends AbstractContextualTest{
     }
 
     @Test
+    @DisplayName("Попытка сгенерировать код для существующего в базе номера телефона")
     public void creatingCodeForExistedUser_MustBeException() {
         Assertions.assertThrows(
             UserAlreadyExistsException.class,
