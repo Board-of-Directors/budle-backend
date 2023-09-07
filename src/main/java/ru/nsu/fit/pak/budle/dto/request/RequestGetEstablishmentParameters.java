@@ -1,10 +1,12 @@
 package ru.nsu.fit.pak.budle.dto.request;
 
+import lombok.Builder;
 import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+@Builder
 public record RequestGetEstablishmentParameters(@Nullable String name,
                                                 @Nullable String category,
                                                 @Nullable Boolean hasMap,
