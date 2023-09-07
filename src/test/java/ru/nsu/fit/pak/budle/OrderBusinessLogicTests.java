@@ -2,12 +2,9 @@ package ru.nsu.fit.pak.budle;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import ru.nsu.fit.pak.budle.controller.EstablishmentController;
 import ru.nsu.fit.pak.budle.controller.OrderController;
 import ru.nsu.fit.pak.budle.dao.*;
@@ -20,6 +17,7 @@ import ru.nsu.fit.pak.budle.service.OrderService;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@DisplayName("Тесты логики работы с заказами")
 class OrderBusinessLogicTests extends AbstractContextualTest {
 
     private static final Long GUEST_ID = 3L;
@@ -47,6 +45,7 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
 
     @Test
     @DatabaseSetup(value = "/establishment/before/establishment.xml")
+    @DisplayName("Тест на успешное создание заказа")
     public void testOrder_creatingOrder() {
         User guest = userRepository.findById(GUEST_ID).orElseThrow();
         mockUser(guest);
@@ -66,6 +65,7 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
 
     @Test
     @DatabaseSetup(value = "/establishment/before/establishment_with_order.xml")
+    @DisplayName("Тест на смену статуса заказа")
     public void testOrder_acceptingAndRejectingOrder() {
         User owner = userRepository.findById(OWNER_ID).orElseThrow();
         mockUser(owner);
@@ -87,19 +87,12 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
     }
 
     @Test
+    @DisplayName("Получение несуществующего заказа")
     public void tryToGetNonExistedOrder_mustBeThrownException() {
         Assertions.assertThrows(
             EstablishmentNotFoundException.class,
             () -> orderService.setStatus(111L, 22L, OrderStatus.ACCEPTED.getStatus())
         );
-    }
-
-    private void mockUser(User user) {
-        Authentication authentication = Mockito.mock(Authentication.class);
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-        Mockito.when(authentication.getPrincipal()).thenReturn(user);
-        SecurityContextHolder.setContext(securityContext);
     }
 
 }
