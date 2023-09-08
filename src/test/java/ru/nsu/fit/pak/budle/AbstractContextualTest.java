@@ -2,8 +2,12 @@ package ru.nsu.fit.pak.budle;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.TransactionDbUnitTestExecutionListener;
+import com.github.springtestdbunit.annotation.DatabaseOperation;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
+import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import com.github.springtestdbunit.dataset.ReplacementDataSetLoader;
+import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
@@ -21,7 +25,9 @@ import ru.nsu.fit.pak.budle.dao.User;
     TransactionDbUnitTestExecutionListener.class,
 })
 @Testcontainers
+@DatabaseTearDown(value = "/empty.xml")
 public class AbstractContextualTest {
+
     protected void mockUser(User user) {
         Authentication authentication = Mockito.mock(Authentication.class);
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
