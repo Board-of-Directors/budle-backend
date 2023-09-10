@@ -18,6 +18,10 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.nsu.fit.pak.budle.dao.User;
 
+import static org.junit.jupiter.params.ParameterizedTest.INDEX_PLACEHOLDER;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 @SpringBootTest(classes = BudleApplication.class)
 @TestExecutionListeners({
     DependencyInjectionTestExecutionListener.class,
@@ -27,12 +31,13 @@ import ru.nsu.fit.pak.budle.dao.User;
 @Testcontainers
 @DatabaseTearDown(value = "/empty.xml")
 public class AbstractContextualTest {
+    protected static final String TUPLE_PARAMETERIZED_DISPLAY_NAME = "[" + INDEX_PLACEHOLDER + "] {0}";
 
     protected void mockUser(User user) {
-        Authentication authentication = Mockito.mock(Authentication.class);
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-        Mockito.when(authentication.getPrincipal()).thenReturn(user);
+        Authentication authentication = mock(Authentication.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn(user);
         SecurityContextHolder.setContext(securityContext);
     }
 }
