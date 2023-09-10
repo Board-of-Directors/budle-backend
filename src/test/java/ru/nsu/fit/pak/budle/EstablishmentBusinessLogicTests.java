@@ -1,16 +1,23 @@
 package ru.nsu.fit.pak.budle;
 
+import java.util.stream.Stream;
+
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import ru.nsu.fit.pak.budle.controller.EstablishmentController;
 import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.Tag;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
+import ru.nsu.fit.pak.budle.dto.EstablishmentListDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestGetEstablishmentParameters;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
@@ -21,6 +28,9 @@ import ru.nsu.fit.pak.budle.service.EstablishmentService;
 class EstablishmentBusinessLogicTests extends AbstractContextualTest {
 
     private static final Long USER_ID = 200L;
+
+    private static final Integer ONLY_ONE = 1;
+    private static final Integer NOTHING = 0;
 
     @BeforeEach
     public void makeMock() {
@@ -59,43 +69,58 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
         establishmentService.addMap(establishment.getId(), addedMap);
     }
 
-    @Test
-    @DisplayName("Поиск заведения по неверной категории")
-    public void testCreatingEstablishment_FindEstablishmentByParams_FindByWrongCategory() {
-        Assertions.assertFalse(establishmentController.getEstablishments(
-            RequestGetEstablishmentParameters.builder().build()
-        ).getEstablishments().isEmpty());
+    @MethodSource
+    @ParameterizedTest(name = TUPLE_PARAMETERIZED_DISPLAY_NAME)
+    @SuppressWarnings("unused")
+    public void search(
+        String testName,
+        RequestGetEstablishmentParameters parameters,
+        Integer expectedResponseCount
+    ) {
+        EstablishmentListDto establishmentListDto = establishmentService.getEstablishmentByParams(parameters);
+        Assertions.assertEquals(expectedResponseCount, establishmentListDto.getCount());
+
     }
 
-    @Test
-    @DisplayName("Поиска заведения по правильной категории")
-    public void testCreatingEstablishment_FindEstablishmentByParams_FindByRightCategory() {
-        Assertions.assertEquals(establishmentService.getEstablishmentByParams(
-            RequestGetEstablishmentParameters.builder().build()
-        ).getCount(), 1);
+    @NonNull
+    public static Stream<Arguments> search() {
+        return Stream.of(
+            Arguments.of(
+                "По пустому фильтру",
+                RequestGetEstablishmentParameters.builder().build(),
+                ONLY_ONE
+            ),
+            Arguments.of(
+                "По названию",
+                RequestGetEstablishmentParameters.builder().name("Red Rabbit").build(),
+                ONLY_ONE
+            ),
+            Arguments.of(
+                "По флагу наличия карты",
+                RequestGetEstablishmentParameters.builder().hasMap(false).build(),
+                ONLY_ONE
+            ),
+            Arguments.of(
+                "По флагу наличия безналичной оплаты",
+                RequestGetEstablishmentParameters.builder().hasCardPayment(false).build(),
+                ONLY_ONE
+            ),
+            Arguments.of(
+                "По количеству рабочих дней",
+                RequestGetEstablishmentParameters.builder().workingDayCount(1).build(),
+                ONLY_ONE
+            ),
+            Arguments.of(
+                "По верной категории",
+                RequestGetEstablishmentParameters.builder().category(Category.game_club.value).build(),
+                ONLY_ONE
+            ),
+            Arguments.of(
+                "По неверной категории",
+                RequestGetEstablishmentParameters.builder().category(Category.hotel.value).build(),
+                NOTHING
+            )
+        );
     }
 
-    @Test
-    @DisplayName("Поиск заведения по неверному флагу")
-    public void testCreatingEstablishment_FindEstablishmentByParams_FindByWrongBooleanFlags() {
-        Assertions.assertEquals(establishmentService.getEstablishmentByParams(
-            RequestGetEstablishmentParameters.builder().hasMap(false).build()
-        ).getCount(), 1);
-    }
-
-    @Test
-    @DisplayName("Поиск заведения по правильным параметрам")
-    public void testCreatingEstablishment_FindEstablishmentByRightParams() {
-        Assertions.assertEquals(establishmentService.getEstablishmentByParams(
-            RequestGetEstablishmentParameters.builder().build()
-        ).getCount(), 1);
-    }
-
-    @Test
-    @DisplayName("Поиск заведения по неверному названию")
-    public void testCreatingEstablishment_FindEstablishmentByWrongName() {
-        Assertions.assertEquals(establishmentService.getEstablishmentByParams(
-            RequestGetEstablishmentParameters.builder().name("Red Rabbit").build()
-        ).getCount(), 1);
-    }
 }
