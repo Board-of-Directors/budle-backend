@@ -10,6 +10,7 @@ import ru.nsu.fit.pak.budle.controller.OrderController;
 import ru.nsu.fit.pak.budle.dao.*;
 import ru.nsu.fit.pak.budle.dto.request.RequestOrderDto;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
+import ru.nsu.fit.pak.budle.exceptions.OrderNotFoundException;
 import ru.nsu.fit.pak.budle.repository.OrderRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.service.OrderService;
@@ -60,7 +61,21 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
         );
         orderController.create(order);
         orderRepository.findAll().get(0);
-        Assertions.assertEquals(orderRepository.findAll().size(), orderCount + 1);
+        Assertions.assertEquals(orderCount + 1, orderRepository.findAll().size());
+    }
+
+    @Test
+    @DatabaseSetup(value = "/establishment/before/establishment_with_order.xml")
+    @DisplayName("Тест на успешное удаление заказа")
+    public void successDeletingOrder() {
+        User owner = userRepository.findById(OWNER_ID).orElseThrow();
+        mockUser(owner);
+        long orderCount = orderRepository.findAll().size();
+        orderController.delete(
+            ORDER_ID,
+            GUEST_ID
+        );
+        Assertions.assertEquals(orderCount - 1, orderRepository.findAll().size());
     }
 
     @Test
@@ -87,12 +102,23 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
     }
 
     @Test
-    @DisplayName("Получение несуществующего заказа")
+    @DisplayName("Получение несуществующего заведения")
     public void tryToGetNonExistedOrder_mustBeThrownException() {
         Assertions.assertThrows(
             EstablishmentNotFoundException.class,
             () -> orderService.setStatus(111L, 22L, OrderStatus.ACCEPTED.getStatus())
         );
+    }
+
+    @Test
+    @DisplayName("Получение несуществующего заказа")
+    @DatabaseSetup(value = "/establishment/before/establishment_with_order.xml")
+    public void getNonExistenceOrder() {
+        Assertions.assertThrows(
+            OrderNotFoundException.class,
+            () -> orderService.setStatus(111L, ESTABLISHMENT_ID, OrderStatus.ACCEPTED.getStatus())
+        );
+
     }
 
 }
