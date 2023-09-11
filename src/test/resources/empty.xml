@@ -3,4 +3,6 @@
     <establishments/>
     <orders/>
     <working_hours/>
+    <workers/>
+    <worker_establishments/>
 </dataset>
