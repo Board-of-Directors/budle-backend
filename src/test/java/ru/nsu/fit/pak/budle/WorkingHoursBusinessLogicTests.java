@@ -11,7 +11,6 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.nsu.fit.pak.budle.dao.WorkingHours;
@@ -21,7 +20,6 @@ import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.WorkingHoursRepository;
 import ru.nsu.fit.pak.budle.service.WorkingHoursService;
 
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mockStatic;
 
 @DisplayName("Тесты на бизнес-функциональность рабочих часов заведения")
@@ -54,7 +52,8 @@ public class WorkingHoursBusinessLogicTests extends AbstractContextualTest {
         try (MockedStatic<LocalDate> mockedStatic = mockStatic(LocalDate.class)) {
             mockedStatic.when(LocalDate::now).thenReturn(now);
             Establishment establishment = establishmentRepository.findById(ESTABLISHMENT_ID).orElseThrow();
-            List<ValidTimeDto> validTimeDtoList = workingHoursService.getValidBookingHoursByEstablishment(establishment);
+            List<ValidTimeDto> validTimeDtoList =
+                workingHoursService.getValidBookingHoursByEstablishment(establishment);
             Assertions.assertEquals(
                 List.of(
                     ValidTimeDto.builder().monthName("дек.").dayName("вт").dayNumber("23").times(TIMES).build(),
