@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.nsu.fit.pak.budle.controller.WorkerController;
 import ru.nsu.fit.pak.budle.service.WorkerService;
 
 @DisplayName("Тест на бизнес-логику работников заведения.")
