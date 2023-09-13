@@ -60,7 +60,6 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
             null
         );
         orderController.create(order);
-        orderRepository.findAll().get(0);
         Assertions.assertEquals(orderCount + 1, orderRepository.findAll().size());
     }
 
