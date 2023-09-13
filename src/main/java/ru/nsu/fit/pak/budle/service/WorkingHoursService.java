@@ -28,5 +28,10 @@ public interface WorkingHoursService {
      */
     List<ValidTimeDto> getValidBookingHoursByEstablishment(Establishment establishment);
 
+    /**
+     * Удаление рабочих часов из базы данных.
+     *
+     * @param workingHours рабочие часы для удаления
+     */
     void deleteHours(Set<WorkingHours> workingHours);
 }

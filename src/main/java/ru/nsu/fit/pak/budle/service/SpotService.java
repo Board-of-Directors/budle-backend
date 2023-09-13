@@ -33,5 +33,13 @@ public interface SpotService {
      */
     void createSpot(Long localId, Long establishmentId);
 
+    /**
+     * Получение временного промежутка для конкретного места.
+     *
+     * @param localId         идентификатор места для конкретного заведения
+     * @param establishmentId идентификатор заведения
+     * @return временной промежуток места
+     */
+
     TimelineDto getSpotTimeline(Long localId, Long establishmentId);
 }
