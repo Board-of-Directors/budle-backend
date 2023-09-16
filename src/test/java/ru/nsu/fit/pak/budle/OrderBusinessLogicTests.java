@@ -12,7 +12,6 @@ import ru.nsu.fit.pak.budle.controller.EstablishmentController;
 import ru.nsu.fit.pak.budle.controller.OrderController;
 import ru.nsu.fit.pak.budle.dao.*;
 import ru.nsu.fit.pak.budle.dto.request.RequestOrderDto;
-import ru.nsu.fit.pak.budle.dto.response.ResponseOrderDto;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
 import ru.nsu.fit.pak.budle.exceptions.OrderNotFoundException;
 import ru.nsu.fit.pak.budle.repository.OrderRepository;
@@ -21,7 +20,6 @@ import ru.nsu.fit.pak.budle.service.OrderService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 import java.util.stream.Stream;
 
 @DisplayName("Тесты логики работы с заказами")
@@ -54,6 +52,7 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
     @MethodSource
     @DatabaseSetup(value = "/establishment/before/establishment_with_many_orders.xml")
     @DisplayName("Тест на получение заказов заведения")
+    @SuppressWarnings("unused")
     public void getEstablishmentOrders(String name, Integer status, int size) {
         var answer = orderService.getEstablishmentOrders(ESTABLISHMENT_ID, status);
         Assertions.assertEquals(size, answer.size());
