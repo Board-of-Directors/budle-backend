@@ -2,7 +2,6 @@ package ru.nsu.fit.pak.budle.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 import ru.nsu.fit.pak.budle.dto.PhotoDto;
