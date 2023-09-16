@@ -48,7 +48,7 @@ class UserBusinessLogicTests extends AbstractContextualTest {
     @Test
     @DisplayName("Успешное создание и проверка кода доступа")
     public void testCreatingCodeForUser_AfterThatCheckingThisCode_MustBeTrue() {
-        codeService.generateCode("+79833219999");
+        codeService.generateCode("+79131233212");
         Code code = codeRepository.findAll().get(0);
         Assertions.assertTrue(codeService.checkCode(code.getPhoneNumber(), code.getCode()));
     }

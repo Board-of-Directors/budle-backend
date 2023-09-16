@@ -1,15 +1,23 @@
 package ru.nsu.fit.pak.budle;
 
+import java.time.LocalTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import ru.nsu.fit.pak.budle.controller.EstablishmentController;
@@ -18,10 +26,20 @@ import ru.nsu.fit.pak.budle.dao.Tag;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.EstablishmentListDto;
+import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestGetEstablishmentParameters;
+import ru.nsu.fit.pak.budle.dto.request.RequestHotelDto;
+import ru.nsu.fit.pak.budle.dto.request.RequestWorkingHoursDto;
+import ru.nsu.fit.pak.budle.exceptions.ErrorWhileParsingEstablishmentMapException;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
+import ru.nsu.fit.pak.budle.repository.WorkingHoursRepository;
 import ru.nsu.fit.pak.budle.service.EstablishmentService;
+import ru.nsu.fit.pak.budle.utils.ImageWorker;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 @DatabaseSetup(value = "/establishment/before/establishment.xml")
 @DisplayName("Тест на бизнес-логику заведений")
@@ -31,6 +49,11 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
 
     private static final Integer ONLY_ONE = 1;
     private static final Integer NOTHING = 0;
+
+    @Autowired
+    private ImageWorker imageWorker;
+    @Autowired
+    private WorkingHoursRepository workingHoursRepository;
 
     @BeforeEach
     public void makeMock() {
@@ -69,6 +92,29 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
         establishmentService.addMap(establishment.getId(), addedMap);
     }
 
+    @Test
+    @DisplayName("Проверка ошибки создания карты")
+    public void errorCreatingMap() {
+        Establishment establishment = establishmentRepository.findAll().get(0);
+        String addedMap = "smkalz";
+        Assertions.assertThrows(
+            ErrorWhileParsingEstablishmentMapException.class,
+            () -> establishmentService.addMap(establishment.getId(), addedMap)
+        );
+    }
+
+    @Test
+    @DisplayName("Проверка создания заведения")
+    @ExpectedDatabase(
+        value = "/establishment/after/hotel_created.xml",
+        assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED
+    )
+    public void testCreatingHotel() {
+        when(imageWorker.saveImage(any())).thenReturn("image path");
+        establishmentService.createEstablishment(getEstablishment());
+        Assertions.assertEquals(4, workingHoursRepository.findAll().size());
+    }
+
     @MethodSource
     @ParameterizedTest(name = TUPLE_PARAMETERIZED_DISPLAY_NAME)
     @SuppressWarnings("unused")
@@ -79,6 +125,17 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
     ) {
         EstablishmentListDto establishmentListDto = establishmentService.getEstablishmentByParams(parameters);
         Assertions.assertEquals(expectedResponseCount, establishmentListDto.getCount());
+
+    }
+
+    @EnumSource(Category.class)
+    @ParameterizedTest(name = TUPLE_PARAMETERIZED_DISPLAY_NAME)
+    @DisplayName("Тест на получение вариантов категорий")
+    public void categoryVariants(Category category) {
+        Assertions.assertEquals(
+            category.variants,
+            establishmentService.getCategoryVariants(category.getValue())
+        );
 
     }
 
@@ -121,6 +178,29 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
                 NOTHING
             )
         );
+    }
+
+    private RequestEstablishmentDto getEstablishment() {
+        return RequestHotelDto.builder()
+            .name("DoubleTree")
+            .address("Aztekov st. 47")
+            .description("One of the best places")
+            .hasCardPayment(false)
+            .hasMap(false)
+            .owner(USER_ID)
+            .price(400)
+            .rating(4.8F)
+            .tags(Collections.emptySet())
+            .workingHours(Set.of(
+                RequestWorkingHoursDto.builder()
+                    .startTime(LocalTime.of(12, 0))
+                    .endTime(LocalTime.of(13, 0))
+                    .days(List.of("Вт", "Ср", "Вс"))
+                    .build()
+            ))
+            .category(Category.hotel.value)
+            .photosInput(Collections.emptySet())
+            .build();
     }
 
 }

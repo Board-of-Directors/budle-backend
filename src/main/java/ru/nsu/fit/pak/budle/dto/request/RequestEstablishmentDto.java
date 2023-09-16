@@ -2,7 +2,9 @@ package ru.nsu.fit.pak.budle.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 import ru.nsu.fit.pak.budle.dto.PhotoDto;
 
 import javax.validation.Valid;
@@ -26,6 +28,7 @@ import java.util.Set;
         @JsonSubTypes.Type(value = RequestGameClubDto.class, name = "Игровые клубы")
 })
 @Data
+@SuperBuilder
 public class RequestEstablishmentDto {
     @NotNull(message = "Имя не может быть не задано.")
     @Size(max = 200, message = "Название заведения не может превышать 200 символов.")
