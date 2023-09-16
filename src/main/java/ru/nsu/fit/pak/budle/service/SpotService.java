@@ -1,5 +1,6 @@
 package ru.nsu.fit.pak.budle.service;
 
+import ru.nsu.fit.pak.budle.dao.Spot;
 import ru.nsu.fit.pak.budle.dto.SpotDto;
 import ru.nsu.fit.pak.budle.dto.TimelineDto;
 
@@ -42,4 +43,12 @@ public interface SpotService {
      */
 
     TimelineDto getSpotTimeline(Long localId, Long establishmentId);
+
+    /**
+     * Сохранить переданный список мест для конкретного заведения.
+     *
+     * @param spots           список мест
+     * @param establishmentId идентификатор заведения
+     */
+    void saveSpots(List<Spot> spots, Long establishmentId);
 }
