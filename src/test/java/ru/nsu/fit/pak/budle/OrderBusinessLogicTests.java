@@ -4,11 +4,15 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.nsu.fit.pak.budle.controller.EstablishmentController;
 import ru.nsu.fit.pak.budle.controller.OrderController;
 import ru.nsu.fit.pak.budle.dao.*;
 import ru.nsu.fit.pak.budle.dto.request.RequestOrderDto;
+import ru.nsu.fit.pak.budle.dto.response.ResponseOrderDto;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
 import ru.nsu.fit.pak.budle.exceptions.OrderNotFoundException;
 import ru.nsu.fit.pak.budle.repository.OrderRepository;
@@ -17,6 +21,8 @@ import ru.nsu.fit.pak.budle.service.OrderService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Stream;
 
 @DisplayName("Тесты логики работы с заказами")
 class OrderBusinessLogicTests extends AbstractContextualTest {
@@ -43,6 +49,15 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
 
     @Autowired
     private EstablishmentController establishmentController;
+
+    @ParameterizedTest(name = TUPLE_PARAMETERIZED_DISPLAY_NAME)
+    @MethodSource
+    @DatabaseSetup(value = "/establishment/before/establishment_with_many_orders.xml")
+    @DisplayName("Тест на получение заказов заведения")
+    public void getEstablishmentOrders(String name, Integer status, int size) {
+        var answer = orderService.getEstablishmentOrders(ESTABLISHMENT_ID, status);
+        Assertions.assertEquals(size, answer.size());
+    }
 
     @Test
     @DatabaseSetup(value = "/establishment/before/establishment.xml")
@@ -118,6 +133,15 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
             () -> orderService.setStatus(111L, ESTABLISHMENT_ID, OrderStatus.ACCEPTED.getStatus())
         );
 
+    }
+
+    public static Stream<Arguments> getEstablishmentOrders() {
+        return Stream.of(
+            Arguments.of("Получение всех заказов", null, 3),
+            Arguments.of("Получение ожидающих заказов", OrderStatus.WAITING.getStatus(), 1),
+            Arguments.of("Получение принятых заказов", OrderStatus.ACCEPTED.getStatus(), 1),
+            Arguments.of("Получение отклоненных заказов", OrderStatus.REJECTED.getStatus(), 1)
+        );
     }
 
 }

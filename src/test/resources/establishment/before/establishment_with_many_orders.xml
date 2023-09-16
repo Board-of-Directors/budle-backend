@@ -1,0 +1,61 @@
+<dataset>
+    <users
+            id="200"
+            username="Oleg"
+            phone_number="+79993332211"
+            password="123456"/>
+    <users
+            id="3"
+            username="Varya"
+            phone_number="+79991232233"
+            password="123456"/>
+    <establishments
+            id="100"
+            name="Red Rabbit"
+            description="Small bar"
+            address="Koshurnikova St. 47"
+            has_map="false"
+            has_card_payment="false"
+            rating="4.9"
+            price="400"
+            category="game_club"
+            image="some_image"
+            map="some_map"
+            owner_id="200"/>
+    <working_hours
+            id="1"
+            establishment_id="100"
+            day_of_week="1"
+            start_time="00:00:00"
+            end_time="23:00:00"/>
+    <orders
+            id="250"
+            date="2022-07-07"
+            start_time="14:30:00"
+            end_time="18:30:00"
+            guest_count="4"
+            status="0"
+            user_id="3"
+            establishment_id="100"
+            dtype="order"/>
+    <orders
+        id="251"
+        date="2022-07-07"
+        start_time="15:00:00"
+        end_time="19:00:00"
+        guest_count="10"
+        status="1"
+        user_id="3"
+        establishment_id="100"
+        dtype="order"/>
+    <orders
+        id="252"
+        date="2022-07-07"
+        start_time="15:30:00"
+        end_time="19:30:00"
+        guest_count="1"
+        status="2"
+        user_id="3"
+        establishment_id="100"
+        dtype="order"/>
+</dataset>
