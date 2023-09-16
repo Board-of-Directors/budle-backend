@@ -11,13 +11,13 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
+
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Base64;
 import java.util.Iterator;
-
 
 /**
  * Class, that responsible for image saving into file system
@@ -27,7 +27,6 @@ import java.util.Iterator;
 @Component
 public class ImageWorker {
     private final static String SERVER_PATH = "./images";
-
     private final static String IMAGE_PATH_PREFIX = SERVER_PATH + '/';
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 

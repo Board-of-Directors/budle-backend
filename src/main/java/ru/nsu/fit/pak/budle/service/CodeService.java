@@ -13,7 +13,6 @@ public interface CodeService {
      */
     boolean checkCode(String phoneNumber, String code);
 
-
     /**
      * Method, that generated code by user request and put it into database.
      * Also, verified phone number in API service.

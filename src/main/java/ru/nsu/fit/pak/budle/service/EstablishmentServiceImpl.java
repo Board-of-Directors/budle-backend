@@ -56,13 +56,10 @@ import java.util.stream.Stream;
 public class EstablishmentServiceImpl implements EstablishmentService {
     private final EstablishmentRepository establishmentRepository;
     private final SpotService spotService;
-
     private final ImageService imageService;
     private final EstablishmentMapper establishmentMapper;
     private final SecurityService securityService;
-
     private final WorkingHoursService workingHoursService;
-
     private final TagMapper tagMapper;
 
     @Override

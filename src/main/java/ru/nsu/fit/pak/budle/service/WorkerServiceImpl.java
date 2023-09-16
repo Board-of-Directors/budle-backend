@@ -18,19 +18,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class WorkerServiceImpl implements WorkerService {
     private final WorkerRepository workerRepository;
     private final EstablishmentService establishmentService;
-
     private final UserService userService;
-
     private final WorkerMapper workerMapper;
-
-
 
     @Override
     public List<WorkerDto> getWorkers(Long establishmentId) {
@@ -47,10 +42,10 @@ public class WorkerServiceImpl implements WorkerService {
         log.info("Worker with ID: " + workerId);
         Establishment establishment = establishmentService.getEstablishmentById(establishmentId);
         Worker worker = workerRepository
-                .findByEstablishmentAndWorkerId(establishment, workerId)
-                .orElseThrow(() -> new WorkerNotFoundException(workerId));
+            .findByEstablishmentAndWorkerId(establishment, workerId)
+            .orElseThrow(() -> new WorkerNotFoundException(workerId));
         worker.getEstablishments()
-                .removeIf((x) -> Objects.equals(x.getId(), establishment.getId()));
+            .removeIf((x) -> Objects.equals(x.getId(), establishment.getId()));
         workerRepository.save(worker);
     }
 
@@ -71,6 +66,5 @@ public class WorkerServiceImpl implements WorkerService {
         }
         workerRepository.save(worker);
     }
-
 
 }

@@ -30,11 +30,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SpotServiceImpl implements SpotService {
     private final SpotRepository spotRepository;
-
     private final EstablishmentRepository establishmentRepository;
-
     private final SpotMapper spotMapper;
-
     private final OrderRepository orderRepository;
 
     @Override

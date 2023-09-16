@@ -19,10 +19,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class CodeServiceImpl implements CodeService {
-
     private final CodeRepository codeRepository;
     private final UserRepository userRepository;
-
     private final RequestSender requestSender;
 
     @Override
