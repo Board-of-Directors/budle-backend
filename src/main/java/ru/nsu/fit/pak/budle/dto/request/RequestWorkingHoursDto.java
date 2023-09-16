@@ -1,6 +1,7 @@
 package ru.nsu.fit.pak.budle.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -9,6 +10,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Data
+@Builder
 public class RequestWorkingHoursDto {
     @NotNull(message = "Дни недели не могут быть не заданы")
     @Size(min = 1, message = "Список дней не может быть пустым")

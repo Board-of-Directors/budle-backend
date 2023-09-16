@@ -23,9 +23,15 @@
             map="some_map"
             owner_id="200"/>
     <working_hours
-            id="50"
+        id="50"
+        establishment_id="100"
+        day_of_week="1"
+        start_time="00:00:00"
+        end_time="01:00:00"/>
+    <working_hours
+            id="1"
             establishment_id="100"
-            day_of_week="1"
-            start_time="00:00:00"
-            end_time="01:00:00"/>
+            day_of_week="2"
+            start_time="12:00:00"
+            end_time="13:00:00"/>
 </dataset>

@@ -1,8 +1,8 @@
 package ru.nsu.fit.pak.budle;
 
-import com.github.springtestdbunit.DbUnitTestExecutionListener;
+import javax.transaction.Transactional;
+
 import com.github.springtestdbunit.TransactionDbUnitTestExecutionListener;
-import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,12 +21,11 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(classes = BudleApplication.class)
 @TestExecutionListeners({
     DependencyInjectionTestExecutionListener.class,
-    DbUnitTestExecutionListener.class,
     TransactionDbUnitTestExecutionListener.class,
 })
 @RunWith(MockitoJUnitRunner.class)
 @Testcontainers
-@DatabaseTearDown(value = "/empty.xml")
+@Transactional
 public class AbstractContextualTest {
     protected static final String TUPLE_PARAMETERIZED_DISPLAY_NAME = "[" + INDEX_PLACEHOLDER + "] {0}";
 
