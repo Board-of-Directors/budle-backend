@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.nsu.fit.pak.budle.controller.EstablishmentController;
 import ru.nsu.fit.pak.budle.controller.OrderController;
@@ -20,9 +21,16 @@ import ru.nsu.fit.pak.budle.repository.OrderRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.service.OrderService;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.stream.Stream;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mockStatic;
 
 @DisplayName("Тесты логики работы с заказами")
 class OrderBusinessLogicTests extends AbstractContextualTest {
@@ -68,19 +76,29 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
     @DatabaseSetup(value = "/establishment/before/establishment.xml")
     @DisplayName("Тест на успешное создание заказа")
     public void testOrder_creatingOrder() {
-        User guest = userRepository.findById(GUEST_ID).orElseThrow();
-        mockUser(guest);
-        long orderCount = orderRepository.findAll().size();
-        RequestOrderDto order = new RequestOrderDto(
-            4,
-            LocalDate.now().plusDays(1),
-            LocalTime.parse("14:30:00"),
-            ESTABLISHMENT_ID,
-            guest.getId(),
-            null
-        );
-        orderController.create(order);
-        Assertions.assertEquals(orderCount + 1, orderRepository.findAll().size());
+        String instantExpected = "2014-12-23T00:01:00Z";
+        Clock clock = Clock.fixed(Instant.parse(instantExpected), ZoneId.of("UTC"));
+        LocalDate now = LocalDate.now(clock);
+        LocalDate bookDate = LocalDate.of(2014, 12, 23);
+        ZonedDateTime zonedNow = ZonedDateTime.now(clock);
+        try (MockedStatic<LocalDate> mockedStatic = mockStatic(LocalDate.class);
+             MockedStatic<ZonedDateTime> mockedZonedTime = mockStatic(ZonedDateTime.class)) {
+            mockedStatic.when(LocalDate::now).thenReturn(now);
+            mockedZonedTime.when(() -> ZonedDateTime.now(any(ZoneId.class))).thenReturn(zonedNow);
+            User guest = userRepository.findById(GUEST_ID).orElseThrow();
+            mockUser(guest);
+            long orderCount = orderRepository.findAll().size();
+            RequestOrderDto order = new RequestOrderDto(
+                4,
+                bookDate,
+                LocalTime.parse("00:30:00"),
+                ESTABLISHMENT_ID,
+                guest.getId(),
+                null
+            );
+            orderController.create(order);
+            Assertions.assertEquals(orderCount + 1, orderRepository.findAll().size());
+        }
     }
 
     @Test
@@ -91,19 +109,29 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
     )
     @DisplayName("Тест на успешное создание заказа с местом")
     public void creatingOrderWithSpot() {
-        User guest = userRepository.findById(GUEST_ID).orElseThrow();
-        mockUser(guest);
-        long orderCount = orderRepository.findAll().size();
-        RequestOrderDto order = new RequestOrderDto(
-            4,
-            LocalDate.of(2022, 12, 12),
-            LocalTime.parse("14:30:00"),
-            ESTABLISHMENT_ID,
-            guest.getId(),
-            1L
-        );
-        orderController.create(order);
-        Assertions.assertEquals(orderCount + 1, orderRepository.findAll().size());
+        String instantExpected = "2014-12-23T00:01:00Z";
+        Clock clock = Clock.fixed(Instant.parse(instantExpected), ZoneId.of("UTC"));
+        LocalDate now = LocalDate.now(clock);
+        LocalDate bookDate = LocalDate.of(2014, 12, 23);
+        ZonedDateTime zonedNow = ZonedDateTime.now(clock);
+        try (MockedStatic<LocalDate> mockedStatic = mockStatic(LocalDate.class);
+             MockedStatic<ZonedDateTime> mockedZonedTime = mockStatic(ZonedDateTime.class)) {
+            mockedStatic.when(LocalDate::now).thenReturn(now);
+            mockedZonedTime.when(() -> ZonedDateTime.now(any(ZoneId.class))).thenReturn(zonedNow);
+            User guest = userRepository.findById(GUEST_ID).orElseThrow();
+            mockUser(guest);
+            long orderCount = orderRepository.findAll().size();
+            RequestOrderDto order = new RequestOrderDto(
+                4,
+                bookDate,
+                LocalTime.parse("00:30:00"),
+                ESTABLISHMENT_ID,
+                guest.getId(),
+                1L
+            );
+            orderController.create(order);
+            Assertions.assertEquals(orderCount + 1, orderRepository.findAll().size());
+        }
     }
 
     @Test
