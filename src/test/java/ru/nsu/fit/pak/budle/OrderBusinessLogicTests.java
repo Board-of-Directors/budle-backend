@@ -1,6 +1,8 @@
 package ru.nsu.fit.pak.budle;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -76,6 +78,29 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
             ESTABLISHMENT_ID,
             guest.getId(),
             null
+        );
+        orderController.create(order);
+        Assertions.assertEquals(orderCount + 1, orderRepository.findAll().size());
+    }
+
+    @Test
+    @DatabaseSetup(value = "/establishment/before/establishment_with_spots.xml")
+    @ExpectedDatabase(
+        value = "/orders/after/order_with_spot.xml",
+        assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED
+    )
+    @DisplayName("Тест на успешное создание заказа с местом")
+    public void creatingOrderWithSpot() {
+        User guest = userRepository.findById(GUEST_ID).orElseThrow();
+        mockUser(guest);
+        long orderCount = orderRepository.findAll().size();
+        RequestOrderDto order = new RequestOrderDto(
+            4,
+            LocalDate.of(2022, 12, 12),
+            LocalTime.parse("14:30:00"),
+            ESTABLISHMENT_ID,
+            guest.getId(),
+            1L
         );
         orderController.create(order);
         Assertions.assertEquals(orderCount + 1, orderRepository.findAll().size());
