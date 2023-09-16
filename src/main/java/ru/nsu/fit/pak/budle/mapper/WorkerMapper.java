@@ -15,7 +15,6 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class WorkerMapper {
-
     private final ModelMapper modelMapper;
 
     /**

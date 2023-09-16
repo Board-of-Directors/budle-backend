@@ -18,20 +18,14 @@ import ru.nsu.fit.pak.budle.repository.UserRepository;
 @RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService, UserDetailsService {
-
-
     private final UserRepository userRepository;
-
     private final UserMapper userMapper;
     private final PasswordEncoder encoder;
 
     @Override
     public void registerUser(RequestUserDto requestUserDto) {
         log.info("Registering user");
-        if (userRepository.existsByPhoneNumber(
-                requestUserDto.getPhoneNumber()) ||
-                userRepository.existsByUsername(requestUserDto.getUsername())
-        ) {
+        if (existsByPhoneNumberOrUsername(requestUserDto)) {
             log.warn("User already exists");
             throw new UserAlreadyExistsException();
         } else {
@@ -42,11 +36,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
+    private boolean existsByPhoneNumberOrUsername(RequestUserDto userDto) {
+        return userRepository.existsByPhoneNumber(userDto.getPhoneNumber())
+            || userRepository.existsByUsername(userDto.getUsername());
+    }
+
     @Override
     public User findByPhoneNumber(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(UserNotFoundException::new);
     }
-
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

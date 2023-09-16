@@ -26,38 +26,41 @@ public class OrderMapper {
     public OrderMapper(ModelMapper mapper, SpotRepository spotRepository) {
         final int bookingDurationMinutes = 240;
         final Converter<Long, Spot> converterToSpot = (src) ->
-                (spotRepository.findById(src.getSource())
-                        .orElseThrow(() -> new SpotNotFoundException(src.getSource())));
+            (spotRepository.findById(src.getSource())
+                .orElseThrow(() -> new SpotNotFoundException(src.getSource())));
         final Converter<LocalDate, Date> converterDate = (src) -> Date.valueOf(src.getSource());
 
         final Converter<LocalTime, Time> converterToStartTime = (src) ->
-                Time.valueOf(src.getSource());
+            Time.valueOf(src.getSource());
 
         final Converter<LocalTime, Time> converterTime = (src) ->
-                Time.valueOf(src.getSource().plus(bookingDurationMinutes, ChronoUnit.MINUTES));
+            Time.valueOf(src.getSource().plusMinutes(bookingDurationMinutes));
 
         Condition<Long, Spot> notNull = ctx -> ctx.getSource() != null;
 
         mapper.createTypeMap(RequestOrderDto.class, OrderWithSpot.class)
-                .include(Order.class)
-                .addMappings(mapping -> mapping
-                        .when(notNull)
-                        .using(converterToSpot)
-                        .map(RequestOrderDto::getSpotId,
-                                OrderWithSpot::setSpot))
-                .addMappings(mapping -> mapping.using(converterToStartTime)
-                        .map(RequestOrderDto::getTime,
-                                Order::setStartTime))
-                .addMappings(mapping -> mapping.using(converterTime)
-                        .map(RequestOrderDto::getTime, Order::setEndTime))
-                .addMappings(mapping -> mapping.using(converterDate)
-                        .map(RequestOrderDto::getDate, Order::setDate));
+            .include(Order.class)
+            .addMappings(mapping -> mapping
+                .when(notNull)
+                .using(converterToSpot)
+                .map(
+                    RequestOrderDto::getSpotId,
+                    OrderWithSpot::setSpot
+                ))
+            .addMappings(mapping -> mapping.using(converterToStartTime)
+                .map(
+                    RequestOrderDto::getTime,
+                    Order::setStartTime
+                ))
+            .addMappings(mapping -> mapping.using(converterTime)
+                .map(RequestOrderDto::getTime, Order::setEndTime))
+            .addMappings(mapping -> mapping.using(converterDate)
+                .map(RequestOrderDto::getDate, Order::setDate));
         this.mapper = mapper;
     }
 
     public Order toEntity(RequestOrderDto dto, Class<? extends Order> mappingClass) {
         return mapper.map(dto, mappingClass);
     }
-
 
 }

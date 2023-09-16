@@ -5,7 +5,6 @@ package ru.nsu.fit.pak.budle.exceptions;
  * Throw it when user try to access worker, that does not exist in our system.
  */
 public class WorkerNotFoundException extends BaseException {
-
     static final private String ERROR_TYPE = "WorkerNotFoundException";
 
     /**

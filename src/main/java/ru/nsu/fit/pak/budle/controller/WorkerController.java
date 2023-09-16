@@ -36,14 +36,18 @@ public class WorkerController {
      * @param workerId - id of worker what we want to delete.
      */
     @DeleteMapping
-    public void delete(@RequestParam Long workerId,
-                       @RequestParam Long establishmentId) {
+    public void delete(
+        @RequestParam Long workerId,
+        @RequestParam Long establishmentId
+    ) {
         workerService.deleteWorker(workerId, establishmentId);
     }
 
     @PutMapping
-    public void invite(@RequestParam String phoneNumber,
-                       @RequestParam Long establishmentId) {
+    public void invite(
+        @RequestParam String phoneNumber,
+        @RequestParam Long establishmentId
+    ) {
         workerService.createWorker(phoneNumber, establishmentId);
     }
 }

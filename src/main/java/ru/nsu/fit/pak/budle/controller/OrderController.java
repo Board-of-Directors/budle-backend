@@ -8,6 +8,7 @@ import ru.nsu.fit.pak.budle.dto.response.ResponseOrderDto;
 import ru.nsu.fit.pak.budle.service.OrderService;
 
 import javax.validation.Valid;
+
 import java.util.List;
 
 /**
@@ -25,7 +26,6 @@ public class OrderController {
      * @param dto - order dto represent order details, such as time, date, etc.
      *            For details of order dto you can watch OrderDTO class.
      */
-
     @PostMapping
     public void create(@RequestBody @Valid RequestOrderDto dto) {
         orderService.createOrder(dto);
@@ -40,8 +40,10 @@ public class OrderController {
      * @param userId  from what user we create request (will be deleted)
      */
     @DeleteMapping
-    public void delete(@RequestParam Long orderId,
-                       @RequestParam Long userId) {
+    public void delete(
+        @RequestParam Long orderId,
+        @RequestParam Long userId
+    ) {
         orderService.deleteOrder(orderId, userId);
     }
 
@@ -53,11 +55,12 @@ public class OrderController {
      * @return list of order dto.
      */
     @GetMapping
-    public List<ResponseOrderDto> get(@RequestParam Long userId,
-                                      @RequestParam(required = false) Integer status) {
+    public List<ResponseOrderDto> get(
+        @RequestParam Long userId,
+        @RequestParam(required = false) Integer status
+    ) {
 
         return orderService.getUserOrders(status);
     }
-
 
 }

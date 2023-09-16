@@ -15,19 +15,21 @@ import java.util.stream.Collectors;
 public class PhotoMapper {
     private final ImageWorker imageWorker;
 
-    public Set<Photo> convertSetPhotoDtoToModelSet(Set<PhotoDto> photoDtos,
-                                                   Establishment establishment) {
+    public Set<Photo> convertSetPhotoDtoToModelSet(
+        Set<PhotoDto> photoDtos,
+        Establishment establishment
+    ) {
         return photoDtos
-                .stream()
-                .map(x -> new Photo(imageWorker.saveImage(x.getImage())))
-                .peek((x) -> x.setEstablishment(establishment))
-                .collect(Collectors.toSet());
+            .stream()
+            .map(x -> new Photo(imageWorker.saveImage(x.getImage())))
+            .peek((x) -> x.setEstablishment(establishment))
+            .collect(Collectors.toSet());
     }
 
     public Set<PhotoDto> convertModelPhotoSetToDtoSet(Set<Photo> photos) {
         return photos.stream()
-                .map((photo) -> new PhotoDto(imageWorker.loadImage(photo.getFilepath())))
-                .collect(Collectors.toSet());
+            .map((photo) -> new PhotoDto(imageWorker.loadImage(photo.getFilepath())))
+            .collect(Collectors.toSet());
     }
 
 }

@@ -13,7 +13,6 @@ public class OrderNotFoundException extends BaseException {
      * @param id - id of order that user try to access.
      */
     public OrderNotFoundException(Long id) {
-        super(
-                "Заказ с id " + id + " не существует.", ERROR_TYPE);
+        super("Заказ с id " + id + " не существует.", ERROR_TYPE);
     }
 }
