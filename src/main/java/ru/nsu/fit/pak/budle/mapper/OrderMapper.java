@@ -34,7 +34,7 @@ public class OrderMapper {
             Time.valueOf(src.getSource());
 
         final Converter<LocalTime, Time> converterTime = (src) ->
-            Time.valueOf(src.getSource().plus(bookingDurationMinutes, ChronoUnit.MINUTES));
+            Time.valueOf(src.getSource().plusMinutes(bookingDurationMinutes));
 
         Condition<Long, Spot> notNull = ctx -> ctx.getSource() != null;
 
