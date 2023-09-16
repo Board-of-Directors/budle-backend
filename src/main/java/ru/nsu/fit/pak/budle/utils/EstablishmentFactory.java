@@ -12,7 +12,6 @@ import ru.nsu.fit.pak.budle.dto.response.establishment.extended.*;
 import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectEstablishmentType;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
