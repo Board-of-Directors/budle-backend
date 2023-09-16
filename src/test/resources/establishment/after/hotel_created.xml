@@ -1,0 +1,62 @@
+<dataset>
+    <users
+            id="200"
+            username="Oleg"
+            phone_number="+79993332211"
+            password="123456"/>
+    <users
+            id="3"
+            username="Varya"
+            phone_number="+79991232233"
+            password="123456"/>
+    <establishments
+            id="100"
+            name="Red Rabbit"
+            description="Small bar"
+            address="Koshurnikova St. 47"
+            has_map="false"
+            has_card_payment="false"
+            rating="4.9"
+            price="400"
+            category="game_club"
+            image="some_image"
+            map="some_map"
+            owner_id="200"/>
+    <establishments
+            id="1"
+            name="DoubleTree"
+            address="Aztekov st. 47"
+            description="One of the best places"
+            has_card_payment="false"
+            has_map="false"
+            owner_id="200"
+            price="400"
+            rating="4.8"
+            image="image path"
+            category="hotel"/>
+    <working_hours
+            id="500"
+            establishment_id="100"
+            day_of_week="1"
+            start_time="00:00:00"
+            end_time="23:00:00"/>
+    <working_hours
+            id="1"
+            establishment_id="1"
+            day_of_week="1"
+            start_time="12:00:00"
+            end_time="13:00:00"/>
+    <working_hours
+            id="2"
+            establishment_id="1"
+            day_of_week="2"
+            start_time="12:00:00"
+            end_time="13:00:00"/>
+    <working_hours
+            id="3"
+            establishment_id="1"
+            day_of_week="6"
+            start_time="12:00:00"
+            end_time="13:00:00"/>
+
+</dataset>
