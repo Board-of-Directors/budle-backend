@@ -58,6 +58,10 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
         Assertions.assertEquals(size, answer.size());
     }
 
+    private static Stream<Arguments> getUserOrders() {
+        return getEstablishmentOrders();
+    }
+
     @Test
     @DatabaseSetup(value = "/establishment/before/establishment.xml")
     @DisplayName("Тест на успешное создание заказа")
@@ -141,6 +145,17 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
             Arguments.of("Получение принятых заказов", OrderStatus.ACCEPTED.getStatus(), 1),
             Arguments.of("Получение отклоненных заказов", OrderStatus.REJECTED.getStatus(), 1)
         );
+    }
+
+    @ParameterizedTest(name = TUPLE_PARAMETERIZED_DISPLAY_NAME)
+    @MethodSource
+    @DatabaseSetup(value = "/establishment/before/establishment_with_many_orders.xml")
+    @DisplayName("Тест на получение заказов человека")
+    @SuppressWarnings("unused")
+    public void getUserOrders(String name, Integer status, int size) {
+        mockUser(userRepository.findById(GUEST_ID).orElseThrow());
+        var answer = orderService.getUserOrders(status);
+        Assertions.assertEquals(size, answer.size());
     }
 
 }
