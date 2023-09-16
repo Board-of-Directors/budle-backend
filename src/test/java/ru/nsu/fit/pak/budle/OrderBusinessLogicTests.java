@@ -68,10 +68,6 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
         Assertions.assertEquals(size, answer.size());
     }
 
-    private static Stream<Arguments> getUserOrders() {
-        return getEstablishmentOrders();
-    }
-
     @Test
     @DatabaseSetup(value = "/establishment/before/establishment.xml")
     @DisplayName("Тест на успешное создание заказа")
@@ -191,6 +187,10 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
 
     }
 
+    private static Stream<Arguments> getUserOrders() {
+        return getEstablishmentOrders();
+    }
+
     public static Stream<Arguments> getEstablishmentOrders() {
         return Stream.of(
             Arguments.of("Получение всех заказов", null, 3),
@@ -209,6 +209,16 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
         mockUser(userRepository.findById(GUEST_ID).orElseThrow());
         var answer = orderService.getUserOrders(status);
         Assertions.assertEquals(size, answer.size());
+    }
+
+    @Test
+    @DisplayName("Получение заказов несуществующего заведения")
+    @DatabaseSetup(value = "/establishment/before/establishment_with_order.xml")
+    public void getOrderNonExistenceEstablishment() {
+        Assertions.assertThrows(
+            EstablishmentNotFoundException.class,
+            () -> orderService.getEstablishmentOrders(123L, 0)
+        );
     }
 
 }

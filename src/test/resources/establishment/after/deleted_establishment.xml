@@ -1,0 +1,14 @@
+<dataset>
+    <users
+            id="200"
+            username="Oleg"
+            phone_number="+79993332211"
+            password="123456"/>
+    <users
+            id="3"
+            username="Varya"
+            phone_number="+79991232233"
+            password="123456"/>
+    <establishments/>
+    <working_hours/>
+</dataset>

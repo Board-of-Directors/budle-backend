@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.nsu.fit.pak.budle.exceptions.WorkerNotFoundException;
 import ru.nsu.fit.pak.budle.service.WorkerService;
 
 @DisplayName("Тест на бизнес-логику работников заведения.")
@@ -45,5 +46,15 @@ public class WorkerBusinessLogicTests extends AbstractContextualTest {
             workerService.getWorkers(ESTABLISHMENT_ID).size()
         );
 
+    }
+
+    @Test
+    @DisplayName("Тест на получение несуществующего работника")
+    @DatabaseSetup(value = "/worker/before/establishment_without_worker.xml")
+    public void getNonExistenceWorker() {
+        Assertions.assertThrows(
+            WorkerNotFoundException.class,
+            () -> workerService.deleteWorker(123L, ESTABLISHMENT_ID)
+        );
     }
 }
