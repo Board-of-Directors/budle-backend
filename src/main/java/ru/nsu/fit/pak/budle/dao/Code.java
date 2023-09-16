@@ -1,20 +1,21 @@
 package ru.nsu.fit.pak.budle.dao;
 
-import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
 @Table(name = "user_codes")
+@Builder
+@AllArgsConstructor
 public class Code {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,4 +26,8 @@ public class Code {
     private LocalDateTime createdAt;
     @Enumerated(EnumType.STRING)
     private CodeType type;
+
+    public Code() {
+
+    }
 }
