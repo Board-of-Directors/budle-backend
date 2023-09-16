@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -24,6 +25,7 @@ import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.WorkingHoursRepository;
 import ru.nsu.fit.pak.budle.service.WorkingHoursService;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
 
 @DisplayName("Тесты на бизнес-функциональность рабочих часов заведения")
@@ -61,6 +63,32 @@ public class WorkingHoursBusinessLogicTests extends AbstractContextualTest {
             Assertions.assertEquals(
                 List.of(
                     ValidTimeDto.builder().monthName("дек.").dayName("вт").dayNumber("23").times(TIMES).build(),
+                    ValidTimeDto.builder().monthName("дек.").dayName("вт").dayNumber("30").times(TIMES).build()
+                ),
+                validTimeDtoList
+            );
+        }
+
+    }
+
+    @Test
+    @DisplayName("Тест генерации рабочих часов заведения на основании времени работы (с учетом отступа по времени)")
+    public void testGenerateWorkingHoursDurationWithGap() {
+        String instantExpected = "2014-12-23T00:01:00Z";
+        Clock clock = Clock.fixed(Instant.parse(instantExpected), ZoneId.of("UTC"));
+        LocalDate now = LocalDate.now(clock);
+        ZonedDateTime zonedNow = ZonedDateTime.now(clock);
+        try (MockedStatic<LocalDate> mockedStatic = mockStatic(LocalDate.class);
+             MockedStatic<ZonedDateTime> mockedZonedTime = mockStatic(ZonedDateTime.class)) {
+            mockedStatic.when(LocalDate::now).thenReturn(now);
+            mockedZonedTime.when(() -> ZonedDateTime.now(any(ZoneId.class))).thenReturn(zonedNow);
+            Establishment establishment = establishmentRepository.findById(ESTABLISHMENT_ID).orElseThrow();
+            List<ValidTimeDto> validTimeDtoList =
+                workingHoursService.getValidBookingHoursByEstablishment(establishment);
+            Assertions.assertEquals(
+                List.of(
+                    ValidTimeDto.builder().monthName("дек.").dayName("вт").dayNumber("23").times(List.of(TIMES.get(1)))
+                        .build(),
                     ValidTimeDto.builder().monthName("дек.").dayName("вт").dayNumber("30").times(TIMES).build()
                 ),
                 validTimeDtoList
