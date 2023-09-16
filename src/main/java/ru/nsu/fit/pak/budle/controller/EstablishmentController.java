@@ -17,6 +17,7 @@ import ru.nsu.fit.pak.budle.service.EstablishmentServiceImpl;
 import ru.nsu.fit.pak.budle.service.OrderService;
 
 import javax.validation.Valid;
+
 import java.util.List;
 
 /**
@@ -30,7 +31,6 @@ public class EstablishmentController {
     private final EstablishmentServiceImpl establishmentService;
     private final OrderService orderService;
 
-
     /**
      * Get requests for establishments.
      * Can filter establishments by fields, also implemented sorting and pagination.
@@ -43,6 +43,12 @@ public class EstablishmentController {
         return establishmentService.getEstablishmentByParams(parameters);
     }
 
+    /**
+     * Get request for the establishment.
+     *
+     * @param establishmentId identifier of the establishment
+     * @return the establishment extended info
+     */
     @GetMapping
     public ResponseExtendedEstablishmentInfo getEstablishment(@RequestParam Long establishmentId) {
         return establishmentService.getEstablishmentInfoById(establishmentId);
@@ -79,8 +85,10 @@ public class EstablishmentController {
      */
 
     @GetMapping(value = "/order")
-    public List<ResponseOrderDto> orders(@RequestParam Long establishmentId,
-                                         @RequestParam(required = false) Integer status) {
+    public List<ResponseOrderDto> orders(
+        @RequestParam Long establishmentId,
+        @RequestParam(required = false) Integer status
+    ) {
         return orderService.getEstablishmentOrders(establishmentId, status);
     }
 
@@ -106,9 +114,11 @@ public class EstablishmentController {
      * @param orderId         - what order we need to accept.
      */
     @PutMapping(value = "/order/status")
-    public void accept(@RequestParam Long establishmentId,
-                       @RequestParam Long orderId,
-                       @RequestParam Integer status) {
+    public void accept(
+        @RequestParam Long establishmentId,
+        @RequestParam Long orderId,
+        @RequestParam Integer status
+    ) {
         orderService.setStatus(orderId, establishmentId, status);
     }
 
@@ -153,7 +163,10 @@ public class EstablishmentController {
     }
 
     @PutMapping
-    public void update(@RequestParam Long establishmentId, @RequestBody @Valid RequestEstablishmentDto establishmentDto) {
+    public void update(
+        @RequestParam Long establishmentId,
+        @RequestBody @Valid RequestEstablishmentDto establishmentDto
+    ) {
         establishmentService.updateEstablishment(establishmentId, establishmentDto);
     }
 
@@ -161,6 +174,5 @@ public class EstablishmentController {
     public void delete(@RequestParam Long establishmentId) {
         establishmentService.deleteEstablishment(establishmentId);
     }
-
 
 }

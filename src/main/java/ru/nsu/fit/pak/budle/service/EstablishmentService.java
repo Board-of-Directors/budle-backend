@@ -25,7 +25,7 @@ public interface EstablishmentService {
      * @return pageable list of Establishment dto.
      */
     EstablishmentListDto getEstablishmentByParams(
-            RequestGetEstablishmentParameters parameters
+        RequestGetEstablishmentParameters parameters
     );
 
     /**

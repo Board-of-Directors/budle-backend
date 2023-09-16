@@ -34,8 +34,8 @@ public class SpotMapper {
      */
     public List<SpotDto> ListModelToListDto(List<Spot> spots) {
         return spots
-                .stream()
-                .map(spot -> modelMapper.map(spot, SpotDto.class))
-                .toList();
+            .stream()
+            .map(spot -> modelMapper.map(spot, SpotDto.class))
+            .toList();
     }
 }

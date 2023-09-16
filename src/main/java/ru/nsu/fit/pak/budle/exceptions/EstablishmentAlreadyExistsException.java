@@ -7,7 +7,6 @@ package ru.nsu.fit.pak.budle.exceptions;
 public class EstablishmentAlreadyExistsException extends BaseException {
     static final private String ERROR_TYPE = "EstablishmentAlreadyExists";
 
-
     /**
      * Default constructor.
      *
@@ -16,8 +15,8 @@ public class EstablishmentAlreadyExistsException extends BaseException {
      */
     public EstablishmentAlreadyExistsException(String name, String address) {
         super("Заведение с названием " +
-                name + " и адресом " +
-                address + " уже существует", ERROR_TYPE);
+            name + " и адресом " +
+            address + " уже существует", ERROR_TYPE);
 
     }
 }

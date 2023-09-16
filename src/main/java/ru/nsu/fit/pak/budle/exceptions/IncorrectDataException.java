@@ -10,7 +10,6 @@ import lombok.Getter;
 @Getter
 public class IncorrectDataException extends BaseException {
     static final private String ERROR_TYPE = "IncorrectData";
-
     static final private String ERROR_MESSAGE = "Данные введены неверно.";
 
     /**

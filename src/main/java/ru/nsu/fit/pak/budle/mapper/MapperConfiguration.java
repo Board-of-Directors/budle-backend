@@ -14,14 +14,12 @@ import ru.nsu.fit.pak.budle.dao.establishment.restaurant.CuisineCountry;
  */
 @Configuration
 public class MapperConfiguration {
-
     private final AbstractConverter<CuisineCountry, String> convertCuisine = new AbstractConverter<>() {
         @Override
         protected String convert(CuisineCountry source) {
             return source.getValue();
         }
     };
-
     private final AbstractConverter<String, CuisineCountry> convertToCuisine = new AbstractConverter<>() {
 
         @Override
@@ -42,15 +40,13 @@ public class MapperConfiguration {
             return Category.getEnumByValue(source);
         }
     };
-
     private final AbstractConverter<OrderStatus, Integer> convertOrderStatus =
-            new AbstractConverter<>() {
-                @Override
-                protected Integer convert(OrderStatus source) {
-                    return source.getStatus();
-                }
-            };
-
+        new AbstractConverter<>() {
+            @Override
+            protected Integer convert(OrderStatus source) {
+                return source.getStatus();
+            }
+        };
 
     /**
      * Bean that allows dependency injection for model mapper.

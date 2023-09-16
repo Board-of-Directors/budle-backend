@@ -25,6 +25,7 @@ import ru.nsu.fit.pak.budle.repository.OrderRepository;
 import ru.nsu.fit.pak.budle.utils.OrderFactory;
 
 import javax.transaction.Transactional;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -33,33 +34,22 @@ import java.util.Objects;
 @Slf4j
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
-
     private final ModelMapper modelMapper;
-
     private final SecurityService securityService;
-
     private final EstablishmentService establishmentService;
-
     private final EstablishmentMapper establishmentMapper;
-
     private final EstablishmentRepository establishmentRepository;
-
-
     private final OrderFactory orderFactory;
-
     private final WorkingHoursService workingHoursService;
-
     private final WorkingHoursMapper workingHoursMapper;
-
     private final OrderMapper orderMapper;
-
 
     @Override
     public void createOrder(RequestOrderDto dto) {
         log.info("Creating order");
         log.info(dto.toString());
         Establishment establishment = establishmentService
-                .getEstablishmentById(dto.getEstablishmentId());
+            .getEstablishmentById(dto.getEstablishmentId());
         /*
         if (!bookingTimeIsValid(establishment, dto)) {
             log.warn("Booking time is not valid");
@@ -79,14 +69,14 @@ public class OrderServiceImpl implements OrderService {
 
     private boolean bookingTimeIsValid(Establishment establishment, RequestOrderDto order) {
         List<ValidTimeDto> validTimeDtos =
-                workingHoursService.getValidBookingHoursByEstablishment(establishment);
+            workingHoursService.getValidBookingHoursByEstablishment(establishment);
         ValidTimeDto orderTime = workingHoursMapper.convertFromDateAndTimeToValidTimeDto(order.getDate());
         String bookingTime = order.getTime().toString();
         for (ValidTimeDto time : validTimeDtos) {
             if (Objects.equals(time.getDayName(), orderTime.getDayName()) &&
-                    Objects.equals(time.getMonthName(), orderTime.getMonthName()) &&
-                    Objects.equals(time.getDayNumber(), orderTime.getDayNumber()) &&
-                    time.getTimes().contains(bookingTime)) {
+                Objects.equals(time.getMonthName(), orderTime.getMonthName()) &&
+                Objects.equals(time.getDayNumber(), orderTime.getDayNumber()) &&
+                time.getTimes().contains(bookingTime)) {
                 return true;
             }
         }
@@ -107,15 +97,15 @@ public class OrderServiceImpl implements OrderService {
         log.info("Result: " + orders);
 
         return orders
-                .stream()
-                .map(order -> {
-                    Establishment establishmentSource = order.getEstablishment();
-                    ResponseOrderDto responseOrderDto = modelMapper.map(order, ResponseOrderDto.class);
-                    responseOrderDto.setEstablishment(establishmentMapper.toBasic(establishmentSource));
-                    responseOrderDto.setUsername(order.getUser().getUsername());
-                    return responseOrderDto;
-                })
-                .toList();
+            .stream()
+            .map(order -> {
+                Establishment establishmentSource = order.getEstablishment();
+                ResponseOrderDto responseOrderDto = modelMapper.map(order, ResponseOrderDto.class);
+                responseOrderDto.setEstablishment(establishmentMapper.toBasic(establishmentSource));
+                responseOrderDto.setUsername(order.getUser().getUsername());
+                return responseOrderDto;
+            })
+            .toList();
     }
 
     @Override
@@ -123,27 +113,26 @@ public class OrderServiceImpl implements OrderService {
         log.info("Get establishment orders");
         User user = securityService.getLoggedInUser();
         Establishment establishment = establishmentRepository.findById(establishmentId)
-                .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
+            .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
         userIsStuff(user, establishment);
 
         return establishment
-                .getOrders()
-                .stream()
-                .filter(order -> {
-                    if (status == null) {
-                        return true;
-                    } else {
-                        return Objects.equals(order.getStatus().getStatus(), status);
-                    }
-                })
-                .map(order -> {
-                            ResponseOrderDto responseOrderDto = modelMapper.map(order, ResponseOrderDto.class);
-                            responseOrderDto.setUsername(order.getUser().getUsername());
-                            return responseOrderDto;
-                        }
-                )
-                .toList();
-
+            .getOrders()
+            .stream()
+            .filter(order -> {
+                if (status == null) {
+                    return true;
+                } else {
+                    return Objects.equals(order.getStatus().getStatus(), status);
+                }
+            })
+            .map(order -> {
+                    ResponseOrderDto responseOrderDto = modelMapper.map(order, ResponseOrderDto.class);
+                    responseOrderDto.setUsername(order.getUser().getUsername());
+                    return responseOrderDto;
+                }
+            )
+            .toList();
 
     }
 
@@ -168,7 +157,7 @@ public class OrderServiceImpl implements OrderService {
     public void setStatus(Long orderId, Long establishmentId, Integer status) {
         log.info("Setting order status");
         Establishment establishment = establishmentRepository.findById(establishmentId)
-                .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
+            .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
         User user = securityService.getLoggedInUser();
         userIsStuff(user, establishment);
         Order order = getOrderById(orderId);
@@ -176,20 +165,19 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order);
     }
 
-
     private Order getOrderById(Long orderId) {
         return orderRepository.findById(orderId).orElseThrow(() ->
-                new OrderNotFoundException(orderId));
+            new OrderNotFoundException(orderId));
     }
 
     private void userIsStuff(User user, Establishment establishment) {
         if (establishment.getWorkers()
-                .stream()
-                .map(Worker::getUser)
-                .map(User::getId)
-                .toList()
-                .contains(user.getId()) ||
-                Objects.equals(establishment.getOwner().getId(), user.getId())) {
+            .stream()
+            .map(Worker::getUser)
+            .map(User::getId)
+            .toList()
+            .contains(user.getId()) ||
+            Objects.equals(establishment.getOwner().getId(), user.getId())) {
         } else {
             throw new NotEnoughRightsException();
         }

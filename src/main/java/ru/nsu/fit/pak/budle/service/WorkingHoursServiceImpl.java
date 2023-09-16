@@ -24,7 +24,6 @@ import java.util.*;
 public class WorkingHoursServiceImpl implements WorkingHoursService {
     private final ModelMapper mapper;
     private final WorkingHoursRepository workingHoursRepository;
-
     private final WorkingHoursMapper workingHoursMapper;
 
     @Override
@@ -38,14 +37,13 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
                 workingHours.setDayOfWeek(DayOfWeek.getDayByString(day));
                 workingHours.setEstablishment(establishment);
                 workingHoursMap.put(
-                        workingHours.getDayOfWeek().getTranslate(),
-                        workingHours
+                    workingHours.getDayOfWeek().getTranslate(),
+                    workingHours
                 );
             }
         }
         workingHoursRepository.saveAll(workingHoursMap.values());
     }
-
 
     public List<ValidTimeDto> getValidBookingHoursByEstablishment(Establishment establishment) {
         List<ValidTimeDto> times = new ArrayList<>();
@@ -56,9 +54,9 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
             LocalDate today = LocalDate.now().plusDays(i);
             ValidTimeDto currentDto = workingHoursMapper.convertFromDateAndTimeToValidTimeDto(today);
             Optional<WorkingHours> currentHours = workingHours
-                    .stream()
-                    .filter(x -> x.getDayOfWeek().getTranslateLittle().equals(currentDto.getDayName()))
-                    .findFirst();
+                .stream()
+                .filter(x -> x.getDayOfWeek().getTranslateLittle().equals(currentDto.getDayName()))
+                .findFirst();
             if (currentHours.isPresent()) {
                 final int DURATION = 30;
                 List<LocalTime> generatedTimes;
@@ -68,21 +66,21 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
                 now = now.minusNanos(now.getNano());
                 if (i == 0 && now.isAfter(currentHours.get().getStartTime())) {
                     generatedTimes = workingHoursMapper.generateTimes(
-                            now.plusMinutes(30 - (now.getMinute() % 30)),
-                            currentHours.get().getEndTime(),
-                            DURATION
+                        now.plusMinutes(30 - (now.getMinute() % 30)),
+                        currentHours.get().getEndTime(),
+                        DURATION
                     );
                 } else {
                     generatedTimes = workingHoursMapper.generateTimes(
-                            currentHours.get().getStartTime(),
-                            currentHours.get().getEndTime(),
-                            DURATION
+                        currentHours.get().getStartTime(),
+                        currentHours.get().getEndTime(),
+                        DURATION
                     );
                 }
                 List<String> currentDayTimes = generatedTimes
-                        .stream()
-                        .map(Objects::toString)
-                        .toList();
+                    .stream()
+                    .map(Objects::toString)
+                    .toList();
 
                 if (!currentDayTimes.isEmpty()) {
                     currentDto.setTimes(currentDayTimes);
@@ -96,6 +94,5 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
     @Override
     public void deleteHours(Set<WorkingHours> workingHours) {
         workingHoursRepository.deleteAll(workingHours);
-
     }
 }

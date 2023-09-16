@@ -31,9 +31,7 @@ import java.util.stream.Collectors;
 public class EstablishmentMapper {
     private final ModelMapper modelMapper;
     private final ImageWorker imageWorker;
-
     private final EstablishmentFactory establishmentFactory;
-
 
     /**
      * Converts establishment model to establishment dto.
@@ -51,33 +49,33 @@ public class EstablishmentMapper {
 
     public ResponseExtendedEstablishmentInfo toExtended(Establishment establishment) {
         Class<? extends ResponseShortEstablishmentInfo> classOfDto = establishmentFactory
-                .getEstablishmentDto(establishment.getCategory().toString(), "extended");
+            .getEstablishmentDto(establishment.getCategory().toString(), "extended");
 
         ResponseExtendedEstablishmentInfo responseEstablishmentInfo =
-                (ResponseExtendedEstablishmentInfo) modelMapper.map(establishment, classOfDto);
+            (ResponseExtendedEstablishmentInfo) modelMapper.map(establishment, classOfDto);
 
         responseEstablishmentInfo.setWorkingHours(establishment
-                .getWorkingHours()
-                .stream()
-                .sorted(Comparator.comparing(o -> o.getDayOfWeek().getOrdinal()))
-                .map(x -> {
-                    ResponseWorkingHoursDto dto = modelMapper.map(x, ResponseWorkingHoursDto.class);
-                    dto.setDayOfWeek(x.getDayOfWeek().getTranslate());
-                    return dto;
-                })
-                .collect(Collectors.toList()));
+            .getWorkingHours()
+            .stream()
+            .sorted(Comparator.comparing(o -> o.getDayOfWeek().getOrdinal()))
+            .map(x -> {
+                ResponseWorkingHoursDto dto = modelMapper.map(x, ResponseWorkingHoursDto.class);
+                dto.setDayOfWeek(x.getDayOfWeek().getTranslate());
+                return dto;
+            })
+            .collect(Collectors.toList()));
 
         responseEstablishmentInfo.setTags(establishment
-                .getTags()
-                .stream()
-                .map(x -> new ResponseTagDto(x.translate, imageWorker.getImageFromResource(x.assets)))
-                .collect(Collectors.toSet()));
+            .getTags()
+            .stream()
+            .map(x -> new ResponseTagDto(x.translate, imageWorker.getImageFromResource(x.assets)))
+            .collect(Collectors.toSet()));
 
         responseEstablishmentInfo.setPhotos(establishment
-                .getPhotos()
-                .stream()
-                .map(x -> new PhotoDto(imageWorker.loadImage(x.getFilepath())))
-                .collect(Collectors.toSet()));
+            .getPhotos()
+            .stream()
+            .map(x -> new PhotoDto(imageWorker.loadImage(x.getFilepath())))
+            .collect(Collectors.toSet()));
 
         responseEstablishmentInfo.setImage(imageWorker.loadImage(establishment.getImage()));
         String map = getMap(establishment);
@@ -89,10 +87,10 @@ public class EstablishmentMapper {
 
     public ResponseBasicEstablishmentInfo toBasic(Establishment establishment) {
         Class<? extends ResponseShortEstablishmentInfo> classOfDto = establishmentFactory
-                .getEstablishmentDto(establishment.getCategory().toString(), "basic");
+            .getEstablishmentDto(establishment.getCategory().toString(), "basic");
 
         ResponseBasicEstablishmentInfo establishmentDto =
-                (ResponseBasicEstablishmentInfo) modelMapper.map(establishment, classOfDto);
+            (ResponseBasicEstablishmentInfo) modelMapper.map(establishment, classOfDto);
 
         establishmentDto.setImage(imageWorker.loadImage(establishment.getImage()));
         return establishmentDto;
@@ -107,9 +105,9 @@ public class EstablishmentMapper {
 
     public List<ResponseBasicEstablishmentInfo> modelListToDtoList(List<Establishment> establishmentList) {
         return establishmentList
-                .stream()
-                .map(this::toBasic)
-                .toList();
+            .stream()
+            .map(this::toBasic)
+            .toList();
     }
 
     /**
@@ -122,8 +120,10 @@ public class EstablishmentMapper {
      */
 
     public Establishment dtoToModel(RequestEstablishmentDto dto) {
-        Establishment establishment = modelMapper.map(dto,
-                establishmentFactory.getEstablishmentEntity(dto.getCategory()));
+        Establishment establishment = modelMapper.map(
+            dto,
+            establishmentFactory.getEstablishmentEntity(dto.getCategory())
+        );
         establishment.setImage(imageWorker.saveImage(establishment.getImage()));
         establishment.setWorkingHours(null);
         establishment.setPhotos(null);
@@ -133,7 +133,6 @@ public class EstablishmentMapper {
     public ResponseShortEstablishmentInfo toShortInfo(Establishment establishment) {
         return modelMapper.map(establishment, ResponseShortEstablishmentInfo.class);
     }
-
 
     public List<ResponseShortEstablishmentInfo> toShortInfoList(List<Establishment> establishmentList) {
         return establishmentList.stream().map(this::toShortInfo).toList();

@@ -12,14 +12,10 @@ import ru.nsu.fit.pak.budle.service.CodeService;
  * Main aim of this controller - creating user codes and checking user codes.
  */
 @RestController
-@RequestMapping(value = "code",
-        produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "code", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class CodeController {
-
-
     private final CodeService codeService;
-
     /**
      * Get request, that creates code for user registration.
      *
@@ -33,7 +29,6 @@ public class CodeController {
     }
 
     // TODO: VALID Code Dto
-
     /**
      * Post request, that validate existing of registration code in our database.
      *

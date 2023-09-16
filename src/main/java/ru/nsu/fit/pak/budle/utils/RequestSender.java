@@ -2,6 +2,7 @@ package ru.nsu.fit.pak.budle.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -13,10 +14,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
-
 @Component
+@Slf4j
 public class RequestSender {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     public Map<String, Object> sendUCaller(String phoneNumber) {
 
@@ -25,15 +25,15 @@ public class RequestSender {
         }
 
         String requestString = "https://api.ucaller.ru/v1.0/initCall?" +
-                "phone=" + phoneNumber +
-                "&voice=" + "false" +
-                "&key=1vvjxSFMby9xJx783gk31AT7UDPEHBdI" +
-                "&service_id=317622";
+            "phone=" + phoneNumber +
+            "&voice=" + "false" +
+            "&key=1vvjxSFMby9xJx783gk31AT7UDPEHBdI" +
+            "&service_id=317622";
 
         Map<String, Object> map = null;
 
         try {
-            logger.info("Request to UCaller API was sent");
+            log.info("Request to UCaller API was sent");
             URL request = new URL(requestString);
             HttpURLConnection connection = (HttpURLConnection) request.openConnection();
             connection.setRequestMethod("GET");
@@ -46,16 +46,16 @@ public class RequestSender {
                 response.append(inputLine);
             }
             in.close();
-            logger.info("Response was received");
+            log.info("Response was received");
             ObjectMapper objectMapper = new ObjectMapper();
             map = objectMapper.readValue(
-                    response.toString(), new TypeReference<>() {
-                    });
-            logger.debug("Response was: " + response);
+                response.toString(), new TypeReference<>() {
+                });
+            log.debug("Response was: " + response);
             connection.disconnect();
 
         } catch (IOException exception) {
-            logger.warn(exception.getMessage());
+            log.warn(exception.getMessage());
         }
         return map;
     }

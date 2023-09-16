@@ -25,8 +25,8 @@ public class TagMapper {
 
     public List<ResponseTagDto> modelSetToSpotTagDtoList(Set<Tag> tags) {
         return tags.stream()
-                .map(this::modelToSpotTagDto)
-                .toList();
+            .map(this::modelToSpotTagDto)
+            .toList();
     }
 
     public ResponseTagDto modelToTagDto(Tag tag) {
@@ -37,14 +37,14 @@ public class TagMapper {
 
     public List<ResponseTagDto> modelArrayToTagDtoList(Tag[] tags) {
         return Arrays.stream(tags)
-                .map(this::modelToTagDto)
-                .toList();
+            .map(this::modelToTagDto)
+            .toList();
     }
 
     public Set<Tag> tagDtoSetToModelSet(Set<RequestTagDto> tagDtoSet) {
         return tagDtoSet.stream()
-                .map(x -> Tag.parseEnum(x.getName()))
-                .collect(Collectors.toSet());
+            .map(x -> Tag.parseEnum(x.getName()))
+            .collect(Collectors.toSet());
     }
 
 }

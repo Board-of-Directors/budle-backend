@@ -1,6 +1,7 @@
 package ru.nsu.fit.pak.budle.utils;
 
 import org.springframework.stereotype.Component;
+import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dao.establishment.beauty.Barbershop;
 import ru.nsu.fit.pak.budle.dao.establishment.entertainment.GameClub;
@@ -22,46 +23,43 @@ import java.util.Map;
 @Component
 public class EstablishmentFactory {
     private final Map<String, Establishment> entityFactory;
-
     private final Map<String, Map<String, ? extends ResponseShortEstablishmentInfo>> factoryOfDtoFactories;
 
     /**
      * Default constructor of establishment factory.
      */
     public EstablishmentFactory() {
-        entityFactory = new HashMap<>();
-        factoryOfDtoFactories = new HashMap<>();
-        initEntityFactory();
-        initDtoFactory();
+        entityFactory = getEntityFactory();
+        Map<String, ResponseBasicEstablishmentInfo> basicFactory = getBasicDtoFactory();
+        Map<String, ResponseExtendedEstablishmentInfo> extendedFactory = getExtendedDtoFactory();
+        factoryOfDtoFactories = Map.of("basic", basicFactory, "extended", extendedFactory);
     }
 
-    /**
-     * Initial state of entity factory.
-     */
-    private void initEntityFactory() {
-        entityFactory.put("Отели", new Hotel());
-        entityFactory.put("Рестораны", new Restaurant());
-        entityFactory.put("Игровые клубы", new GameClub());
-        entityFactory.put("Парикмахерские", new Barbershop());
+    private Map<String, Establishment> getEntityFactory() {
+        return Map.of(
+            Category.hotel.value, new Hotel(),
+            Category.restaurant.value, new Restaurant(),
+            Category.game_club.value, new GameClub(),
+            Category.barbershop.value, new Barbershop()
+        );
     }
 
-    /**
-     * Initial state of dto factory.
-     */
-    private void initDtoFactory() {
-        Map<String, ResponseBasicEstablishmentInfo> basicFactory = new HashMap<>();
-        basicFactory.put("hotel", new ResponseBasicHotelInfo());
-        basicFactory.put("restaurant", new ResponseBasicRestaurantInfo());
-        basicFactory.put("game_club", new ResponseBasicGameClubInfo());
-        basicFactory.put("barbershop", new ResponseBasicBarbershopInfo());
-        factoryOfDtoFactories.put("basic", basicFactory);
+    private Map<String, ResponseBasicEstablishmentInfo> getBasicDtoFactory() {
+        return Map.of(
+            Category.hotel.name(), new ResponseBasicHotelInfo(),
+            Category.restaurant.name(), new ResponseBasicRestaurantInfo(),
+            Category.game_club.name(), new ResponseBasicGameClubInfo(),
+            Category.barbershop.name(), new ResponseBasicBarbershopInfo()
+        );
+    }
 
-        Map<String, ResponseExtendedEstablishmentInfo> extendedFactory = new HashMap<>();
-        extendedFactory.put("hotel", new ResponseExtendedHotelInfo());
-        extendedFactory.put("restaurant", new ResponseExtendedRestaurantInfo());
-        extendedFactory.put("game_club", new ResponseExtendedGameClubInfo());
-        extendedFactory.put("barbershop", new ResponseExtendedBarbershopInfo());
-        factoryOfDtoFactories.put("extended", extendedFactory);
+    private Map<String, ResponseExtendedEstablishmentInfo> getExtendedDtoFactory() {
+        return Map.of(
+            Category.hotel.name(), new ResponseExtendedHotelInfo(),
+            Category.restaurant.name(), new ResponseExtendedRestaurantInfo(),
+            Category.game_club.name(), new ResponseExtendedGameClubInfo(),
+            Category.barbershop.name(), new ResponseExtendedBarbershopInfo()
+        );
     }
 
     /**

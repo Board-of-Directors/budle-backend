@@ -21,8 +21,6 @@ import javax.servlet.http.HttpSession;
 @RequiredArgsConstructor
 @Slf4j
 public class SecurityServiceImpl implements SecurityService {
-
-
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
 
@@ -63,10 +61,11 @@ public class SecurityServiceImpl implements SecurityService {
         log.info(userDetails.toString());
         log.info("Auto login success");
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken(userDetails,
-                        password,
-                        userDetails.getAuthorities());
-
+            new UsernamePasswordAuthenticationToken(
+                userDetails,
+                password,
+                userDetails.getAuthorities()
+            );
 
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
