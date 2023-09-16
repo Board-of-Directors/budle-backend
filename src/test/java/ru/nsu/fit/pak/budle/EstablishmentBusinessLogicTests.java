@@ -91,6 +91,20 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
     }
 
     @Test
+    @DisplayName("Проверка удаления заведения")
+    @ExpectedDatabase(
+        value = "/establishment/after/deleted_establishment.xml",
+        assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED
+    )
+    public void deleteEstablishment() {
+        establishmentService.deleteEstablishment(100L);
+        Assertions.assertEquals(
+            0,
+            establishmentRepository.findAll().size()
+        );
+    }
+
+    @Test
     @DisplayName("Проверка ошибки создания карты")
     public void errorCreatingMap() {
         Establishment establishment = establishmentRepository.findAll().get(0);
