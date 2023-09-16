@@ -22,6 +22,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Slf4j
 public class WorkingHoursServiceImpl implements WorkingHoursService {
+    private static final int DAY_COUNT_GENERATED_FOR_BOOKING = 14;
     private final ModelMapper mapper;
     private final WorkingHoursRepository workingHoursRepository;
     private final WorkingHoursMapper workingHoursMapper;
@@ -48,9 +49,7 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
     public List<ValidTimeDto> getValidBookingHoursByEstablishment(Establishment establishment) {
         List<ValidTimeDto> times = new ArrayList<>();
         Set<WorkingHours> workingHours = establishment.getWorkingHours();
-
-        final int DAY_COUNT = 14;
-        for (int i = 0; i < DAY_COUNT; i++) {
+        for (int i = 0; i < DAY_COUNT_GENERATED_FOR_BOOKING; i++) {
             LocalDate today = LocalDate.now().plusDays(i);
             ValidTimeDto currentDto = workingHoursMapper.convertFromDateAndTimeToValidTimeDto(today);
             Optional<WorkingHours> currentHours = workingHours

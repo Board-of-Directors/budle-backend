@@ -15,6 +15,7 @@ import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestOrderDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseOrderDto;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
+import ru.nsu.fit.pak.budle.exceptions.InvalidBookingTime;
 import ru.nsu.fit.pak.budle.exceptions.NotEnoughRightsException;
 import ru.nsu.fit.pak.budle.exceptions.OrderNotFoundException;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
@@ -50,13 +51,10 @@ public class OrderServiceImpl implements OrderService {
         log.info(dto.toString());
         Establishment establishment = establishmentService
             .getEstablishmentById(dto.getEstablishmentId());
-        /*
         if (!bookingTimeIsValid(establishment, dto)) {
             log.warn("Booking time is not valid");
             throw new InvalidBookingTime();
         }
-
-         */
 
         Class<? extends Order> mappingClass = orderFactory.getEntity(dto);
         Order order = orderMapper.toEntity(dto, mappingClass);
