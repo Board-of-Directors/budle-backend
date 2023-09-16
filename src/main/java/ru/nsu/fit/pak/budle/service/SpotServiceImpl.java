@@ -50,7 +50,7 @@ public class SpotServiceImpl implements SpotService {
         log.info("Getting spot by id");
         log.info("SpotID: " + spotId);
         return spotMapper.modelToDto(spotRepository.findById(spotId)
-                .orElseThrow(() -> new SpotNotFoundException(spotId)));
+            .orElseThrow(() -> new SpotNotFoundException(spotId)));
     }
 
     @Override
@@ -59,36 +59,46 @@ public class SpotServiceImpl implements SpotService {
         log.info("LocalID: " + localId);
         log.info("EstablishmentID: " + establishmentId);
         spotRepository.save(
-                new Spot(localId, establishmentRepository.getReferenceById(establishmentId))
+            new Spot(localId, establishmentRepository.getReferenceById(establishmentId))
         );
+    }
+
+    @Override
+    public void saveSpots(List<Spot> spots, Long establishmentId) {
+        spots = spots.stream()
+            .peek(spot -> spot.setEstablishment(establishmentRepository.getReferenceById(establishmentId)))
+            .toList();
+        spotRepository.saveAll(spots);
     }
 
     @Override
     public TimelineDto getSpotTimeline(Long localId, Long establishmentId) {
         log.info("Getting spot timeline");
         Establishment establishment = establishmentRepository.findById(establishmentId)
-                .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
+            .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
 
         Spot spot = spotRepository.findByEstablishmentAndLocalId(establishment, localId)
-                .orElseThrow(() -> new SpotNotFoundException(localId));
+            .orElseThrow(() -> new SpotNotFoundException(localId));
 
         LocalDate dateNow = LocalDate.now();
-        String today = dateNow.getDayOfWeek().getDisplayName(TextStyle.SHORT,
-                new Locale("ru"));
+        String today = dateNow.getDayOfWeek().getDisplayName(
+            TextStyle.SHORT,
+            new Locale("ru")
+        );
 
         WorkingHours todayHours = establishmentRepository
-                .findWorkingHoursByDay(DayOfWeek.getDayByLittleString(today));
+            .findWorkingHoursByDay(DayOfWeek.getDayByLittleString(today));
 
         TimelineDto timelineDto = new TimelineDto();
         timelineDto.setStart(todayHours.getStartTime());
         timelineDto.setEnd(todayHours.getEndTime());
         Set<BookingTimesDto> times = orderRepository.findAllByDateAndEstablishment(
-                        Date.valueOf(dateNow),
-                        spot.getEstablishment()
-                )
-                .stream()
-                .map(x -> new BookingTimesDto(x.getStartTime().toString(), x.getEndTime().toString()))
-                .collect(Collectors.toSet());
+                Date.valueOf(dateNow),
+                spot.getEstablishment()
+            )
+            .stream()
+            .map(x -> new BookingTimesDto(x.getStartTime().toString(), x.getEndTime().toString()))
+            .collect(Collectors.toSet());
         timelineDto.setTimes(times);
         return timelineDto;
 
