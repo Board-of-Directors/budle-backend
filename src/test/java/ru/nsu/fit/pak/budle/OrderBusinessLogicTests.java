@@ -16,6 +16,7 @@ import ru.nsu.fit.pak.budle.controller.OrderController;
 import ru.nsu.fit.pak.budle.dao.*;
 import ru.nsu.fit.pak.budle.dto.request.RequestOrderDto;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
+import ru.nsu.fit.pak.budle.exceptions.InvalidBookingTime;
 import ru.nsu.fit.pak.budle.exceptions.NotEnoughRightsException;
 import ru.nsu.fit.pak.budle.exceptions.OrderNotFoundException;
 import ru.nsu.fit.pak.budle.repository.OrderRepository;
@@ -128,6 +129,35 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
             );
             orderController.create(order);
             Assertions.assertEquals(orderCount + 1, orderRepository.findAll().size());
+        }
+    }
+
+    @Test
+    @DatabaseSetup(value = "/establishment/before/establishment_with_spots.xml")
+    @DisplayName("Тест на создание заказа с местом в невалидное время")
+    public void creatingNotValidTimeOrder() {
+        String instantExpected = "2014-12-23T00:01:00Z";
+        Clock clock = Clock.fixed(Instant.parse(instantExpected), ZoneId.of("UTC"));
+        LocalDate now = LocalDate.now(clock);
+        LocalDate bookDate = LocalDate.of(2014, 12, 23);
+        ZonedDateTime zonedNow = ZonedDateTime.now(clock);
+        try (MockedStatic<LocalDate> mockedStatic = mockStatic(LocalDate.class);
+             MockedStatic<ZonedDateTime> mockedZonedTime = mockStatic(ZonedDateTime.class)) {
+            mockedStatic.when(LocalDate::now).thenReturn(now);
+            mockedZonedTime.when(() -> ZonedDateTime.now(any(ZoneId.class))).thenReturn(zonedNow);
+            User guest = userRepository.findById(GUEST_ID).orElseThrow();
+            mockUser(guest);
+            long orderCount = orderRepository.findAll().size();
+            RequestOrderDto order = new RequestOrderDto(
+                4,
+                bookDate,
+                LocalTime.parse("23:30:00"),
+                ESTABLISHMENT_ID,
+                guest.getId(),
+                1L
+            );
+            Assertions.assertThrows(InvalidBookingTime.class, () -> orderController.create(order));
+            Assertions.assertEquals(orderCount, orderRepository.findAll().size());
         }
     }
 
