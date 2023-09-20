@@ -16,6 +16,7 @@ import ru.nsu.fit.pak.budle.controller.OrderController;
 import ru.nsu.fit.pak.budle.dao.*;
 import ru.nsu.fit.pak.budle.dto.request.RequestOrderDto;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
+import ru.nsu.fit.pak.budle.exceptions.NotEnoughRightsException;
 import ru.nsu.fit.pak.budle.exceptions.OrderNotFoundException;
 import ru.nsu.fit.pak.budle.repository.OrderRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
@@ -142,6 +143,20 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
             GUEST_ID
         );
         Assertions.assertEquals(orderCount - 1, orderRepository.findAll().size());
+    }
+
+    @Test
+    @DatabaseSetup(value = "/establishment/before/establishment_with_order.xml")
+    @DisplayName("Тест на исключение при удалении заказа")
+    public void exceptionDeletingOrder() {
+        User owner = userRepository.findById(OWNER_ID).orElseThrow();
+        mockUser(owner);
+        long orderCount = orderRepository.findAll().size();
+        Assertions.assertThrows(
+            NotEnoughRightsException.class,
+            () -> orderController.delete(ORDER_ID, OWNER_ID)
+        );
+        Assertions.assertEquals(orderCount, orderRepository.findAll().size());
     }
 
     @Test
