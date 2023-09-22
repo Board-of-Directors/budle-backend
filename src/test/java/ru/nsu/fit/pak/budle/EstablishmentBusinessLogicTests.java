@@ -24,6 +24,7 @@ import ru.nsu.fit.pak.budle.dto.request.RequestGetEstablishmentParameters;
 import ru.nsu.fit.pak.budle.dto.request.RequestHotelDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestWorkingHoursDto;
 import ru.nsu.fit.pak.budle.exceptions.ErrorWhileParsingEstablishmentMapException;
+import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.repository.WorkingHoursRepository;
@@ -52,13 +53,6 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
     private ImageWorker imageWorker;
     @Autowired
     private WorkingHoursRepository workingHoursRepository;
-
-    @BeforeEach
-    public void makeMock() {
-        User user = userRepository.findById(USER_ID).orElseThrow();
-        mockUser(user);
-    }
-
     @Autowired
     private EstablishmentService establishmentService;
     @Autowired
@@ -68,6 +62,53 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
 
     @Autowired
     private EstablishmentController establishmentController;
+
+    @NonNull
+    public static Stream<Arguments> search() {
+        return Stream.of(
+            Arguments.of(
+                "По пустому фильтру",
+                RequestGetEstablishmentParameters.builder().build(),
+                ONLY_ONE
+            ),
+            Arguments.of(
+                "По названию",
+                RequestGetEstablishmentParameters.builder().name("Red Rabbit").build(),
+                ONLY_ONE
+            ),
+            Arguments.of(
+                "По флагу наличия карты",
+                RequestGetEstablishmentParameters.builder().hasMap(false).build(),
+                ONLY_ONE
+            ),
+            Arguments.of(
+                "По флагу наличия безналичной оплаты",
+                RequestGetEstablishmentParameters.builder().hasCardPayment(false).build(),
+                ONLY_ONE
+            ),
+            Arguments.of(
+                "По количеству рабочих дней",
+                RequestGetEstablishmentParameters.builder().workingDayCount(1).build(),
+                ONLY_ONE
+            ),
+            Arguments.of(
+                "По верной категории",
+                RequestGetEstablishmentParameters.builder().category(Category.game_club.value).build(),
+                ONLY_ONE
+            ),
+            Arguments.of(
+                "По неверной категории",
+                RequestGetEstablishmentParameters.builder().category(Category.hotel.value).build(),
+                NOTHING
+            )
+        );
+    }
+
+    @BeforeEach
+    public void makeMock() {
+        User user = userRepository.findById(USER_ID).orElseThrow();
+        mockUser(user);
+    }
 
     @Test
     @DisplayName("Проверка количества категорий")
@@ -127,6 +168,14 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
         Assertions.assertEquals(4, workingHoursRepository.findAll().size());
     }
 
+    @Test
+    @DisplayName("Проверка создания заведения - заведение уже существует")
+    public void testWrongCreatingHotel() {
+        Assertions.assertThrows(
+            EstablishmentAlreadyExistsException.class,
+            () -> establishmentService.createEstablishment(getExistedEstablishment()));
+    }
+
     @MethodSource
     @DisplayName("Тест на поиск заведения по заданным параметрам")
     @ParameterizedTest(name = TUPLE_PARAMETERIZED_DISPLAY_NAME)
@@ -152,47 +201,6 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
 
     }
 
-    @NonNull
-    public static Stream<Arguments> search() {
-        return Stream.of(
-            Arguments.of(
-                "По пустому фильтру",
-                RequestGetEstablishmentParameters.builder().build(),
-                ONLY_ONE
-            ),
-            Arguments.of(
-                "По названию",
-                RequestGetEstablishmentParameters.builder().name("Red Rabbit").build(),
-                ONLY_ONE
-            ),
-            Arguments.of(
-                "По флагу наличия карты",
-                RequestGetEstablishmentParameters.builder().hasMap(false).build(),
-                ONLY_ONE
-            ),
-            Arguments.of(
-                "По флагу наличия безналичной оплаты",
-                RequestGetEstablishmentParameters.builder().hasCardPayment(false).build(),
-                ONLY_ONE
-            ),
-            Arguments.of(
-                "По количеству рабочих дней",
-                RequestGetEstablishmentParameters.builder().workingDayCount(1).build(),
-                ONLY_ONE
-            ),
-            Arguments.of(
-                "По верной категории",
-                RequestGetEstablishmentParameters.builder().category(Category.game_club.value).build(),
-                ONLY_ONE
-            ),
-            Arguments.of(
-                "По неверной категории",
-                RequestGetEstablishmentParameters.builder().category(Category.hotel.value).build(),
-                NOTHING
-            )
-        );
-    }
-
     private RequestEstablishmentDto getEstablishment() {
         return RequestHotelDto.builder()
             .name("DoubleTree")
@@ -213,6 +221,14 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
             ))
             .category(Category.hotel.value)
             .photosInput(Collections.emptySet())
+            .build();
+    }
+
+    private RequestEstablishmentDto getExistedEstablishment() {
+        return RequestEstablishmentDto.builder()
+            .name("Red Rabbit")
+            .address("Koshurnikova St. 47")
+            .category("Отели")
             .build();
     }
 
