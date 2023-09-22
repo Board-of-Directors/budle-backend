@@ -3,13 +3,21 @@ package ru.nsu.fit.pak.budle.service;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import ru.nsu.fit.pak.budle.dao.*;
+import ru.nsu.fit.pak.budle.dao.Category;
+import ru.nsu.fit.pak.budle.dao.Photo;
+import ru.nsu.fit.pak.budle.dao.Spot;
+import ru.nsu.fit.pak.budle.dao.Tag;
+import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.EstablishmentListDto;
 import ru.nsu.fit.pak.budle.dto.PhotoDto;
@@ -59,35 +67,35 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     public EstablishmentListDto getEstablishmentByParams(
-            RequestGetEstablishmentParameters parameters
+        RequestGetEstablishmentParameters parameters
     ) {
         log.info("Getting establishment by parameters");
         securityService.findLoggedInUsername();
         log.info("Parameters" + parameters);
 
         PageRequest page = PageRequest.of(parameters.offset(), parameters.limit(),
-                Sort.by(parameters.sortValue())
+            Sort.by(parameters.sortValue())
         );
 
         ExampleMatcher matcher = ExampleMatcher
-                .matching()
-                .withIgnoreNullValues()
-                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+            .matching()
+            .withIgnoreNullValues()
+            .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
 
         Category categoryEnum = parameters.category() == null ? null : Category.getEnumByValue(parameters.category());
 
         Example<Establishment> exampleQuery =
-                Example.of(new Establishment(
-                        categoryEnum,
-                        parameters.hasMap(),
-                        parameters.hasCardPayment(),
-                        parameters.name()
-                ), matcher);
+            Example.of(new Establishment(
+                categoryEnum,
+                parameters.hasMap(),
+                parameters.hasCardPayment(),
+                parameters.name()
+            ), matcher);
 
         Page<Establishment> results = establishmentRepository.findAll(exampleQuery, page);
         log.info("Results was " + results);
         List<Establishment> processing = results.getContent().stream().filter(
-                est -> est.getWorkingHours().size() <= parameters.workingDayCount()
+            est -> est.getWorkingHours().size() <= parameters.workingDayCount()
         ).toList();
         List<ResponseBasicEstablishmentInfo> establishments = establishmentMapper.modelListToDtoList(processing);
         return new EstablishmentListDto(establishments, establishments.size());
@@ -161,13 +169,13 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     @NonNull
     private List<Spot> getSpotList(NodeList elems) {
         return IntStream.range(0, elems.getLength())
-                .peek(idx -> ((Element) elems.item(idx)).setAttribute("id", String.valueOf(idx)))
-                .mapToObj(idx -> {
-                    Spot spot = new Spot();
-                    spot.setLocalId((long) idx);
-                    return spot;
-                })
-                .toList();
+            .peek(idx -> ((Element) elems.item(idx)).setAttribute("id", String.valueOf(idx)))
+            .mapToObj(idx -> {
+                Spot spot = new Spot();
+                spot.setLocalId((long) idx);
+                return spot;
+            })
+            .toList();
     }
 
     @Override
@@ -176,7 +184,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         User owner = securityService.getLoggedInUser();
 
         return establishmentMapper.toShortInfoList(
-                establishmentRepository.findAllByOwner(owner)
+            establishmentRepository.findAllByOwner(owner)
         );
     }
 
@@ -225,9 +233,9 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     public Establishment getEstablishmentById(Long establishmentId) {
         return establishmentRepository
-                .findById(establishmentId).orElseThrow(
-                        () -> new EstablishmentNotFoundException(establishmentId)
-                );
+            .findById(establishmentId).orElseThrow(
+                () -> new EstablishmentNotFoundException(establishmentId)
+            );
     }
 
     @Override
