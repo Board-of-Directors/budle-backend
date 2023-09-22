@@ -1,11 +1,5 @@
 package ru.nsu.fit.pak.budle;
 
-import java.time.LocalTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Stream;
-
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
@@ -35,6 +29,12 @@ import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.repository.WorkingHoursRepository;
 import ru.nsu.fit.pak.budle.service.EstablishmentService;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
+
+import java.time.LocalTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -128,6 +128,7 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
     }
 
     @MethodSource
+    @DisplayName("Тест на поиск заведения по заданным параметрам")
     @ParameterizedTest(name = TUPLE_PARAMETERIZED_DISPLAY_NAME)
     @SuppressWarnings("unused")
     public void search(
