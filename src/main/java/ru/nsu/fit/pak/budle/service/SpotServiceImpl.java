@@ -38,7 +38,7 @@ public class SpotServiceImpl implements SpotService {
     public List<SpotDto> getSpotsByEstablishment(Long establishmentId) {
         log.info("Getting spots by establishment");
         log.info("EstablishmentID: " + establishmentId);
-        Establishment establishment = establishmentRepository.getEstablishmentById(establishmentId);
+        Establishment establishment = establishmentRepository.findById(establishmentId).orElseThrow();
         return spotMapper.ListModelToListDto(spotRepository.findByEstablishment(establishment));
     }
 
