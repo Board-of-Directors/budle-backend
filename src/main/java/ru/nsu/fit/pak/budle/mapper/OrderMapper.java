@@ -6,7 +6,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.pak.budle.dao.Order;
-import ru.nsu.fit.pak.budle.dao.OrderWithSpot;
 import ru.nsu.fit.pak.budle.dao.Spot;
 import ru.nsu.fit.pak.budle.dto.request.RequestOrderDto;
 import ru.nsu.fit.pak.budle.exceptions.SpotNotFoundException;
@@ -16,7 +15,6 @@ import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 
 @Component
 public class OrderMapper {
@@ -38,15 +36,11 @@ public class OrderMapper {
 
         Condition<Long, Spot> notNull = ctx -> ctx.getSource() != null;
 
-        mapper.createTypeMap(RequestOrderDto.class, OrderWithSpot.class)
-            .include(Order.class)
-            .addMappings(mapping -> mapping
-                .when(notNull)
+        mapper.createTypeMap(RequestOrderDto.class, Order.class)
+            .addMappings(mapping -> mapping.when(notNull)
                 .using(converterToSpot)
-                .map(
-                    RequestOrderDto::getSpotId,
-                    OrderWithSpot::setSpot
-                ))
+                .map(RequestOrderDto::getSpotId, Order::setSpot)
+            )
             .addMappings(mapping -> mapping.using(converterToStartTime)
                 .map(
                     RequestOrderDto::getTime,
@@ -59,8 +53,8 @@ public class OrderMapper {
         this.mapper = mapper;
     }
 
-    public Order toEntity(RequestOrderDto dto, Class<? extends Order> mappingClass) {
-        return mapper.map(dto, mappingClass);
+    public Order toEntity(RequestOrderDto dto) {
+        return mapper.map(dto, Order.class);
     }
 
 }

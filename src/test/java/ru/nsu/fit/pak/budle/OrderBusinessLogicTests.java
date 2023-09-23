@@ -25,7 +25,6 @@ import ru.nsu.fit.pak.budle.exceptions.OrderNotFoundException;
 import ru.nsu.fit.pak.budle.repository.OrderRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.service.OrderService;
-import ru.nsu.fit.pak.budle.service.SpotService;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -49,9 +48,6 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
     private static final Long ORDER_ID = 250L;
 
     private static final Long ESTABLISHMENT_ID = 100L;
-
-    @Autowired
-    private SpotService spotService;
 
     @Autowired
     private UserRepository userRepository;
