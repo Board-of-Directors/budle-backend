@@ -1,8 +1,9 @@
 package ru.nsu.fit.pak.budle;
 
-import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
+import org.flywaydb.test.annotation.FlywayTest;
+import org.flywaydb.test.dbunit.DBUnitSupport;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,11 +41,13 @@ import java.util.stream.Stream;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@DatabaseSetup(value = "/establishment/before/establishment.xml")
 @DisplayName("Тест на бизнес-логику заведений")
+@FlywayTest
+@DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment.xml"})
 class EstablishmentBusinessLogicTests extends AbstractContextualTest {
 
     private static final Long USER_ID = 200L;
+    private static final Long ESTABLISHMENT_ID = 100L;
 
     private static final Integer ONLY_ONE = 1;
     private static final Integer NOTHING = 0;
@@ -111,18 +114,25 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
     }
 
     @Test
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment.xml"})
     @DisplayName("Проверка количества категорий")
     public void testCategoryNumber() {
         Assertions.assertEquals(establishmentService.getCategories().size(), Category.values().length);
     }
 
     @Test
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment.xml"})
     @DisplayName("Проверка количества тэгов")
     public void testTagsNumber() {
         Assertions.assertEquals(establishmentController.tags().size(), Tag.values().length);
     }
 
     @Test
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment.xml"})
+
     @DisplayName("Проверка создания карты заведения")
     public void testCreatingMap() {
         Establishment establishment = establishmentRepository.findAll().get(0);
@@ -132,6 +142,8 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
     }
 
     @Test
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment.xml"})
     @DisplayName("Проверка удаления заведения")
     @ExpectedDatabase(
         value = "/establishment/after/deleted_establishment.xml",
@@ -146,6 +158,8 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
     }
 
     @Test
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment.xml"})
     @DisplayName("Проверка ошибки создания карты")
     public void errorCreatingMap() {
         Establishment establishment = establishmentRepository.findAll().get(0);
@@ -157,6 +171,8 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
     }
 
     @Test
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment.xml"})
     @DisplayName("Проверка создания заведения")
     @ExpectedDatabase(
         value = "/establishment/after/hotel_created.xml",
@@ -169,6 +185,8 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
     }
 
     @Test
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment.xml"})
     @DisplayName("Проверка создания заведения - заведение уже существует")
     public void testWrongCreatingHotel() {
         Assertions.assertThrows(
@@ -176,9 +194,24 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
             () -> establishmentService.createEstablishment(getExistedEstablishment()));
     }
 
+    @Test
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment.xml"})
+    @DisplayName("Проверка обновления заведения новыми данными")
+    @ExpectedDatabase(
+        value = "/establishment/after/updated.xml",
+        assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED
+    )
+    public void testUpdateEstablishment() {
+        establishmentService.updateEstablishment(ESTABLISHMENT_ID, getEstablishment());
+    }
+
+
     @MethodSource
     @DisplayName("Тест на поиск заведения по заданным параметрам")
     @ParameterizedTest(name = TUPLE_PARAMETERIZED_DISPLAY_NAME)
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment.xml"})
     @SuppressWarnings("unused")
     public void search(
         String testName,
@@ -193,6 +226,8 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
     @EnumSource(Category.class)
     @ParameterizedTest(name = TUPLE_PARAMETERIZED_DISPLAY_NAME)
     @DisplayName("Тест на получение вариантов категорий")
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment.xml"})
     public void categoryVariants(Category category) {
         Assertions.assertEquals(
             category.variants,
