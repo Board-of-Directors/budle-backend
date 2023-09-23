@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.nsu.fit.pak.budle.controller.WorkerController;
 import ru.nsu.fit.pak.budle.exceptions.WorkerNotFoundException;
-import ru.nsu.fit.pak.budle.service.WorkerService;
 
 @DisplayName("Тест на бизнес-логику работников заведения.")
 @FlywayTest
@@ -17,7 +17,7 @@ public class WorkerBusinessLogicTests extends AbstractContextualTest {
 
     private static final String WORKER_PHONE_NUMBER = "+79991232233";
     @Autowired
-    private WorkerService workerService;
+    private WorkerController workerController;
 
     @Test
     @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/worker/before/establishment_with_worker.xml"})
@@ -25,7 +25,7 @@ public class WorkerBusinessLogicTests extends AbstractContextualTest {
     public void testGetWorkers() {
         Assertions.assertEquals(
             1,
-            workerService.getWorkers(ESTABLISHMENT_ID).size()
+            workerController.getWorkers(ESTABLISHMENT_ID).size()
         );
 
     }
@@ -34,18 +34,18 @@ public class WorkerBusinessLogicTests extends AbstractContextualTest {
     @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/worker/before/establishment_with_worker.xml"})
     @DisplayName("Тест на удаление работника")
     public void testDeleteWorker() {
-        workerService.deleteWorker(WORKER_ID, ESTABLISHMENT_ID);
-        Assertions.assertTrue(workerService.getWorkers(ESTABLISHMENT_ID).isEmpty());
+        workerController.delete(WORKER_ID, ESTABLISHMENT_ID);
+        Assertions.assertTrue(workerController.getWorkers(ESTABLISHMENT_ID).isEmpty());
     }
 
     @Test
     @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/worker/before/establishment_without_worker.xml"})
     @DisplayName("Тест на создание работника")
     public void testCreateWorker() {
-        workerService.createWorker(WORKER_PHONE_NUMBER, ESTABLISHMENT_ID);
+        workerController.invite(WORKER_PHONE_NUMBER, ESTABLISHMENT_ID);
         Assertions.assertEquals(
             1,
-            workerService.getWorkers(ESTABLISHMENT_ID).size()
+            workerController.getWorkers(ESTABLISHMENT_ID).size()
         );
 
     }
@@ -57,7 +57,7 @@ public class WorkerBusinessLogicTests extends AbstractContextualTest {
     public void getNonExistenceWorker() {
         Assertions.assertThrows(
             WorkerNotFoundException.class,
-            () -> workerService.deleteWorker(123L, ESTABLISHMENT_ID)
+            () -> workerController.delete(123L, ESTABLISHMENT_ID)
         );
     }
 }
