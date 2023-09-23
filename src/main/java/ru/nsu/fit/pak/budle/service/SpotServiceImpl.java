@@ -86,9 +86,6 @@ public class SpotServiceImpl implements SpotService {
         WorkingHours todayHours = establishmentRepository
             .findWorkingHoursByDay(DayOfWeek.getDayByLittleString(today));
 
-        TimelineDto timelineDto = new TimelineDto();
-        timelineDto.setStart(todayHours.getStartTime());
-        timelineDto.setEnd(todayHours.getEndTime());
         Set<BookingTimesDto> times = orderRepository.findAllByDateAndEstablishment(
                 Date.valueOf(dateNow),
                 spot.getEstablishment()
@@ -96,8 +93,11 @@ public class SpotServiceImpl implements SpotService {
             .stream()
             .map(x -> new BookingTimesDto(x.getStartTime().toString(), x.getEndTime().toString()))
             .collect(Collectors.toSet());
-        timelineDto.setTimes(times);
-        return timelineDto;
+
+        return new TimelineDto()
+            .setStart(todayHours.getStartTime())
+            .setEnd(todayHours.getEndTime())
+            .setTimes(times);
 
     }
 }
