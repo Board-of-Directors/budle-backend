@@ -1,8 +1,9 @@
 package ru.nsu.fit.pak.budle;
 
-import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
+import org.flywaydb.test.annotation.FlywayTest;
+import org.flywaydb.test.dbunit.DBUnitSupport;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,9 @@ import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.nsu.fit.pak.budle.controller.EstablishmentController;
 import ru.nsu.fit.pak.budle.controller.OrderController;
-import ru.nsu.fit.pak.budle.dao.*;
+import ru.nsu.fit.pak.budle.dao.Order;
+import ru.nsu.fit.pak.budle.dao.OrderStatus;
+import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dto.request.RequestOrderDto;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
 import ru.nsu.fit.pak.budle.exceptions.InvalidBookingTime;
@@ -35,6 +38,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
 
 @DisplayName("Тесты логики работы с заказами")
+@FlywayTest
 class OrderBusinessLogicTests extends AbstractContextualTest {
 
     private static final Long GUEST_ID = 3L;
@@ -62,7 +66,8 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
 
     @ParameterizedTest(name = TUPLE_PARAMETERIZED_DISPLAY_NAME)
     @MethodSource
-    @DatabaseSetup(value = "/establishment/before/establishment_with_many_orders.xml")
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment_with_many_orders.xml"})
     @DisplayName("Тест на получение заказов заведения")
     @SuppressWarnings("unused")
     public void getEstablishmentOrders(String name, Integer status, int size) {
@@ -71,7 +76,8 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
     }
 
     @Test
-    @DatabaseSetup(value = "/establishment/before/establishment.xml")
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment.xml"})
     @DisplayName("Тест на успешное создание заказа")
     public void testOrder_creatingOrder() {
         String instantExpected = "2014-12-23T00:01:00Z";
@@ -100,7 +106,8 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
     }
 
     @Test
-    @DatabaseSetup(value = "/establishment/before/establishment_with_spots.xml")
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment_with_spots.xml"})
     @ExpectedDatabase(
         value = "/orders/after/order_with_spot.xml",
         assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED
@@ -133,7 +140,8 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
     }
 
     @Test
-    @DatabaseSetup(value = "/establishment/before/establishment_with_spots.xml")
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment_with_spots.xml"})
     @DisplayName("Тест на создание заказа с местом в невалидное время")
     public void creatingNotValidTimeOrder() {
         String instantExpected = "2014-12-23T00:01:00Z";
@@ -162,7 +170,8 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
     }
 
     @Test
-    @DatabaseSetup(value = "/establishment/before/establishment_with_order.xml")
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment_with_order.xml"})
     @DisplayName("Тест на успешное удаление заказа")
     public void successDeletingOrder() {
         User owner = userRepository.findById(OWNER_ID).orElseThrow();
@@ -176,7 +185,8 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
     }
 
     @Test
-    @DatabaseSetup(value = "/establishment/before/establishment_with_order.xml")
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment_with_order.xml"})
     @DisplayName("Тест на исключение при удалении заказа")
     public void exceptionDeletingOrder() {
         User owner = userRepository.findById(OWNER_ID).orElseThrow();
@@ -190,7 +200,8 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
     }
 
     @Test
-    @DatabaseSetup(value = "/establishment/before/establishment_with_order.xml")
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment_with_order.xml"})
     @DisplayName("Тест на смену статуса заказа")
     public void testOrder_acceptingAndRejectingOrder() {
         User owner = userRepository.findById(OWNER_ID).orElseThrow();
@@ -223,7 +234,8 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
 
     @Test
     @DisplayName("Получение несуществующего заказа")
-    @DatabaseSetup(value = "/establishment/before/establishment_with_order.xml")
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment_with_order.xml"})
     public void getNonExistenceOrder() {
         Assertions.assertThrows(
             OrderNotFoundException.class,
@@ -247,7 +259,8 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
 
     @ParameterizedTest(name = TUPLE_PARAMETERIZED_DISPLAY_NAME)
     @MethodSource
-    @DatabaseSetup(value = "/establishment/before/establishment_with_many_orders.xml")
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment_with_many_orders.xml"})
     @DisplayName("Тест на получение заказов человека")
     @SuppressWarnings("unused")
     public void getUserOrders(String name, Integer status, int size) {
@@ -258,7 +271,8 @@ class OrderBusinessLogicTests extends AbstractContextualTest {
 
     @Test
     @DisplayName("Получение заказов несуществующего заведения")
-    @DatabaseSetup(value = "/establishment/before/establishment_with_order.xml")
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment_with_order.xml"})
     public void getOrderNonExistenceEstablishment() {
         Assertions.assertThrows(
             EstablishmentNotFoundException.class,

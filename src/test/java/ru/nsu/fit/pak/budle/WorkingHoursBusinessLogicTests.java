@@ -1,17 +1,9 @@
 package ru.nsu.fit.pak.budle;
 
-import java.time.Clock;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Set;
-
-import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
+import org.flywaydb.test.annotation.FlywayTest;
+import org.flywaydb.test.dbunit.DBUnitSupport;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,11 +17,20 @@ import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.WorkingHoursRepository;
 import ru.nsu.fit.pak.budle.service.WorkingHoursService;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Set;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
 
 @DisplayName("Тесты на бизнес-функциональность рабочих часов заведения")
-@DatabaseSetup("/working_hours/before/prepare.xml")
+@FlywayTest
 public class WorkingHoursBusinessLogicTests extends AbstractContextualTest {
 
     private final static Long ESTABLISHMENT_ID = 100L;
@@ -42,6 +43,8 @@ public class WorkingHoursBusinessLogicTests extends AbstractContextualTest {
     private EstablishmentRepository establishmentRepository;
 
     @Test
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/working_hours/before/prepare.xml"})
     @DisplayName("Тест на удаление рабочих часов из базы данных")
     public void testDeleteWorkingHours() {
         WorkingHours wh = workingHoursRepository.findAll().get(0);
@@ -50,6 +53,8 @@ public class WorkingHoursBusinessLogicTests extends AbstractContextualTest {
     }
 
     @Test
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/working_hours/before/prepare.xml"})
     @DisplayName("Тест генерации рабочих часов заведения на основании времени работы")
     public void testGenerateWorkingHoursDuration() {
         String instantExpected = "2014-12-22T10:15:30Z";
@@ -72,6 +77,8 @@ public class WorkingHoursBusinessLogicTests extends AbstractContextualTest {
     }
 
     @Test
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/working_hours/before/prepare.xml"})
     @DisplayName("Тест генерации рабочих часов заведения на основании времени работы (с учетом отступа по времени)")
     public void testGenerateWorkingHoursDurationWithGap() {
         String instantExpected = "2014-12-23T00:01:00Z";
@@ -98,6 +105,8 @@ public class WorkingHoursBusinessLogicTests extends AbstractContextualTest {
     }
 
     @Test
+    @FlywayTest
+    @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/working_hours/before/prepare.xml"})
     @DisplayName("Тест на сохранение рабочих часов в базу данных")
     @ExpectedDatabase(
         value = "/working_hours/after/not_replace_old_hours.xml",

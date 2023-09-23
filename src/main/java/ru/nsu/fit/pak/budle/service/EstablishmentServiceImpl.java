@@ -201,6 +201,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         Establishment originalEstablishment = getEstablishmentById(establishmentId);
         Establishment establishment = establishmentMapper.dtoToModel(establishmentDto);
         establishment.setId(establishmentId);
+        establishment.setOwner(securityService.getLoggedInUser());
         deleteEstablishmentPhotos(originalEstablishment);
         deleteEstablishmentHours(originalEstablishment);
         saveEstablishmentData(establishment, establishmentDto);

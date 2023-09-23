@@ -1,0 +1,43 @@
+<dataset>
+    <users
+            id="200"
+            username="Oleg"
+            phone_number="+79993332211"
+            password="123456"/>
+    <users
+            id="3"
+            username="Varya"
+            phone_number="+79991232233"
+            password="123456"/>
+    <establishments
+            id="100"
+            name="DoubleTree"
+            description="One of the best places"
+            address="Aztekov St. 47"
+            has_map="false"
+            has_card_payment="false"
+            rating="4.8"
+            price="400"
+            category="game_club"
+            image="some_image"
+            map="some_map"
+            owner_id="200"/>
+    <working_hours
+            id="1"
+            establishment_id="100"
+            day_of_week="2"
+            start_time="12:00:00"
+            end_time="13:00:00"/>
+    <working_hours
+            id="2"
+            establishment_id="100"
+            day_of_week="3"
+            start_time="12:00:00"
+            end_time="13:00:00"/>
+    <working_hours
+            id="3"
+            establishment_id="100"
+            day_of_week="7"
+            start_time="12:00:00"
+            end_time="13:00:00"/>
+</dataset>
