@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.nsu.fit.pak.budle.controller.SpotController;
 import ru.nsu.fit.pak.budle.dto.SpotDto;
 import ru.nsu.fit.pak.budle.dto.TimelineDto;
 import ru.nsu.fit.pak.budle.service.SpotService;
@@ -31,6 +32,8 @@ public class SpotBusinessLogicTests extends AbstractContextualTest {
     private static final Long ESTABLISHMENT_ID = 100L;
     @Autowired
     private SpotService spotService;
+    @Autowired
+    private SpotController spotController;
 
     @Test
     @DisplayName("Проверка получения мест заведения")
@@ -54,7 +57,7 @@ public class SpotBusinessLogicTests extends AbstractContextualTest {
         SpotDto expectedSpot = new SpotDto();
         expectedSpot.setId(2L);
         Assertions.assertEquals(
-            spotService.getSpotById(2L),
+            spotController.get(2L),
             expectedSpot
         );
 
@@ -87,7 +90,7 @@ public class SpotBusinessLogicTests extends AbstractContextualTest {
                     .setStart(LocalTime.of(0, 0))
                     .setEnd(LocalTime.of(23, 0))
                     .setTimes(Collections.emptySet()),
-                spotService.getSpotTimeline(1L, ESTABLISHMENT_ID)
+                spotController.getTimeline(1L, ESTABLISHMENT_ID)
             );
         }
     }
