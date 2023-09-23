@@ -29,7 +29,11 @@
             start_time="00:00:00"
             end_time="23:00:00"/>
     <spots
-            id="2"
+            id="1"
             local_id="1"
+            establishment_id="100"/>
+    <spots
+            id="2"
+            local_id="2"
             establishment_id="100"/>
 </dataset>
