@@ -29,7 +29,6 @@ import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.UserRepository;
 import ru.nsu.fit.pak.budle.repository.WorkingHoursRepository;
-import ru.nsu.fit.pak.budle.service.EstablishmentService;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
 
 import java.time.LocalTime;
@@ -57,12 +56,9 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
     @Autowired
     private WorkingHoursRepository workingHoursRepository;
     @Autowired
-    private EstablishmentService establishmentService;
-    @Autowired
     private EstablishmentRepository establishmentRepository;
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private EstablishmentController establishmentController;
 
@@ -90,11 +86,6 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
                 ONLY_ONE
             ),
             Arguments.of(
-                "По количеству рабочих дней",
-                RequestGetEstablishmentParameters.builder().workingDayCount(1).build(),
-                ONLY_ONE
-            ),
-            Arguments.of(
                 "По верной категории",
                 RequestGetEstablishmentParameters.builder().category(Category.game_club.value).build(),
                 ONLY_ONE
@@ -118,7 +109,7 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
     @DBUnitSupport(loadFilesForRun = {"CLEAN_INSERT", "/establishment/before/establishment.xml"})
     @DisplayName("Проверка количества категорий")
     public void testCategoryNumber() {
-        Assertions.assertEquals(establishmentService.getCategories().size(), Category.values().length);
+        Assertions.assertEquals(establishmentController.category().size(), Category.values().length);
     }
 
     @Test
@@ -138,7 +129,7 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
         Establishment establishment = establishmentRepository.findAll().get(0);
         String addedMap =
             "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" height=\"555\" viewBox=\"0 0 375 555\" width=\"375\"/>";
-        establishmentService.addMap(establishment.getId(), addedMap);
+        establishmentController.createMap(establishment.getId(), addedMap);
     }
 
     @Test
@@ -150,7 +141,7 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
         assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED
     )
     public void deleteEstablishment() {
-        establishmentService.deleteEstablishment(100L);
+        establishmentController.delete(100L);
         Assertions.assertEquals(
             0,
             establishmentRepository.findAll().size()
@@ -166,7 +157,7 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
         String addedMap = "smkalz";
         Assertions.assertThrows(
             ErrorWhileParsingEstablishmentMapException.class,
-            () -> establishmentService.addMap(establishment.getId(), addedMap)
+            () -> establishmentController.createMap(establishment.getId(), addedMap)
         );
     }
 
@@ -180,7 +171,7 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
     )
     public void testCreatingHotel() {
         when(imageWorker.saveImage(any())).thenReturn("image path");
-        establishmentService.createEstablishment(getEstablishment());
+        establishmentController.createEstablishment(getEstablishment());
         Assertions.assertEquals(4, workingHoursRepository.findAll().size());
     }
 
@@ -191,7 +182,7 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
     public void testWrongCreatingHotel() {
         Assertions.assertThrows(
             EstablishmentAlreadyExistsException.class,
-            () -> establishmentService.createEstablishment(getExistedEstablishment()));
+            () -> establishmentController.createEstablishment(getExistedEstablishment()));
     }
 
     @Test
@@ -203,7 +194,7 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
         assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED
     )
     public void testUpdateEstablishment() {
-        establishmentService.updateEstablishment(ESTABLISHMENT_ID, getEstablishment());
+        establishmentController.update(ESTABLISHMENT_ID, getEstablishment());
     }
 
 
@@ -218,7 +209,7 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
         RequestGetEstablishmentParameters parameters,
         Integer expectedResponseCount
     ) {
-        EstablishmentListDto establishmentListDto = establishmentService.getEstablishmentByParams(parameters);
+        EstablishmentListDto establishmentListDto = establishmentController.getEstablishments(parameters);
         Assertions.assertEquals(expectedResponseCount, establishmentListDto.getCount());
 
     }
@@ -231,7 +222,7 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
     public void categoryVariants(Category category) {
         Assertions.assertEquals(
             category.variants,
-            establishmentService.getCategoryVariants(category.getValue())
+            establishmentController.getCategoryVariants(category.getValue())
         );
 
     }
@@ -244,8 +235,10 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
             .hasCardPayment(false)
             .hasMap(false)
             .owner(USER_ID)
-            .price(400)
+            .price(500)
             .rating(4.8F)
+            .image("Main image")
+            .starsCount(5)
             .tags(Collections.emptySet())
             .workingHours(Set.of(
                 RequestWorkingHoursDto.builder()
@@ -260,11 +253,10 @@ class EstablishmentBusinessLogicTests extends AbstractContextualTest {
     }
 
     private RequestEstablishmentDto getExistedEstablishment() {
-        return RequestEstablishmentDto.builder()
-            .name("Red Rabbit")
-            .address("Koshurnikova St. 47")
-            .category("Отели")
-            .build();
+        return getEstablishment()
+            .setName("Red Rabbit")
+            .setAddress("Koshurnikova St. 47")
+            .setCategory("Отели");
     }
 
 }
