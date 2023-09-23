@@ -36,26 +36,23 @@
             guest_count="4"
             status="0"
             user_id="3"
-            establishment_id="100"
-            dtype="order"/>
+            establishment_id="100"/>
     <orders
-        id="251"
-        date="2022-07-07"
-        start_time="15:00:00"
-        end_time="19:00:00"
-        guest_count="10"
-        status="1"
-        user_id="3"
-        establishment_id="100"
-        dtype="order"/>
+            id="251"
+            date="2022-07-07"
+            start_time="15:00:00"
+            end_time="19:00:00"
+            guest_count="10"
+            status="1"
+            user_id="3"
+            establishment_id="100"/>
     <orders
-        id="252"
-        date="2022-07-07"
-        start_time="15:30:00"
-        end_time="19:30:00"
-        guest_count="1"
-        status="2"
-        user_id="3"
-        establishment_id="100"
-        dtype="order"/>
+            id="252"
+            date="2022-07-07"
+            start_time="15:30:00"
+            end_time="19:30:00"
+            guest_count="1"
+            status="2"
+            user_id="3"
+            establishment_id="100"/>
 </dataset>

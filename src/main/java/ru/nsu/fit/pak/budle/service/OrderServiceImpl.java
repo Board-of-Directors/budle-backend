@@ -23,10 +23,8 @@ import ru.nsu.fit.pak.budle.mapper.OrderMapper;
 import ru.nsu.fit.pak.budle.mapper.WorkingHoursMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.OrderRepository;
-import ru.nsu.fit.pak.budle.utils.OrderFactory;
 
 import javax.transaction.Transactional;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -40,7 +38,6 @@ public class OrderServiceImpl implements OrderService {
     private final EstablishmentService establishmentService;
     private final EstablishmentMapper establishmentMapper;
     private final EstablishmentRepository establishmentRepository;
-    private final OrderFactory orderFactory;
     private final WorkingHoursService workingHoursService;
     private final WorkingHoursMapper workingHoursMapper;
     private final OrderMapper orderMapper;
@@ -56,8 +53,7 @@ public class OrderServiceImpl implements OrderService {
             throw new InvalidBookingTime();
         }
 
-        Class<? extends Order> mappingClass = orderFactory.getEntity(dto);
-        Order order = orderMapper.toEntity(dto, mappingClass);
+        Order order = orderMapper.toEntity(dto);
 
         User user = securityService.getLoggedInUser();
         order.setUser(user);

@@ -29,13 +29,12 @@
             start_time="00:00:00"
             end_time="23:00:00"/>
     <orders
-        id="250"
-        date="2022-07-07"
-        start_time="14:30:00"
-        end_time="18:30:00"
-        guest_count="4"
-        status="0"
-        user_id="3"
-        establishment_id="100"
-        dtype="order"/>
+            id="250"
+            date="2022-07-07"
+            start_time="14:30:00"
+            end_time="18:30:00"
+            guest_count="4"
+            status="0"
+            user_id="3"
+            establishment_id="100"/>
 </dataset>

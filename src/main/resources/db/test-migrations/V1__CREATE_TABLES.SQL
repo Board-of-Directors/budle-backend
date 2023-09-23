@@ -94,7 +94,6 @@ create table orders
     end_time         time        not null,
     status           int4 default 0,
     guest_count      int         not null,
-    dtype            varchar(31) not null,
     primary key (id),
     foreign key (user_id) references users (id),
     foreign key (establishment_id) references establishments (id)
