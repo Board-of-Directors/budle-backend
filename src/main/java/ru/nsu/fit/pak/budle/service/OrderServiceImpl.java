@@ -44,26 +44,24 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void createOrder(RequestOrderDto dto) {
-        log.info("Creating order");
-        log.info(dto.toString());
-        Establishment establishment = establishmentService
-            .getEstablishmentById(dto.getEstablishmentId());
-        if (!bookingTimeIsValid(establishment, dto)) {
-            log.warn("Booking time is not valid");
-            throw new InvalidBookingTime();
-        }
-
-        Order order = orderMapper.toEntity(dto);
-
-        User user = securityService.getLoggedInUser();
-        order.setUser(user);
-        order.setEstablishment(establishment);
+        log.info("Creating order {}", dto);
+        Establishment establishment = establishmentService.getEstablishmentById(dto.getEstablishmentId());
+        validateBookingTime(establishment, dto);
+        Order order = orderMapper.toEntity(dto)
+            .setUser(securityService.getLoggedInUser())
+            .setEstablishment(establishment);
         orderRepository.save(order);
     }
 
+    private void validateBookingTime(Establishment establishment, RequestOrderDto order) {
+        if (!bookingTimeIsValid(establishment, order)) {
+            log.warn("Booking time is not valid");
+            throw new InvalidBookingTime();
+        }
+    }
+
     private boolean bookingTimeIsValid(Establishment establishment, RequestOrderDto order) {
-        List<ValidTimeDto> validTimeDtos =
-            workingHoursService.getValidBookingHoursByEstablishment(establishment);
+        List<ValidTimeDto> validTimeDtos = workingHoursService.generateValidBookingHours(establishment);
         ValidTimeDto orderTime = workingHoursMapper.convertFromDateAndTimeToValidTimeDto(order.getDate());
         String bookingTime = order.getTime().toString();
         for (ValidTimeDto time : validTimeDtos) {

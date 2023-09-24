@@ -26,7 +26,7 @@ public interface WorkingHoursService {
      * @param establishment for what establishment we need to compute booking times.
      * @return list of valid times dto.
      */
-    List<ValidTimeDto> getValidBookingHoursByEstablishment(Establishment establishment);
+    List<ValidTimeDto> generateValidBookingHours(Establishment establishment);
 
     /**
      * Удаление рабочих часов из базы данных.

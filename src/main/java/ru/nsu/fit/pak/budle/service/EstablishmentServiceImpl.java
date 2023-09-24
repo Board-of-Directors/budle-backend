@@ -129,7 +129,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     @Override
     public List<ValidTimeDto> getValidTime(Long establishmentId) {
         Establishment establishment = getEstablishmentById(establishmentId);
-        return workingHoursService.getValidBookingHoursByEstablishment(establishment);
+        return workingHoursService.generateValidBookingHours(establishment);
     }
 
     @Override
