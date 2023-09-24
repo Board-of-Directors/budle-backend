@@ -16,7 +16,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +38,7 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
         log.info("Saving working hours");
         Map<String, WorkingHours> workingHoursMap = new HashMap<>();
         for (RequestWorkingHoursDto dto : responseWorkingHoursDto) {
-            log.info("Saving " + dto);
+            log.info("Saving {}", dto);
             for (String day : dto.getDays()) {
                 WorkingHours workingHours = mapper.map(dto, WorkingHours.class);
                 workingHours.setDayOfWeek(DayOfWeek.getDayByString(day));
@@ -46,48 +52,48 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
         workingHoursRepository.saveAll(workingHoursMap.values());
     }
 
-    public List<ValidTimeDto> getValidBookingHoursByEstablishment(Establishment establishment) {
+    public List<ValidTimeDto> generateValidBookingHours(Establishment establishment) {
         List<ValidTimeDto> times = new ArrayList<>();
         Set<WorkingHours> workingHours = establishment.getWorkingHours();
-        for (int i = 0; i < DAY_COUNT_GENERATED_FOR_BOOKING; i++) {
-            LocalDate today = LocalDate.now().plusDays(i);
-            ValidTimeDto currentDto = workingHoursMapper.convertFromDateAndTimeToValidTimeDto(today);
-            Optional<WorkingHours> currentHours = workingHours
-                .stream()
+        LocalDate currentDate = LocalDate.now();
+        for (int dayNumber = 0; dayNumber < DAY_COUNT_GENERATED_FOR_BOOKING; dayNumber++) {
+            LocalDate bookDate = currentDate.plusDays(dayNumber);
+            ValidTimeDto currentDto = workingHoursMapper.convertFromDateAndTimeToValidTimeDto(bookDate);
+            Optional<WorkingHours> currentHours = workingHours.stream()
                 .filter(x -> x.getDayOfWeek().getTranslateLittle().equals(currentDto.getDayName()))
                 .findFirst();
             if (currentHours.isPresent()) {
-                final int DURATION = 30;
-                List<LocalTime> generatedTimes;
-                ZoneId zone = ZoneId.of("Asia/Novosibirsk");
-                LocalTime now = LocalTime.from(ZonedDateTime.now(zone));
-                now = now.minusSeconds(now.getSecond());
-                now = now.minusNanos(now.getNano());
-                if (i == 0 && now.isAfter(currentHours.get().getStartTime())) {
-                    generatedTimes = workingHoursMapper.generateTimes(
-                        now.plusMinutes(30 - (now.getMinute() % 30)),
-                        currentHours.get().getEndTime(),
-                        DURATION
-                    );
-                } else {
-                    generatedTimes = workingHoursMapper.generateTimes(
-                        currentHours.get().getStartTime(),
-                        currentHours.get().getEndTime(),
-                        DURATION
-                    );
-                }
-                List<String> currentDayTimes = generatedTimes
-                    .stream()
-                    .map(Objects::toString)
-                    .toList();
-
-                if (!currentDayTimes.isEmpty()) {
-                    currentDto.setTimes(currentDayTimes);
+                List<String> generatedTimes = generateTimeForDay(dayNumber, currentHours.get());
+                if (!generatedTimes.isEmpty()) {
+                    currentDto.setTimes(generatedTimes);
                     times.add(currentDto);
                 }
             }
         }
         return times;
+    }
+
+    private List<String> generateTimeForDay(int dayNumber, WorkingHours currentHours) {
+        final int DURATION = 30;
+        List<LocalTime> generatedTimes;
+        ZoneId zone = ZoneId.of("Asia/Novosibirsk");
+        LocalTime now = LocalTime.from(ZonedDateTime.now(zone)).withSecond(0).withNano(0);
+        if (dayNumber == 0 && now.isAfter(currentHours.getStartTime())) {
+            generatedTimes = workingHoursMapper.generateTimes(
+                now.plusMinutes(30 - (now.getMinute() % 30)),
+                currentHours.getEndTime(),
+                DURATION
+            );
+        } else {
+            generatedTimes = workingHoursMapper.generateTimes(
+                currentHours.getStartTime(),
+                currentHours.getEndTime(),
+                DURATION
+            );
+        }
+        return generatedTimes.stream()
+            .map(Objects::toString)
+            .toList();
     }
 
     @Override

@@ -63,8 +63,7 @@ public class WorkingHoursBusinessLogicTests extends AbstractContextualTest {
         try (MockedStatic<LocalDate> mockedStatic = mockStatic(LocalDate.class)) {
             mockedStatic.when(LocalDate::now).thenReturn(now);
             Establishment establishment = establishmentRepository.findById(ESTABLISHMENT_ID).orElseThrow();
-            List<ValidTimeDto> validTimeDtoList =
-                workingHoursService.getValidBookingHoursByEstablishment(establishment);
+            List<ValidTimeDto> validTimeDtoList = workingHoursService.generateValidBookingHours(establishment);
             Assertions.assertEquals(
                 List.of(
                     ValidTimeDto.builder().monthName("дек.").dayName("вт").dayNumber("23").times(TIMES).build(),
@@ -90,8 +89,7 @@ public class WorkingHoursBusinessLogicTests extends AbstractContextualTest {
             mockedStatic.when(LocalDate::now).thenReturn(now);
             mockedZonedTime.when(() -> ZonedDateTime.now(any(ZoneId.class))).thenReturn(zonedNow);
             Establishment establishment = establishmentRepository.findById(ESTABLISHMENT_ID).orElseThrow();
-            List<ValidTimeDto> validTimeDtoList =
-                workingHoursService.getValidBookingHoursByEstablishment(establishment);
+            List<ValidTimeDto> validTimeDtoList = workingHoursService.generateValidBookingHours(establishment);
             Assertions.assertEquals(
                 List.of(
                     ValidTimeDto.builder().monthName("дек.").dayName("вт").dayNumber("23").times(List.of(TIMES.get(1)))

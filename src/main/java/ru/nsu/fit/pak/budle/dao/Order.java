@@ -3,6 +3,7 @@ package ru.nsu.fit.pak.budle.dao;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 
 import javax.persistence.Entity;
@@ -25,6 +26,7 @@ import java.sql.Time;
 @Table(name = "orders")
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 public class Order {
 
     @Id
