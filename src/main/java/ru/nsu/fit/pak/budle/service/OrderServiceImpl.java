@@ -2,7 +2,6 @@ package ru.nsu.fit.pak.budle.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
@@ -14,14 +13,11 @@ import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.ValidTimeDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestOrderDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseOrderDto;
-import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
 import ru.nsu.fit.pak.budle.exceptions.InvalidBookingTime;
 import ru.nsu.fit.pak.budle.exceptions.NotEnoughRightsException;
 import ru.nsu.fit.pak.budle.exceptions.OrderNotFoundException;
-import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
 import ru.nsu.fit.pak.budle.mapper.OrderMapper;
 import ru.nsu.fit.pak.budle.mapper.WorkingHoursMapper;
-import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
 import ru.nsu.fit.pak.budle.repository.OrderRepository;
 
 import javax.transaction.Transactional;
@@ -33,11 +29,8 @@ import java.util.Objects;
 @Slf4j
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
-    private final ModelMapper modelMapper;
     private final SecurityService securityService;
     private final EstablishmentService establishmentService;
-    private final EstablishmentMapper establishmentMapper;
-    private final EstablishmentRepository establishmentRepository;
     private final WorkingHoursService workingHoursService;
     private final WorkingHoursMapper workingHoursMapper;
     private final OrderMapper orderMapper;
@@ -63,40 +56,29 @@ public class OrderServiceImpl implements OrderService {
     private boolean bookingTimeIsValid(Establishment establishment, RequestOrderDto order) {
         List<ValidTimeDto> validTimeDtos = workingHoursService.generateValidBookingHours(establishment);
         ValidTimeDto orderTime = workingHoursMapper.convertFromDateAndTimeToValidTimeDto(order.getDate());
-        String bookingTime = order.getTime().toString();
-        for (ValidTimeDto time : validTimeDtos) {
-            if (Objects.equals(time.getDayName(), orderTime.getDayName()) &&
-                Objects.equals(time.getMonthName(), orderTime.getMonthName()) &&
-                Objects.equals(time.getDayNumber(), orderTime.getDayNumber()) &&
-                time.getTimes().contains(bookingTime)) {
-                return true;
-            }
-        }
+        return validTimeDtos.stream().anyMatch(time -> isTimesEquals(time, orderTime, order));
+    }
 
-        return false;
+    private boolean isTimesEquals(ValidTimeDto validTime, ValidTimeDto orderTime, RequestOrderDto order) {
+        String bookingTime = order.getTime().toString();
+        return Objects.equals(validTime.getDayName(), orderTime.getDayName())
+            && Objects.equals(validTime.getMonthName(), orderTime.getMonthName())
+            && Objects.equals(validTime.getDayNumber(), orderTime.getDayNumber())
+            && validTime.getTimes().contains(bookingTime);
+
     }
 
     @Override
     public List<ResponseOrderDto> getUserOrders(Integer status) {
         log.info("Getting user orders");
         User user = securityService.getLoggedInUser();
-
         OrderStatus orderStatus = status == null ? null : OrderStatus.getStatusByInteger(status);
         ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues();
         Example<Order> exampleQuery = Example.of(new Order(user, orderStatus), matcher);
         List<Order> orders = orderRepository.findAll(exampleQuery);
-
         log.info("Result: " + orders);
-
-        return orders
-            .stream()
-            .map(order -> {
-                Establishment establishmentSource = order.getEstablishment();
-                ResponseOrderDto responseOrderDto = modelMapper.map(order, ResponseOrderDto.class);
-                responseOrderDto.setEstablishment(establishmentMapper.toBasic(establishmentSource));
-                responseOrderDto.setUsername(order.getUser().getUsername());
-                return responseOrderDto;
-            })
+        return orders.stream()
+            .map(order -> orderMapper.toResponse(order, order.getEstablishment()))
             .toList();
     }
 
@@ -104,36 +86,29 @@ public class OrderServiceImpl implements OrderService {
     public List<ResponseOrderDto> getEstablishmentOrders(Long establishmentId, Integer status) {
         log.info("Get establishment orders");
         User user = securityService.getLoggedInUser();
-        Establishment establishment = establishmentRepository.findById(establishmentId)
-            .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
+        Establishment establishment = establishmentService.getEstablishmentById(establishmentId);
         userIsStuff(user, establishment);
-
-        return establishment
-            .getOrders()
+        return establishment.getOrders()
             .stream()
-            .filter(order -> {
-                if (status == null) {
-                    return true;
-                } else {
-                    return Objects.equals(order.getStatus().getStatus(), status);
-                }
-            })
-            .map(order -> {
-                    ResponseOrderDto responseOrderDto = modelMapper.map(order, ResponseOrderDto.class);
-                    responseOrderDto.setUsername(order.getUser().getUsername());
-                    return responseOrderDto;
-                }
-            )
+            .filter(order -> isNullOrEquals(status, order))
+            .map(orderMapper::toResponse)
             .toList();
+
+    }
+
+    private boolean isNullOrEquals(Integer status, Order order) {
+        if (status == null) {
+            return true;
+        } else {
+            return Objects.equals(order.getStatus().getStatus(), status);
+        }
 
     }
 
     @Override
     @Transactional
     public void deleteOrder(Long orderId, Long userId) {
-        log.info("Deleting order");
-        log.info("OrderID " + orderId + "\n" + "id " + userId);
-
+        log.info("Deleting order {} by user {}", orderId, userId);
         Order order = getOrderById(orderId);
 
         if (order.getUser().getId().equals(userId)) {
@@ -148,18 +123,15 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void setStatus(Long orderId, Long establishmentId, Integer status) {
         log.info("Setting order status");
-        Establishment establishment = establishmentRepository.findById(establishmentId)
-            .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
+        Establishment establishment = establishmentService.getEstablishmentById(establishmentId);
         User user = securityService.getLoggedInUser();
         userIsStuff(user, establishment);
-        Order order = getOrderById(orderId);
-        order.setStatus(OrderStatus.getStatusByInteger(status));
-        orderRepository.save(order);
+        orderRepository.save(getOrderById(orderId).setStatus(OrderStatus.getStatusByInteger(status)));
     }
 
     private Order getOrderById(Long orderId) {
-        return orderRepository.findById(orderId).orElseThrow(() ->
-            new OrderNotFoundException(orderId));
+        return orderRepository.findById(orderId)
+            .orElseThrow(() -> new OrderNotFoundException(orderId));
     }
 
     private void userIsStuff(User user, Establishment establishment) {

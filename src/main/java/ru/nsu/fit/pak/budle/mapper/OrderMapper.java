@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.pak.budle.dao.Order;
 import ru.nsu.fit.pak.budle.dao.Spot;
+import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dto.request.RequestOrderDto;
+import ru.nsu.fit.pak.budle.dto.response.ResponseOrderDto;
 import ru.nsu.fit.pak.budle.exceptions.SpotNotFoundException;
 import ru.nsu.fit.pak.budle.repository.SpotRepository;
 
@@ -19,9 +21,10 @@ import java.time.LocalTime;
 @Component
 public class OrderMapper {
     private final ModelMapper mapper;
+    private final EstablishmentMapper establishmentMapper;
 
     @Autowired
-    public OrderMapper(ModelMapper mapper, SpotRepository spotRepository) {
+    public OrderMapper(ModelMapper mapper, SpotRepository spotRepository, EstablishmentMapper establishmentMapper) {
         final int bookingDurationMinutes = 240;
         final Converter<Long, Spot> converterToSpot = (src) ->
             (spotRepository.findById(src.getSource())
@@ -51,10 +54,23 @@ public class OrderMapper {
             .addMappings(mapping -> mapping.using(converterDate)
                 .map(RequestOrderDto::getDate, Order::setDate));
         this.mapper = mapper;
+        this.establishmentMapper = establishmentMapper;
     }
 
     public Order toEntity(RequestOrderDto dto) {
         return mapper.map(dto, Order.class);
     }
 
+    public ResponseOrderDto toResponse(Order order) {
+        ResponseOrderDto responseOrderDto = mapper.map(order, ResponseOrderDto.class);
+        responseOrderDto.setUsername(order.getUser().getUsername());
+        return responseOrderDto;
+    }
+
+    public ResponseOrderDto toResponse(Order order, Establishment establishment) {
+        ResponseOrderDto responseOrderDto = mapper.map(order, ResponseOrderDto.class);
+        responseOrderDto.setEstablishment(establishmentMapper.toBasic(establishment));
+        responseOrderDto.setUsername(order.getUser().getUsername());
+        return responseOrderDto;
+    }
 }
