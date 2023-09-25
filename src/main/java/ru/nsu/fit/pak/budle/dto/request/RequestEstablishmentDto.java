@@ -3,6 +3,7 @@ package ru.nsu.fit.pak.budle.dto.request;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 import ru.nsu.fit.pak.budle.dto.PhotoDto;
@@ -30,6 +31,7 @@ import java.util.Set;
 @Data
 @SuperBuilder
 @Accessors(chain = true)
+@NoArgsConstructor
 public class RequestEstablishmentDto {
     @NotNull(message = "Имя не может быть не задано.")
     @Size(max = 200, message = "Название заведения не может превышать 200 символов.")
