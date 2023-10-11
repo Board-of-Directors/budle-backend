@@ -28,4 +28,18 @@ public interface MenuService {
      * @param product создаваемый продукт
      */
     void createProduct(RequestProductDto product);
+
+    /**
+     * Удаление соответсвующей категории.
+     *
+     * @param categoryId идентификатор категории
+     */
+    void deleteCategory(long categoryId);
+
+    /**
+     * Удаление соответствующего продукта.
+     *
+     * @param productId идентификатор продукта
+     */
+    void deleteProduct(long productId);
 }

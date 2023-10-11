@@ -29,7 +29,7 @@ public class Product {
     private String weightG;
     private String price;
     private boolean isOnSale;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private MenuCategory category;
 }
