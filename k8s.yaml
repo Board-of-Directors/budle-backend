@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: budle
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: budle
+  template:
+    metadata:
+      labels:
+        app: budle
+        visualize: "true"
+    spec:
+      containers:
+        - name: budle-pod
+          image: fagorym/budle:develop
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    visualize: "true"
+  name: budle-service
+spec:
+  selector:
+    app: budle
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
