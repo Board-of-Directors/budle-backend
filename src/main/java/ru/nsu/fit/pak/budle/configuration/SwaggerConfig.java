@@ -1,5 +1,6 @@
 package ru.nsu.fit.pak.budle.configuration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
@@ -14,6 +15,8 @@ import springfox.documentation.spring.web.plugins.Docket;
  */
 @Configuration
 public class SwaggerConfig {
+    @Value("${swagger.baseUrl}")
+    private String baseUrl;
 
     /**
      * Creates instance of Docket class, that configure host URL, controller classes and
@@ -24,7 +27,7 @@ public class SwaggerConfig {
     @Bean
     public Docket create() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .host("80.64.174.33:8080")
+            .host(baseUrl)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("ru.nsu.fit.pak.budle.controller"))
                 .paths(PathSelectors.any())
