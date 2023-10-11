@@ -1,6 +1,7 @@
 package ru.nsu.fit.pak.budle.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,7 @@ public class MenuController {
     private final MenuService menuService;
 
     @GetMapping
+    @CrossOrigin
     public List<ResponseMenuCategoryDto> get(@RequestParam long establishmentId) {
         return menuService.getMenu(establishmentId);
     }
