@@ -1,8 +1,11 @@
 package ru.nsu.fit.pak.budle.mapper;
 
 import org.springframework.stereotype.Component;
+import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 import ru.nsu.fit.pak.budle.dao.establishment.restaurant.MenuCategory;
 import ru.nsu.fit.pak.budle.dao.establishment.restaurant.Product;
+import ru.nsu.fit.pak.budle.dto.request.RequestCategoryDto;
+import ru.nsu.fit.pak.budle.dto.request.RequestProductDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.ResponseMenuCategoryDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.ResponseProductDto;
 
@@ -32,5 +35,22 @@ public class MenuMapper {
             .setDescription(product.getDescription())
             .setWeightG(product.getWeightG())
             .setOnSale(product.isOnSale());
+    }
+
+    public MenuCategory toModel(RequestCategoryDto category, Establishment establishment) {
+        return new MenuCategory()
+            .setName(category.getName())
+            .setParentCategoryId(category.getParentCategoryId())
+            .setEstablishment(establishment);
+    }
+
+    public Product toModel(RequestProductDto product, MenuCategory menuCategory) {
+        return new Product()
+            .setName(product.getName())
+            .setDescription(product.getDescription())
+            .setWeightG(product.getWeightG())
+            .setOnSale(product.isOnSale())
+            .setPrice(product.getPrice())
+            .setCategory(menuCategory);
     }
 }
