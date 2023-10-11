@@ -47,4 +47,16 @@ public class MenuServiceImpl implements MenuService {
     public void createProduct(RequestProductDto product) {
         productRepository.save(menuMapper.toModel(product, menuRepository.findById(product.getCategoryId()).orElseThrow()));
     }
+
+    @Override
+    public void deleteCategory(long categoryId) {
+        menuRepository.deleteById(categoryId);
+    }
+
+    @Override
+    public void deleteProduct(long productId) {
+        productRepository.deleteById(productId);
+    }
+
+
 }

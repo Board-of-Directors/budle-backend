@@ -1,6 +1,7 @@
 package ru.nsu.fit.pak.budle.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,5 +34,15 @@ public class MenuController {
     @PostMapping(value = "/product")
     public void addProduct(@RequestBody RequestProductDto product) {
         menuService.createProduct(product);
+    }
+
+    @DeleteMapping
+    public void deleteCategory(@RequestParam long categoryId) {
+        menuService.deleteCategory(categoryId);
+    }
+
+    @DeleteMapping(value = "/product")
+    public void deleteProduct(@RequestParam long productId) {
+        menuService.deleteProduct(productId);
     }
 }
