@@ -4,12 +4,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.DayOfWeek;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.WorkingHours;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository, that connects establishment models with database.
@@ -36,10 +38,11 @@ public interface EstablishmentRepository extends JpaRepository<Establishment, Lo
     Boolean existsByAddressAndName(String address, String name);
 
     @Query(value = "SELECT wh from Establishment e inner join WorkingHours wh " +
-            "on e.id = wh.establishment.id where wh.dayOfWeek = :day order by wh.startTime")
+        "on e.id = wh.establishment.id where wh.dayOfWeek = :day order by wh.startTime")
     WorkingHours findWorkingHoursByDay(@Param("day") DayOfWeek day);
 
 
     List<Establishment> findAllByOwner(User owner);
 
+    Optional<Establishment> findByCategoryAndId(Category category, Long id);
 }
