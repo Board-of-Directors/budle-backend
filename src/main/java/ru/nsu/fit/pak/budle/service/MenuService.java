@@ -1,5 +1,7 @@
 package ru.nsu.fit.pak.budle.service;
 
+import ru.nsu.fit.pak.budle.dto.request.RequestCategoryDto;
+import ru.nsu.fit.pak.budle.dto.request.RequestProductDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.ResponseMenuCategoryDto;
 
 import java.util.List;
@@ -12,4 +14,18 @@ public interface MenuService {
      * @return список категорий меню
      */
     List<ResponseMenuCategoryDto> getMenu(long establishmentId);
+
+    /**
+     * Создание категории в меню.
+     *
+     * @param category создаваемая категория
+     */
+    void createCategory(RequestCategoryDto category);
+
+    /**
+     * Создание продукта в меню.
+     *
+     * @param product создаваемый продукт
+     */
+    void createProduct(RequestProductDto product);
 }
