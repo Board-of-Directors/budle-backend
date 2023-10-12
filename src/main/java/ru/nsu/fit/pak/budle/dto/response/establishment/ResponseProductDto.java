@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 public class ResponseProductDto {
+    private Long id;
     private String name;
     private String price;
     private String weightG;

@@ -44,6 +44,7 @@ public class MenuController {
     }
 
     @DeleteMapping(value = "/product")
+    @CrossOrigin
     public void deleteProduct(@RequestParam long productId) {
         menuService.deleteProduct(productId);
     }
