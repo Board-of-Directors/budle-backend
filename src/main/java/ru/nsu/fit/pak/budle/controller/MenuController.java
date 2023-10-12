@@ -23,7 +23,7 @@ import java.util.List;
 public class MenuController {
     private final MenuService menuService;
 
-    @GetMapping()
+    @GetMapping(value = "/short")
     @CrossOrigin
     public List<ShortResponseMenuCategoryDto> getShort(@RequestParam long establishmentId) {
         return menuService.getShortMenu(establishmentId);
