@@ -6,6 +6,7 @@ import ru.nsu.fit.pak.budle.dao.establishment.restaurant.MenuCategory;
 import ru.nsu.fit.pak.budle.dao.establishment.restaurant.Product;
 import ru.nsu.fit.pak.budle.dto.request.RequestCategoryDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestProductDto;
+import ru.nsu.fit.pak.budle.dto.response.ShortResponseMenuCategoryDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.ResponseMenuCategoryDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.ResponseProductDto;
 
@@ -23,6 +24,7 @@ public class MenuMapper {
 
     public ResponseMenuCategoryDto toDto(MenuCategory category) {
         return new ResponseMenuCategoryDto()
+            .setId(category.getId())
             .setName(category.getName())
             .setProducts(category.getProducts().stream().map(this::toDto).toList())
             .setChildCategories(category.getChildCategories().stream().map(this::toDto).toList());
@@ -53,5 +55,18 @@ public class MenuMapper {
             .setOnSale(product.isOnSale())
             .setPrice(product.getPrice())
             .setCategory(menuCategory);
+    }
+
+    public List<ShortResponseMenuCategoryDto> toShortDto(List<MenuCategory> categories, long establishmentId) {
+        return categories.stream()
+            .map(this::toShortDto)
+            .map(dto -> dto.setEstablishmentId(establishmentId))
+            .toList();
+    }
+
+    public ShortResponseMenuCategoryDto toShortDto(MenuCategory category) {
+        return new ShortResponseMenuCategoryDto()
+            .setId(category.getId())
+            .setName(category.getName());
     }
 }

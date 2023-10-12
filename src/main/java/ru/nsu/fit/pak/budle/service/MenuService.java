@@ -2,6 +2,7 @@ package ru.nsu.fit.pak.budle.service;
 
 import ru.nsu.fit.pak.budle.dto.request.RequestCategoryDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestProductDto;
+import ru.nsu.fit.pak.budle.dto.response.ShortResponseMenuCategoryDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.ResponseMenuCategoryDto;
 
 import java.util.List;
@@ -42,4 +43,12 @@ public interface MenuService {
      * @param productId идентификатор продукта
      */
     void deleteProduct(long productId);
+
+    /**
+     * Получить краткий список категорий из меню.
+     *
+     * @param establishmentId идентификатор заведения
+     * @return краткий список категорий
+     */
+    List<ShortResponseMenuCategoryDto> getShortMenu(long establishmentId);
 }

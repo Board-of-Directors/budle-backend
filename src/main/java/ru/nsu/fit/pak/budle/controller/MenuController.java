@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.nsu.fit.pak.budle.dto.request.RequestCategoryDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestProductDto;
+import ru.nsu.fit.pak.budle.dto.response.ShortResponseMenuCategoryDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.ResponseMenuCategoryDto;
 import ru.nsu.fit.pak.budle.service.MenuService;
 
@@ -22,6 +23,11 @@ import java.util.List;
 public class MenuController {
     private final MenuService menuService;
 
+    @GetMapping()
+    @CrossOrigin
+    public List<ShortResponseMenuCategoryDto> getShort(@RequestParam long establishmentId) {
+        return menuService.getShortMenu(establishmentId);
+    }
     @GetMapping
     @CrossOrigin
     public List<ResponseMenuCategoryDto> get(@RequestParam long establishmentId) {
@@ -29,16 +35,19 @@ public class MenuController {
     }
 
     @PostMapping
+    @CrossOrigin
     public void add(@RequestBody RequestCategoryDto category) {
         menuService.createCategory(category);
     }
 
     @PostMapping(value = "/product")
+    @CrossOrigin
     public void addProduct(@RequestBody RequestProductDto product) {
         menuService.createProduct(product);
     }
 
     @DeleteMapping
+    @CrossOrigin
     public void deleteCategory(@RequestParam long categoryId) {
         menuService.deleteCategory(categoryId);
     }

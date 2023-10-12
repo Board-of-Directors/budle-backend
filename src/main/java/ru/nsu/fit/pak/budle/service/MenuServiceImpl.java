@@ -6,6 +6,7 @@ import ru.nsu.fit.pak.budle.dao.Category;
 import ru.nsu.fit.pak.budle.dao.establishment.restaurant.Restaurant;
 import ru.nsu.fit.pak.budle.dto.request.RequestCategoryDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestProductDto;
+import ru.nsu.fit.pak.budle.dto.response.ShortResponseMenuCategoryDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.ResponseMenuCategoryDto;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
 import ru.nsu.fit.pak.budle.mapper.MenuMapper;
@@ -56,6 +57,15 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public void deleteProduct(long productId) {
         productRepository.deleteById(productId);
+    }
+
+    @Override
+    public List<ShortResponseMenuCategoryDto> getShortMenu(long establishmentId) {
+        Restaurant restaurant =
+            (Restaurant) establishmentRepository.findByCategoryAndId(Category.restaurant, establishmentId)
+                .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
+
+        return menuMapper.toShortDto(restaurant.getCategories(), establishmentId);
     }
 
 
