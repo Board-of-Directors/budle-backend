@@ -30,6 +30,7 @@ public class MenuMapper {
 
     public ResponseProductDto toDto(Product product) {
         return new ResponseProductDto()
+            .setId(product.getId())
             .setPrice(product.getPrice())
             .setName(product.getName())
             .setDescription(product.getDescription())
