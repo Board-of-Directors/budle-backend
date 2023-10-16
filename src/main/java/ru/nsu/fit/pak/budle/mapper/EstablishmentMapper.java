@@ -12,6 +12,7 @@ import ru.nsu.fit.pak.budle.dto.response.ResponseWorkingHoursDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
+import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ShortEstablishmentDto;
 import ru.nsu.fit.pak.budle.exceptions.ErrorWhileParsingEstablishmentMapException;
 import ru.nsu.fit.pak.budle.utils.EstablishmentFactory;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
@@ -130,12 +131,12 @@ public class EstablishmentMapper {
         return establishment;
     }
 
-    public ResponseShortEstablishmentInfo toShortInfo(Establishment establishment) {
-        return modelMapper.map(establishment, ResponseShortEstablishmentInfo.class);
+    public ResponseShortEstablishmentInfo toShortInfo(ShortEstablishmentDto shortDto) {
+        return modelMapper.map(shortDto, ResponseShortEstablishmentInfo.class);
     }
 
-    public List<ResponseShortEstablishmentInfo> toShortInfoList(List<Establishment> establishmentList) {
-        return establishmentList.stream().map(this::toShortInfo).toList();
+    public List<ResponseShortEstablishmentInfo> toShortInfoList(List<ShortEstablishmentDto> shortDtoList) {
+        return shortDtoList.stream().map(this::toShortInfo).toList();
     }
 
     private String getMap(Establishment establishment) {
