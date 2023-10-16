@@ -28,7 +28,6 @@ import java.sql.Time;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class Order {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

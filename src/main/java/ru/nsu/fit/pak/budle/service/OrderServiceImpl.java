@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 import ru.nsu.fit.pak.budle.dao.Order;
 import ru.nsu.fit.pak.budle.dao.OrderStatus;
 import ru.nsu.fit.pak.budle.dao.User;
@@ -34,6 +35,7 @@ public class OrderServiceImpl implements OrderService {
     private final WorkingHoursService workingHoursService;
     private final WorkingHoursMapper workingHoursMapper;
     private final OrderMapper orderMapper;
+    private final TransactionTemplate transactionTemplate;
 
     @Override
     public void createOrder(RequestOrderDto dto) {
@@ -88,7 +90,7 @@ public class OrderServiceImpl implements OrderService {
         User user = securityService.getLoggedInUser();
         Establishment establishment = establishmentService.getEstablishmentById(establishmentId);
         userIsStuff(user, establishment);
-        return establishment.getOrders()
+        return orderRepository.findAllByEstablishment(establishment)
             .stream()
             .filter(order -> isNullOrEquals(status, order))
             .map(orderMapper::toResponse)
