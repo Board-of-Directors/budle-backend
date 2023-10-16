@@ -59,9 +59,9 @@ public class Establishment {
     private Category category;
     private String image;
     private String map;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private User owner;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "worker_establishments",
             joinColumns = @JoinColumn(name = "establishment_id"),
             inverseJoinColumns = @JoinColumn(name = "worker_id"))

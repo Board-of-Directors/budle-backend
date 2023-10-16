@@ -31,7 +31,7 @@ public class MenuServiceImpl implements MenuService {
             (Restaurant) establishmentRepository.findByCategoryAndId(Category.restaurant, establishmentId)
                 .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
 
-        return menuMapper.toDto(restaurant.getCategories());
+        return menuMapper.toDto(menuRepository.findAllByEstablishment(restaurant));
     }
 
     @Override
@@ -64,8 +64,10 @@ public class MenuServiceImpl implements MenuService {
         Restaurant restaurant =
             (Restaurant) establishmentRepository.findByCategoryAndId(Category.restaurant, establishmentId)
                 .orElseThrow(() -> new EstablishmentNotFoundException(establishmentId));
-
-        return menuMapper.toShortDto(restaurant.getCategories(), establishmentId);
+        return menuMapper.toShortDto(
+            menuRepository.findAllByEstablishment(restaurant),
+            establishmentId
+        );
     }
 
 

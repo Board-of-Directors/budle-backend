@@ -7,7 +7,6 @@ import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.List;
 public class Restaurant extends Establishment {
     private final Category category = Category.restaurant;
     private CuisineCountry cuisineCountry;
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany
     @JoinColumn(name = "establishment_id")
     private List<MenuCategory> categories;
 }

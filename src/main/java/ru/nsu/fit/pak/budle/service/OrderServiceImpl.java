@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.support.TransactionTemplate;
 import ru.nsu.fit.pak.budle.dao.Order;
 import ru.nsu.fit.pak.budle.dao.OrderStatus;
 import ru.nsu.fit.pak.budle.dao.User;
@@ -20,6 +19,7 @@ import ru.nsu.fit.pak.budle.exceptions.OrderNotFoundException;
 import ru.nsu.fit.pak.budle.mapper.OrderMapper;
 import ru.nsu.fit.pak.budle.mapper.WorkingHoursMapper;
 import ru.nsu.fit.pak.budle.repository.OrderRepository;
+import ru.nsu.fit.pak.budle.repository.WorkerRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -35,7 +35,7 @@ public class OrderServiceImpl implements OrderService {
     private final WorkingHoursService workingHoursService;
     private final WorkingHoursMapper workingHoursMapper;
     private final OrderMapper orderMapper;
-    private final TransactionTemplate transactionTemplate;
+    private final WorkerRepository workerRepository;
 
     @Override
     public void createOrder(RequestOrderDto dto) {
@@ -137,7 +137,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private void userIsStuff(User user, Establishment establishment) {
-        if (establishment.getWorkers()
+        if (workerRepository.findByEstablishments(establishment)
             .stream()
             .map(Worker::getUser)
             .map(User::getId)
