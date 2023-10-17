@@ -20,40 +20,35 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/menu")
+@CrossOrigin
 public class MenuController {
     private final MenuService menuService;
 
     @GetMapping(value = "/short")
-    @CrossOrigin
     public List<ShortResponseMenuCategoryDto> getShort(@RequestParam long establishmentId) {
         return menuService.getShortMenu(establishmentId);
     }
     @GetMapping
-    @CrossOrigin
     public List<ResponseMenuCategoryDto> get(@RequestParam long establishmentId) {
         return menuService.getMenu(establishmentId);
     }
 
     @PostMapping
-    @CrossOrigin
     public void add(@RequestBody RequestCategoryDto category) {
         menuService.createCategory(category);
     }
 
     @PostMapping(value = "/product")
-    @CrossOrigin
     public void addProduct(@RequestBody RequestProductDto product) {
         menuService.createProduct(product);
     }
 
     @DeleteMapping
-    @CrossOrigin
     public void deleteCategory(@RequestParam long categoryId) {
         menuService.deleteCategory(categoryId);
     }
 
     @DeleteMapping(value = "/product")
-    @CrossOrigin
     public void deleteProduct(@RequestParam long productId) {
         menuService.deleteProduct(productId);
     }

@@ -34,6 +34,7 @@ import java.util.List;
 @Validated
 @RequestMapping(value = "establishment", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
+@CrossOrigin
 public class EstablishmentController {
     private final EstablishmentServiceImpl establishmentService;
     private final OrderService orderService;
@@ -47,7 +48,6 @@ public class EstablishmentController {
      * @return list of establishment dto, list size included.
      */
     @GetMapping(value = "all")
-    @CrossOrigin
     public EstablishmentListDto getEstablishments(@Valid RequestGetEstablishmentParameters parameters) {
         return establishmentService.getEstablishmentByParams(parameters);
     }
