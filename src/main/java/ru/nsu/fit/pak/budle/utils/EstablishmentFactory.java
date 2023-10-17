@@ -7,9 +7,16 @@ import ru.nsu.fit.pak.budle.dao.establishment.beauty.Barbershop;
 import ru.nsu.fit.pak.budle.dao.establishment.entertainment.GameClub;
 import ru.nsu.fit.pak.budle.dao.establishment.hotel.Hotel;
 import ru.nsu.fit.pak.budle.dao.establishment.restaurant.Restaurant;
-import ru.nsu.fit.pak.budle.dto.response.establishment.basic.*;
-import ru.nsu.fit.pak.budle.dto.response.establishment.extended.*;
-import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
+import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicBarbershopInfo;
+import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
+import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicGameClubInfo;
+import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicHotelInfo;
+import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicRestaurantInfo;
+import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedBarbershopInfo;
+import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
+import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedGameClubInfo;
+import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedHotelInfo;
+import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedRestaurantInfo;
 import ru.nsu.fit.pak.budle.exceptions.IncorrectEstablishmentType;
 
 import java.util.Map;
@@ -22,7 +29,7 @@ import java.util.Map;
 @Component
 public class EstablishmentFactory {
     private final Map<String, Establishment> entityFactory;
-    private final Map<String, Map<String, ? extends ResponseShortEstablishmentInfo>> factoryOfDtoFactories;
+    private final Map<String, Map<String, ? extends ResponseBasicEstablishmentInfo>> factoryOfDtoFactories;
 
     /**
      * Default constructor of establishment factory.
@@ -81,8 +88,8 @@ public class EstablishmentFactory {
      * @param type of establishment
      * @return class
      */
-    public Class<? extends ResponseShortEstablishmentInfo> getEstablishmentDto(String className, String type) {
-        ResponseShortEstablishmentInfo establishmentInfo = factoryOfDtoFactories.get(type).get(className);
+    public Class<? extends ResponseBasicEstablishmentInfo> getEstablishmentDto(String className, String type) {
+        ResponseBasicEstablishmentInfo establishmentInfo = factoryOfDtoFactories.get(type).get(className);
         if (establishmentInfo == null) {
             throw new IncorrectEstablishmentType();
         }

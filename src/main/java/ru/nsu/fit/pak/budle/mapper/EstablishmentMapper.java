@@ -11,8 +11,6 @@ import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseWorkingHoursDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
-import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
-import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ShortEstablishmentDto;
 import ru.nsu.fit.pak.budle.exceptions.ErrorWhileParsingEstablishmentMapException;
 import ru.nsu.fit.pak.budle.utils.EstablishmentFactory;
 import ru.nsu.fit.pak.budle.utils.ImageWorker;
@@ -49,7 +47,7 @@ public class EstablishmentMapper {
      */
 
     public ResponseExtendedEstablishmentInfo toExtended(Establishment establishment) {
-        Class<? extends ResponseShortEstablishmentInfo> classOfDto = establishmentFactory
+        Class<? extends ResponseBasicEstablishmentInfo> classOfDto = establishmentFactory
             .getEstablishmentDto(establishment.getCategory().toString(), "extended");
 
         ResponseExtendedEstablishmentInfo responseEstablishmentInfo =
@@ -87,11 +85,11 @@ public class EstablishmentMapper {
     }
 
     public ResponseBasicEstablishmentInfo toBasic(Establishment establishment) {
-        Class<? extends ResponseShortEstablishmentInfo> classOfDto = establishmentFactory
+        Class<? extends ResponseBasicEstablishmentInfo> classOfDto = establishmentFactory
             .getEstablishmentDto(establishment.getCategory().toString(), "basic");
 
         ResponseBasicEstablishmentInfo establishmentDto =
-            (ResponseBasicEstablishmentInfo) modelMapper.map(establishment, classOfDto);
+            modelMapper.map(establishment, classOfDto);
 
         establishmentDto.setImage(imageWorker.loadImage(establishment.getImage()));
         return establishmentDto;
@@ -131,13 +129,6 @@ public class EstablishmentMapper {
         return establishment;
     }
 
-    public ResponseShortEstablishmentInfo toShortInfo(ShortEstablishmentDto shortDto) {
-        return modelMapper.map(shortDto, ResponseShortEstablishmentInfo.class);
-    }
-
-    public List<ResponseShortEstablishmentInfo> toShortInfoList(List<ShortEstablishmentDto> shortDtoList) {
-        return shortDtoList.stream().map(this::toShortInfo).toList();
-    }
 
     private String getMap(Establishment establishment) {
         if (!establishment.getHasMap()) {
