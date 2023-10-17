@@ -3,39 +3,41 @@ package ru.nsu.fit.pak.budle.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig {
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-/*
-        http.csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/resources/**", "/registration").permitAll()
-                .antMatchers(HttpMethod.POST, "/user/**").permitAll()
-                .anyRequest().authenticated();
-         */
-        http.cors().and().csrf().disable()
-            .authorizeRequests()
-            .anyRequest().permitAll();
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+       /* return http.csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(matcher -> matcher.requestMatchers("/user/login", "/user/register")
+                .permitAll()
+                .anyRequest()
+                .authenticated()
+            )
+            .build();
 
+        */
+
+        return http.csrf(AbstractHttpConfigurer::disable).build();
     }
 
     @Bean
-    public AuthenticationManager customAuthenticationManager() throws Exception {
-        return authenticationManager();
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers("/ignore1", "/ignore2");
     }
+
 }

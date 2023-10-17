@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.7.4'
+    id 'org.springframework.boot' version '3.1.4'
     id 'io.spring.dependency-management' version '1.0.14.RELEASE'
     id 'java'
     id 'org.flywaydb.flyway' version '9.8.1'
@@ -21,9 +21,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.hibernate:hibernate-entitymanager:5.6.14.Final'
     implementation 'javax.validation:validation-api:2.0.1.Final'
     compileOnly 'org.projectlombok:lombok:1.18.24'
+    compileOnly 'javax.servlet:servlet-api:2.5'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
     implementation 'org.postgresql:postgresql:42.5.1'
     implementation 'org.flywaydb:flyway-core:9.10.2'

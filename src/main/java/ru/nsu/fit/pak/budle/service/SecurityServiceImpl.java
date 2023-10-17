@@ -1,5 +1,7 @@
 package ru.nsu.fit.pak.budle.service;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,8 +16,6 @@ import org.springframework.stereotype.Service;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.exceptions.UserNotLoggedInException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 @Service
 @RequiredArgsConstructor
