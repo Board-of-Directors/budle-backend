@@ -9,7 +9,7 @@ import ru.nsu.fit.pak.budle.dao.DayOfWeek;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dao.WorkingHours;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
-import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ShortEstablishmentDto;
+import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ShortEstablishmentInfo;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +43,7 @@ public interface EstablishmentRepository extends JpaRepository<Establishment, Lo
     WorkingHours findWorkingHoursByDay(@Param("day") DayOfWeek day);
 
 
-    List<ShortEstablishmentDto> findAllByOwner(User owner);
+    List<ShortEstablishmentInfo> findAllByOwner(User owner);
 
     Optional<Establishment> findByCategoryAndId(Category category, Long id);
 }

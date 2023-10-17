@@ -3,17 +3,21 @@ package ru.nsu.fit.pak.budle.controller;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.nsu.fit.pak.budle.dao.User;
 import ru.nsu.fit.pak.budle.dto.request.RequestUserDto;
-import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
+import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ShortEstablishmentInfo;
 import ru.nsu.fit.pak.budle.service.EstablishmentService;
 import ru.nsu.fit.pak.budle.service.SecurityService;
 import ru.nsu.fit.pak.budle.service.UserServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
 import java.util.List;
 
 /**
@@ -63,7 +67,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/establishments")
-    public List<ResponseShortEstablishmentInfo> OwnerEstablishments(@RequestParam Long id) {
+    public List<ShortEstablishmentInfo> OwnerEstablishments(@RequestParam Long id) {
         return establishmentService.getEstablishmentsByOwner(id);
     }
 
