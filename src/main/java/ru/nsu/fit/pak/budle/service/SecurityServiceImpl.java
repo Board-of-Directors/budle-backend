@@ -25,19 +25,6 @@ public class SecurityServiceImpl implements SecurityService {
     private final UserDetailsService userDetailsService;
 
     @Override
-    public String findLoggedInUsername() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info(authentication.toString());
-        Object info = authentication.getPrincipal();
-        if (info instanceof UserDetails userDetailsWithUsername) {
-            log.info(userDetailsWithUsername.getUsername());
-            return userDetailsWithUsername.getUsername();
-        }
-        log.warn("User details not instance of user details");
-        return null;
-    }
-
-    @Override
     public User getLoggedInUser() {
         Object info = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (info instanceof User user) {
