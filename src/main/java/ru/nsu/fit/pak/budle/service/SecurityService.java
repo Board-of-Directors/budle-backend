@@ -1,8 +1,7 @@
 package ru.nsu.fit.pak.budle.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import ru.nsu.fit.pak.budle.dao.User;
-
-import javax.servlet.http.HttpServletRequest;
 
 public interface SecurityService {
     String findLoggedInUsername();

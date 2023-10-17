@@ -1,11 +1,11 @@
 package ru.nsu.fit.pak.budle.service;
 
+import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ import ru.nsu.fit.pak.budle.dto.request.RequestGetEstablishmentParameters;
 import ru.nsu.fit.pak.budle.dto.request.RequestWorkingHoursDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseSubcategoryDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
-import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
+import ru.nsu.fit.pak.budle.dto.response.establishment.basic.BasicEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ShortEstablishmentInfo;
 import ru.nsu.fit.pak.budle.exceptions.ErrorWhileParsingEstablishmentMapException;
@@ -36,9 +36,7 @@ import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
 import ru.nsu.fit.pak.budle.mapper.TagMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
-import ru.nsu.fit.pak.budle.repository.UserRepository;
 
-import javax.transaction.Transactional;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -48,6 +46,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.StringReader;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -65,43 +64,40 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     private final SecurityService securityService;
     private final WorkingHoursService workingHoursService;
     private final TagMapper tagMapper;
-    private final UserRepository userRepository;
 
     @Override
     public EstablishmentListDto getEstablishmentByParams(
         RequestGetEstablishmentParameters parameters
     ) {
-        log.info("Getting establishment by parameters");
-        securityService.findLoggedInUsername();
-        log.info("Parameters" + parameters);
-
-        PageRequest page = PageRequest.of(parameters.offset(), parameters.limit(),
+        log.info("Getting establishment by parameters {}", parameters);
+        PageRequest page = PageRequest.of(
+            parameters.offset(),
+            parameters.limit(),
             Sort.by(parameters.sortValue())
         );
-
-        ExampleMatcher matcher = ExampleMatcher
-            .matching()
+        ExampleMatcher matcher = ExampleMatcher.matching()
             .withIgnoreNullValues()
             .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
-
         Category categoryEnum = parameters.category() == null ? null : Category.getEnumByValue(parameters.category());
 
-        Example<Establishment> exampleQuery =
-            Example.of(new Establishment(
+        Example<Establishment> exampleQuery = Example.of(
+            new Establishment(
                 categoryEnum,
                 parameters.hasMap(),
                 parameters.hasCardPayment(),
                 parameters.name()
-            ), matcher);
+            ),
+            matcher
+        );
 
-        Page<Establishment> results = establishmentRepository.findAll(exampleQuery, page);
-        log.info("Results was " + results);
-        List<Establishment> processing = results.getContent()
+        List<BasicEstablishmentInfo> results = establishmentRepository.findBy(
+                exampleQuery,
+                (query) -> query.project(Arrays.stream(BasicEstablishmentInfo.class.getDeclaredFields()).map(Field::getName).toList()).page(page)
+            )
             .stream()
-            .filter(est -> est.getWorkingHours().size() <= parameters.workingDayCount())
+            .map(establishmentMapper::toBasic)
             .toList();
-        List<ResponseBasicEstablishmentInfo> establishments = establishmentMapper.modelListToDtoList(processing);
-        return new EstablishmentListDto(establishments, establishments.size());
+        return new EstablishmentListDto(results, results.size());
     }
 
     @Override

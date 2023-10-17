@@ -69,7 +69,7 @@ public class OrderMapper {
 
     public ResponseOrderDto toResponse(Order order, Establishment establishment) {
         ResponseOrderDto responseOrderDto = mapper.map(order, ResponseOrderDto.class);
-        responseOrderDto.setEstablishment(establishmentMapper.toBasic(establishment));
+        //responseOrderDto.setEstablishment(establishmentMapper.toBasic(establishment));
         responseOrderDto.setUsername(order.getUser().getUsername());
         return responseOrderDto;
     }

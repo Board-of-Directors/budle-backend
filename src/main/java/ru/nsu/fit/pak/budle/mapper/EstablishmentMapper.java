@@ -5,10 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.pak.budle.dao.establishment.Establishment;
+import ru.nsu.fit.pak.budle.dao.establishment.restaurant.CuisineCountry;
 import ru.nsu.fit.pak.budle.dto.PhotoDto;
 import ru.nsu.fit.pak.budle.dto.request.RequestEstablishmentDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseWorkingHoursDto;
+import ru.nsu.fit.pak.budle.dto.response.establishment.basic.BasicEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
 import ru.nsu.fit.pak.budle.exceptions.ErrorWhileParsingEstablishmentMapException;
@@ -18,7 +20,7 @@ import ru.nsu.fit.pak.budle.utils.ImageWorker;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Comparator;
-import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -84,29 +86,19 @@ public class EstablishmentMapper {
 
     }
 
-    public ResponseBasicEstablishmentInfo toBasic(Establishment establishment) {
-        Class<? extends ResponseBasicEstablishmentInfo> classOfDto = establishmentFactory
-            .getEstablishmentDto(establishment.getCategory().toString(), "basic");
-
-        ResponseBasicEstablishmentInfo establishmentDto =
-            modelMapper.map(establishment, classOfDto);
-
-        establishmentDto.setImage(imageWorker.loadImage(establishment.getImage()));
-        return establishmentDto;
-    }
-
-    /**
-     * Convert list of establishment models to list of establishment dto.
-     *
-     * @param establishmentList list of establishment models
-     * @return list of establishment dto.
-     */
-
-    public List<ResponseBasicEstablishmentInfo> modelListToDtoList(List<Establishment> establishmentList) {
-        return establishmentList
-            .stream()
-            .map(this::toBasic)
-            .toList();
+    public BasicEstablishmentInfo toBasic(Establishment establishment) {
+        return new BasicEstablishmentInfo(
+            establishment.getId(),
+            establishment.getName(),
+            establishment.getAddress(),
+            establishment.getRating(),
+            establishment.getImage(),
+            establishment.getCategory().getValue(),
+            establishment.getHasMap(),
+            establishment.getHasCardPayment(),
+            establishment.getStarsCount(),
+            Optional.ofNullable(establishment.getCuisineCountry()).map(CuisineCountry::getValue).orElse(null)
+        );
     }
 
     /**

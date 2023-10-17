@@ -3,7 +3,7 @@ package ru.nsu.fit.pak.budle.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
+import ru.nsu.fit.pak.budle.dto.response.establishment.basic.BasicEstablishmentInfo;
 
 import java.util.List;
 
@@ -11,6 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EstablishmentListDto {
-    private List<ResponseBasicEstablishmentInfo> establishments;
+    private List<BasicEstablishmentInfo> establishments;
     private Integer count;
 }
