@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +28,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @RequestMapping(value = "user", produces = MediaType.APPLICATION_JSON_VALUE)
+@CrossOrigin
 public class UserController {
     private final UserServiceImpl userService;
     private final EstablishmentService establishmentService;

@@ -3,7 +3,13 @@ package ru.nsu.fit.pak.budle.controller;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.nsu.fit.pak.budle.dto.request.RequestCodeDto;
 import ru.nsu.fit.pak.budle.service.CodeService;
 
@@ -14,6 +20,7 @@ import ru.nsu.fit.pak.budle.service.CodeService;
 @RestController
 @RequestMapping(value = "code", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
+@CrossOrigin
 public class CodeController {
     private final CodeService codeService;
     /**
