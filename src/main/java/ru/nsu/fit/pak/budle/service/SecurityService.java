@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import ru.nsu.fit.pak.budle.dao.User;
 
 public interface SecurityService {
-    String findLoggedInUsername();
 
     User getLoggedInUser();
 
