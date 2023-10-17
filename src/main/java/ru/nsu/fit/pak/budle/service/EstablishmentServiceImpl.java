@@ -183,8 +183,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     @Override
     @NonNull
     public List<ShortEstablishmentInfo> getEstablishmentsByOwner(Long id) {
-        User owner = userRepository.findById(11L).orElseThrow();
-
+        User owner = securityService.getLoggedInUser();
         return establishmentRepository.findAllByOwner(owner);
     }
 
