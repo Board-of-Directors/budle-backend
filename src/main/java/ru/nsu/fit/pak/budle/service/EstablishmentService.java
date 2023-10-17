@@ -8,7 +8,7 @@ import ru.nsu.fit.pak.budle.dto.request.RequestGetEstablishmentParameters;
 import ru.nsu.fit.pak.budle.dto.response.ResponseSubcategoryDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
-import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
+import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ShortEstablishmentInfo;
 
 import java.util.List;
 
@@ -87,7 +87,7 @@ public interface EstablishmentService {
 
     ResponseExtendedEstablishmentInfo getEstablishmentInfoById(Long establishmentId);
 
-    List<ResponseShortEstablishmentInfo> getEstablishmentsByOwner(Long id);
+    List<ShortEstablishmentInfo> getEstablishmentsByOwner(Long id);
 
     ResponseSubcategoryDto getCategoryVariants(String category);
 

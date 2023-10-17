@@ -29,13 +29,14 @@ import ru.nsu.fit.pak.budle.dto.response.ResponseSubcategoryDto;
 import ru.nsu.fit.pak.budle.dto.response.ResponseTagDto;
 import ru.nsu.fit.pak.budle.dto.response.establishment.basic.ResponseBasicEstablishmentInfo;
 import ru.nsu.fit.pak.budle.dto.response.establishment.extended.ResponseExtendedEstablishmentInfo;
-import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ResponseShortEstablishmentInfo;
+import ru.nsu.fit.pak.budle.dto.response.establishment.shortInfo.ShortEstablishmentInfo;
 import ru.nsu.fit.pak.budle.exceptions.ErrorWhileParsingEstablishmentMapException;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentAlreadyExistsException;
 import ru.nsu.fit.pak.budle.exceptions.EstablishmentNotFoundException;
 import ru.nsu.fit.pak.budle.mapper.EstablishmentMapper;
 import ru.nsu.fit.pak.budle.mapper.TagMapper;
 import ru.nsu.fit.pak.budle.repository.EstablishmentRepository;
+import ru.nsu.fit.pak.budle.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import javax.xml.parsers.DocumentBuilder;
@@ -64,6 +65,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     private final SecurityService securityService;
     private final WorkingHoursService workingHoursService;
     private final TagMapper tagMapper;
+    private final UserRepository userRepository;
 
     @Override
     public EstablishmentListDto getEstablishmentByParams(
@@ -94,9 +96,10 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
         Page<Establishment> results = establishmentRepository.findAll(exampleQuery, page);
         log.info("Results was " + results);
-        List<Establishment> processing = results.getContent().stream().filter(
-            est -> est.getWorkingHours().size() <= parameters.workingDayCount()
-        ).toList();
+        List<Establishment> processing = results.getContent()
+            .stream()
+            .filter(est -> est.getWorkingHours().size() <= parameters.workingDayCount())
+            .toList();
         List<ResponseBasicEstablishmentInfo> establishments = establishmentMapper.modelListToDtoList(processing);
         return new EstablishmentListDto(establishments, establishments.size());
     }
@@ -107,7 +110,6 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         log.info("Creating new establishment");
         checkEstablishmentExistence(dto);
         log.info("Establishment with name and address does not exist");
-
         Establishment establishment = establishmentMapper.dtoToModel(dto);
         log.info("Establishment was converted");
 
@@ -180,12 +182,10 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     @NonNull
-    public List<ResponseShortEstablishmentInfo> getEstablishmentsByOwner(Long id) {
-        User owner = securityService.getLoggedInUser();
+    public List<ShortEstablishmentInfo> getEstablishmentsByOwner(Long id) {
+        User owner = userRepository.findById(11L).orElseThrow();
 
-        return establishmentMapper.toShortInfoList(
-            establishmentRepository.findAllByOwner(owner)
-        );
+        return establishmentRepository.findAllByOwner(owner);
     }
 
     @Override
