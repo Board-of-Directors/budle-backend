@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,6 +47,7 @@ public class EstablishmentController {
      * @return list of establishment dto, list size included.
      */
     @GetMapping(value = "all")
+    @CrossOrigin
     public EstablishmentListDto getEstablishments(@Valid RequestGetEstablishmentParameters parameters) {
         return establishmentService.getEstablishmentByParams(parameters);
     }
