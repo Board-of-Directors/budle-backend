@@ -1,36 +1,22 @@
 package ru.nsu.fit.pak.budle.configuration;
 
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
 
+import java.util.List;
 
-/**
- * Swagger class, that configure auto creating API documentation.
- * You can search for swagger documentation at 80.64.174.33:8080/swagger-ui/#
- */
 @Configuration
 public class SwaggerConfig {
     @Value("${swagger.baseUrl}")
     private String baseUrl;
 
-    /**
-     * Creates instance of Docket class, that configure host URL, controller classes and
-     * API paths.
-     *
-     * @return instance of Docket class.
-     */
     @Bean
-    public Docket create() {
-        return new Docket(DocumentationType.SWAGGER_2)
-            .host(baseUrl)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("ru.nsu.fit.pak.budle.controller"))
-                .paths(PathSelectors.any())
-                .build();
+    public OpenAPI customOpenApi() {
+        Server server = new Server();
+        server.setUrl(baseUrl);
+        return new OpenAPI().servers(List.of(server));
     }
 }

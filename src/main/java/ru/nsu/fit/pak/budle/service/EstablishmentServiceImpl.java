@@ -1,12 +1,13 @@
 package ru.nsu.fit.pak.budle.service;
 
+import jakarta.annotation.Nonnull;
 import jakarta.transaction.Transactional;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -65,22 +66,47 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     private final WorkingHoursService workingHoursService;
     private final TagMapper tagMapper;
 
+    @Nonnull
     @Override
     public EstablishmentListDto getEstablishmentByParams(
         RequestGetEstablishmentParameters parameters
     ) {
         log.info("Getting establishment by parameters {}", parameters);
-        PageRequest page = PageRequest.of(
+        List<BasicEstablishmentInfo> results = establishmentRepository.findBy(
+                toExample(parameters),
+                query -> query.project(toProjection(BasicEstablishmentInfo.class))
+                    .page(toPageable(parameters))
+            )
+            .stream()
+            .map(establishmentMapper::toBasic)
+            .toList();
+        return new EstablishmentListDto(results, results.size());
+    }
+
+    @Nonnull
+    private Pageable toPageable(RequestGetEstablishmentParameters parameters) {
+        return PageRequest.of(
             parameters.offset(),
             parameters.limit(),
             Sort.by(parameters.sortValue())
         );
+    }
+
+    @Nonnull
+    private List<String> toProjection(Class<BasicEstablishmentInfo> type) {
+        return Arrays.stream(BasicEstablishmentInfo.class.getDeclaredFields())
+            .map(Field::getName)
+            .toList();
+    }
+
+    @Nonnull
+    private Example<Establishment> toExample(RequestGetEstablishmentParameters parameters) {
         ExampleMatcher matcher = ExampleMatcher.matching()
             .withIgnoreNullValues()
             .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
         Category categoryEnum = parameters.category() == null ? null : Category.getEnumByValue(parameters.category());
 
-        Example<Establishment> exampleQuery = Example.of(
+        return Example.of(
             new Establishment(
                 categoryEnum,
                 parameters.hasMap(),
@@ -89,15 +115,6 @@ public class EstablishmentServiceImpl implements EstablishmentService {
             ),
             matcher
         );
-
-        List<BasicEstablishmentInfo> results = establishmentRepository.findBy(
-                exampleQuery,
-                (query) -> query.project(Arrays.stream(BasicEstablishmentInfo.class.getDeclaredFields()).map(Field::getName).toList()).page(page)
-            )
-            .stream()
-            .map(establishmentMapper::toBasic)
-            .toList();
-        return new EstablishmentListDto(results, results.size());
     }
 
     @Override
@@ -105,31 +122,33 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     public void createEstablishment(RequestEstablishmentDto dto) {
         log.info("Creating new establishment");
         checkEstablishmentExistence(dto);
-        log.info("Establishment with name and address does not exist");
         Establishment establishment = establishmentMapper.dtoToModel(dto);
         log.info("Establishment was converted");
-
         establishment.setOwner(securityService.getLoggedInUser());
         saveEstablishmentData(establishment, dto);
     }
 
+    @Nonnull
     @Override
     public List<String> getCategories() {
         log.info("Getting categories");
         return Arrays.stream(Category.values()).map(x -> x.value).toList();
     }
 
+    @Nonnull
     @Override
     public List<ResponseTagDto> getTags() {
         return tagMapper.modelArrayToTagDtoList(Tag.values());
     }
 
+    @Nonnull
     @Override
     public List<ValidTimeDto> getValidTime(Long establishmentId) {
         Establishment establishment = getEstablishmentById(establishmentId);
         return workingHoursService.generateValidBookingHours(establishment);
     }
 
+    @Nonnull
     @Override
     public List<ResponseTagDto> getSpotTags(Long establishmentId) {
         Establishment establishment = getEstablishmentById(establishmentId);
@@ -164,7 +183,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         }
     }
 
-    @NonNull
+    @Nonnull
     private List<Spot> getSpotList(NodeList elems) {
         return IntStream.range(0, elems.getLength())
             .peek(idx -> ((Element) elems.item(idx)).setAttribute("id", String.valueOf(idx)))
@@ -177,14 +196,14 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    @NonNull
+    @Nonnull
     public List<ShortEstablishmentInfo> getEstablishmentsByOwner(Long id) {
         User owner = securityService.getLoggedInUser();
         return establishmentRepository.findAllByOwner(owner);
     }
 
     @Override
-    @NonNull
+    @Nonnull
     public ResponseSubcategoryDto getCategoryVariants(String category) {
         Category categoryEnum = Category.getEnumByValue(category);
         return categoryEnum.variants;
@@ -213,6 +232,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         establishmentRepository.delete(establishment);
     }
 
+    @Nonnull
     @Override
     public String getTagByName(String tagName) {
         return tagMapper.modelToTagDto(Tag.parseEnum(tagName)).getImage();
@@ -227,13 +247,14 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         imageService.deleteImages(paths.toList());
     }
 
+    @Nonnull
     public Establishment getEstablishmentById(Long establishmentId) {
-        return establishmentRepository
-            .findById(establishmentId).orElseThrow(
-                () -> new EstablishmentNotFoundException(establishmentId)
-            );
+        return establishmentRepository.findById(establishmentId).orElseThrow(
+            () -> new EstablishmentNotFoundException(establishmentId)
+        );
     }
 
+    @Nonnull
     @Override
     public ResponseExtendedEstablishmentInfo getEstablishmentInfoById(Long establishmentId) {
         return establishmentMapper.toExtended(getEstablishmentById(establishmentId));
@@ -243,7 +264,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         String address = dto.getAddress();
         String name = dto.getName();
         if (establishmentRepository.existsByAddressAndName(address, name)) {
-            log.warn("Establishment " + name + " " + address + " already exists");
+            log.warn("Establishment with name {} and address {} already exists", name, address);
             throw new EstablishmentAlreadyExistsException(name, address);
         }
     }

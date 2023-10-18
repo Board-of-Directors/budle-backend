@@ -44,7 +44,6 @@ import ru.nsu.fit.pak.budle.exceptions.UserNotLoggedInException;
 import ru.nsu.fit.pak.budle.exceptions.VerificationCodeWasFalseException;
 import ru.nsu.fit.pak.budle.exceptions.WorkerNotFoundException;
 import ru.nsu.fit.pak.budle.utils.BaseResponse;
-import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.LinkedHashMap;
 
@@ -86,7 +85,7 @@ public class ArticleController extends ResponseEntityExceptionHandler implements
         MethodParameter returnType,
         @NonNull Class<? extends HttpMessageConverter<?>> converterType
     ) {
-        return !returnType.hasMethodAnnotation(ApiIgnore.class);
+        return true;
     }
 
     @Override

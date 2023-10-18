@@ -92,7 +92,7 @@ public class EstablishmentMapper {
             establishment.getName(),
             establishment.getAddress(),
             establishment.getRating(),
-            establishment.getImage(),
+            imageWorker.loadImage(establishment.getImage()),
             establishment.getCategory().getValue(),
             establishment.getHasMap(),
             establishment.getHasCardPayment(),
