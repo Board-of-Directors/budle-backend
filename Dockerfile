@@ -16,4 +16,4 @@ EXPOSE 8080
 USER root
 WORKDIR /usr/src/java-app
 COPY --from=builder /usr/src/java-code/build/libs/*.jar ./app.jar
-ENTRYPOINT ["java", "-Dspring.profiles.active=production", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=production","-Xms100m", "-Xmx100m", "-jar", "app.jar"]
