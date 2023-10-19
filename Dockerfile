@@ -11,7 +11,7 @@ COPY . /usr/src/java-code/
 WORKDIR /usr/src/java-code
 RUN gradle bootJar -i --stacktrace
 
-FROM openjdk:17
+FROM eclipse-temurin:17-jre-jammy
 EXPOSE 8080
 USER root
 WORKDIR /usr/src/java-app
