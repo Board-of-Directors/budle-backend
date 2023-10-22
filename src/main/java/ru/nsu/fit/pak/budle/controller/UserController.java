@@ -28,7 +28,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @RequestMapping(value = "user", produces = MediaType.APPLICATION_JSON_VALUE)
-@CrossOrigin
+@CrossOrigin(allowCredentials = "true", originPatterns = {"*"})
 public class UserController {
     private final UserServiceImpl userService;
     private final EstablishmentService establishmentService;

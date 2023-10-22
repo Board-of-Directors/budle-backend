@@ -37,12 +37,9 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public void autoLogin(String username, String password, HttpServletRequest request) {
-        log.info("Auto login");
-        log.info(username);
-        log.info(password);
+        log.info("Auto login with username {} and password {}", username, password);
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         if (userDetails == null) {
-            log.warn("User details was null");
             throw new UsernameNotFoundException("User with this username does not exist");
         }
         log.info(userDetails.toString());

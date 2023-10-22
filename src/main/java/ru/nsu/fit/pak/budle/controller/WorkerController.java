@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @RequestMapping(value = "/worker", produces = MediaType.APPLICATION_JSON_VALUE)
-@CrossOrigin
+@CrossOrigin(allowCredentials = "true", originPatterns = {"*"})
 public class WorkerController {
     private final WorkerServiceImpl workerService;
 

@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/menu")
-@CrossOrigin
+@CrossOrigin(allowCredentials = "true", originPatterns = {"*"})
 public class MenuController {
     private final MenuService menuService;
 

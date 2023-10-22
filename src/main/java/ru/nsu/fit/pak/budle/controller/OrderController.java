@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "order", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@CrossOrigin
+@CrossOrigin(allowCredentials = "true", originPatterns = {"*"})
 public class OrderController {
     private final OrderService orderService;
 

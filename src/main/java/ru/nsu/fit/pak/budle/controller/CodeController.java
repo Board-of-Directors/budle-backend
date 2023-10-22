@@ -20,7 +20,7 @@ import ru.nsu.fit.pak.budle.service.CodeService;
 @RestController
 @RequestMapping(value = "code", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
-@CrossOrigin
+@CrossOrigin(allowCredentials = "true", originPatterns = {"*"})
 public class CodeController {
     private final CodeService codeService;
     /**

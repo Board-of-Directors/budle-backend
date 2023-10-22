@@ -17,7 +17,7 @@ import ru.nsu.fit.pak.budle.service.SpotServiceImpl;
 @RestController
 @RequestMapping(value = "/spot", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@CrossOrigin
+@CrossOrigin(allowCredentials = "true", originPatterns = {"*"})
 public class SpotController {
     private final SpotServiceImpl spotService;
 

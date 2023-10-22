@@ -34,7 +34,7 @@ import java.util.List;
 @Validated
 @RequestMapping(value = "establishment", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
-@CrossOrigin
+@CrossOrigin(allowCredentials = "true", originPatterns = {"*"})
 public class EstablishmentController {
     private final EstablishmentServiceImpl establishmentService;
     private final OrderService orderService;
