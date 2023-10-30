@@ -110,10 +110,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public void deleteOrder(Long orderId, Long userId) {
-        log.info("Deleting order {} by user {}", orderId, userId);
         Order order = getOrderById(orderId);
+        User user = securityService.getLoggedInUser();
+        log.info("Deleting order {} by user {}", orderId, user.getId());
 
-        if (order.getUser().getId().equals(userId)) {
+        if (order.getUser().getId().equals(user.getId())) {
             orderRepository.delete(order);
         } else {
             log.warn("Not enough right for this operation");
